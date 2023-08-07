@@ -7,8 +7,8 @@ class Converter
 {
 public:
     Converter();
-    static QImage** getAsGreyScale(QImage* originalImage);
-    static QImage* combineChannels(QImage** greyImageChannels);
+    static QVector<QImage*> getAsGreyScale(QImage* originalImage);
+    static QImage* combineChannels(QVector<QImage*> greyImageChannels);
 };
 
 #endif // CONVERTER_H

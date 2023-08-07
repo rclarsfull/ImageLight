@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "guimaneger.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -17,5 +18,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    GuiManeger guiManager;
+private slots:
+    void converte();
 };
 #endif // MAINWINDOW_H

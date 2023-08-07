@@ -8,8 +8,9 @@ Converter::Converter()
 
 }
 
-QImage** Converter::getAsGreyScale(QImage* originalImage)
+QVector<QImage*> Converter::getAsGreyScale(QImage* originalImage)
 {
+    QVector<QImage*> greyImageChannels(3);
     if(originalImage == NULL)
         qDebug() << "No Image Found !!\n";
     else{
@@ -18,7 +19,6 @@ QImage** Converter::getAsGreyScale(QImage* originalImage)
         qDebug() << imageSize << color.red() << color.yellow() <<color.blue();
 
 
-        QImage** greyImageChannels = new QImage*[3];
         greyImageChannels[0] = new QImage(*originalImage);
         greyImageChannels[1] = new QImage(*originalImage);
         greyImageChannels[2] = new QImage(*originalImage);
@@ -34,12 +34,11 @@ QImage** Converter::getAsGreyScale(QImage* originalImage)
             }
         }
         qDebug() << "ferig\n";
-        return greyImageChannels;
     }
-    return NULL;
+    return greyImageChannels;
 }
 
-QImage* Converter::combineChannels(QImage** greyImageChannels)
+QImage* Converter::combineChannels(QVector<QImage*> greyImageChannels)
 {
     QImage* out = new QImage(*greyImageChannels[0]);
     for(int y = 0; y < greyImageChannels[0]->height(); y++){
