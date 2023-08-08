@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     canvas.cpp \
     converter.cpp \
-    guimaneger.cpp \
     main.cpp \
     mainwindow.cpp
     converter.cpp
@@ -19,7 +18,6 @@ SOURCES += \
 HEADERS += \
     canvas.h \
     converter.h \
-    guimaneger.h \
     mainwindow.h
     converter.h
 

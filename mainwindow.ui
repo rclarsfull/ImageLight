@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>455</width>
-    <height>315</height>
+    <width>540</width>
+    <height>770</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,19 +16,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <widget class="QFrame" name="frame">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
+        <property name="sizeIncrement">
          <size>
-          <width>100</width>
-          <height>100</height>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
         <property name="frameShape">
@@ -41,16 +35,10 @@
       </item>
       <item>
        <widget class="QFrame" name="frame_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
+        <property name="sizeIncrement">
          <size>
-          <width>100</width>
-          <height>100</height>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
         <property name="frameShape">
@@ -65,6 +53,12 @@
     </item>
     <item>
      <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -72,17 +66,19 @@
     </item>
     <item>
      <widget class="QLabel" name="label_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>Dateiname:</string>
       </property>
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLineEdit" name="lineEdit"/>
-      </item>
-     </layout>
+     <widget class="QLineEdit" name="lineEdit"/>
     </item>
     <item>
      <widget class="QPushButton" name="pushButton">
@@ -98,8 +94,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>455</width>
-     <height>17</height>
+     <width>540</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -116,6 +112,22 @@
     <hint type="sourcelabel">
      <x>227</x>
      <y>277</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>227</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>converte()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>245</y>
     </hint>
     <hint type="destinationlabel">
      <x>227</x>

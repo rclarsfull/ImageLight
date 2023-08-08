@@ -1,4 +1,3 @@
-#include <QtGui/QRgb>
 #include <QDebug>
 #include <QColor>
 #include "converter.h"
@@ -14,26 +13,26 @@ QVector<QImage*> Converter::getAsGreyScale(QImage* originalImage)
     if(originalImage == NULL)
         qDebug() << "No Image Found !!\n";
     else{
-        int imageSize = originalImage->height() * originalImage->width();
-        QColor color = originalImage->pixelColor(0,0);
-        qDebug() << imageSize << color.red() << color.yellow() <<color.blue();
-
-
         greyImageChannels[0] = new QImage(*originalImage);
         greyImageChannels[1] = new QImage(*originalImage);
         greyImageChannels[2] = new QImage(*originalImage);
 
-        qDebug() << "init ferig\n";
-
         for(int y = 0; y < originalImage->height(); y++){
             for(int x = 0; x < originalImage->width(); x++){
                 QColor color = originalImage->pixelColor(x,y);
+                if(color.red() == 255 && color.green() == 255 && color.blue() == 255){
+                    qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist überbelichtet. Verlust von Genauigkeit!";
+                    originalImage->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
+                }
+                if(color.red() == 0 && color.green() == 0 && color.blue() == 0){
+                    qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist unterbelichtet. Verlust von Genauigkeit!";
+                    originalImage->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
+                }
                 greyImageChannels[0]->setPixelColor(x,y,QColor(color.red(),color.red(),color.red()));
                 greyImageChannels[1]->setPixelColor(x,y,QColor(color.green(),color.green(),color.green()));
                 greyImageChannels[2]->setPixelColor(x,y,QColor(color.blue(),color.blue(),color.blue()));
             }
         }
-        qDebug() << "ferig\n";
     }
     return greyImageChannels;
 }

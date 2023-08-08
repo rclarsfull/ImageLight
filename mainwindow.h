@@ -1,7 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "guimaneger.h"
+#include "canvas.h"
+#include "converter.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -18,7 +19,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    GuiManeger guiManager;
+    Converter converter;
+    QImage* image;
+    QImage* greyScalePic;
+    QVector<QImage*> greyScaledChannels;
+    Canvas* originalPic;
+    Canvas* resultPic;
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
 private slots:
     void converte();
 };
