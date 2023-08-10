@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "canvas.h"
-#include "converter.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,14 +18,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Converter converter;
-    QImage* image;
-    QImage* greyScalePic;
+    QImage image;
+    QImage greyScalePic;
     QVector<QImage*> greyScaledChannels;
+    QImage* newPic;
     Canvas* originalPic;
     Canvas* resultPic;
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void converte();

@@ -1,4 +1,5 @@
 #include <QMimeData>
+#include "converter.h"
 #include "mainwindow.h"
 #include "qevent.h"
 #include "ui_mainwindow.h"
@@ -7,6 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , newPic(NULL)
     , originalPic(new Canvas())
     , resultPic(new Canvas())
 {
@@ -24,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete greyScalePic;
-    delete image;
+    if(newPic != NULL)
+        delete newPic;
     delete greyScaledChannels[0];
     delete greyScaledChannels[1];
     delete greyScaledChannels[2];
@@ -35,18 +37,24 @@ MainWindow::~MainWindow()
 void MainWindow::converte()
 {
     QString fileName = ui->lineEdit->text();
-    image = new QImage(fileName);
-    greyScaledChannels = converter.getAsGreyScale(image);
+    image = QImage(fileName);
+    greyScaledChannels = Converter::getAsGreyScale(&image);
     //greyScaledChannels[0]->save("redChannel.jpg");
     //greyScaledChannels[1]->save("greenChannel.jpg");
     //greyScaledChannels[2]->save("blueChannel.jpg");
 
-    QImage* greyScalePic = converter.combineChannels(greyScaledChannels);
-    greyScalePic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
+    newPic = Converter::combineChannels(greyScaledChannels);
+    newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
 
-    originalPic->setImage((*image).scaledToWidth(originalPic->width(),Qt::SmoothTransformation));
-    resultPic->setImage((*greyScalePic).scaledToWidth(resultPic->width(),Qt::SmoothTransformation));
+    Converter::greyImageToColorImage(newPic);
+    newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
+    qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
+
+    originalPic->setImage(image);
+    resultPic->setImage(*newPic);
+    originalPic->resize();
+    resultPic->resize();
     update();
 
 }
@@ -65,5 +73,15 @@ void MainWindow::dropEvent(QDropEvent *event)
 //        qDebug() << "Dropped file:" << fileName;
 //    }
     ui->lineEdit->setText(event->mimeData()->urls()[0].toLocalFile());
+    converte();
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    originalPic->resize();
+    resultPic->resize();
+    update();
+}
+
+
 
