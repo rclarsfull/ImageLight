@@ -87,25 +87,24 @@ QColor Converter::greyToColor(unsigned int grey)
     double r = 0, g = 0, b = 0;
     if(grey == 0)
         grey = 1;
-    if(grey < 255* 0.5)
-        b = 255 * cos(3.1438*(255/grey));
+    if(grey < (255* 0.5))
+        b =0.8  * 255 * cos(0.012368*grey);
 
-    if(grey > 255* 0.5)
-        r = 255 * -cos(3.1438*(255/grey));
+    if(grey > (255* 0.5))
+        r = 255 * -cos(0.012368*(grey));
 
-    g =  255 * sin(3.1438*(255/grey));
-    qDebug() << g;
-    if(r > 255)
-        r = 255;
-    if(g > 255)
-        g = 255;
-    if(b > 255)
-        b = 255;
-    if(r < 0)
-        r = 0;
-    if(g < 0)
-        g = 0;
-    if(b < 0)
-        b = 0;
+    g =   0.6 * 255 * sin(0.012368 * grey);
+//    if(r > 255)
+//        r = 255;
+//    if(g > 255)
+//        g = 255;
+//    if(b > 255)
+//        b = 255;
+//    if(r < 0)
+//        r = 0;
+//    if(g < 0)
+//        g = 0;
+//    if(b < 0)
+//        b = 0;
     return QColor(r, g, b);
 }
