@@ -2,9 +2,11 @@
 #include <QColor>
 #include <math.h>
 #include <QVector3D>
+
 #include "converter.h"
-
-
+#include "workerthread.h"
+QThreadPool Converter::workerPool = QThreadPool();
+QMutex Converter::imageMutex = QMutex();
 QVector<QImage*> Converter::getAsGreyScale(QImage* originalImage)
 {
     QVector<QImage*> greyImageChannels(3);
@@ -75,12 +77,15 @@ unsigned int Converter::getConversionPresition(unsigned int grey)
 
 void Converter::greyImageToColorImage(QImage* greyImage, unsigned int minGrey, unsigned int maxGrey)
 {
+    QList<WorkerThreadGreyToColor*> workers;
     for(int y = 0; y < greyImage->height(); y++){
-        for(int x = 0; x < greyImage->width(); x++){
-                unsigned int grey = greyImage->pixelColor(x,y).red();
-                greyImage->setPixelColor(x,y,Converter::greyToColor(grey, minGrey, maxGrey));
-        }
+        workers.push_back(new WorkerThreadGreyToColor(greyImage,&imageMutex, minGrey,maxGrey,y));
+        workerPool.start(workers.back());
     }
+    workerPool.waitForDone();
+//    for(WorkerThreadGreyToColor* worker:workers){
+//        delete worker;
+//    }
 }
 
 QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey)

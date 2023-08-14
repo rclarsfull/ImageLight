@@ -6,12 +6,14 @@
 
 
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , newPic(NULL)
     , originalPic(new Canvas())
     , resultPic(new Canvas())
+
 {
     ui->setupUi(this);
     originalPic->setOtherCanvas(resultPic);

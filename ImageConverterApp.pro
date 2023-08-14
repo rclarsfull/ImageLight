@@ -18,7 +18,8 @@ SOURCES += \
 HEADERS += \
     canvas.h \
     converter.h \
-    mainwindow.h
+    mainwindow.h \
+    workerthread.h
     converter.h
 
 FORMS += \

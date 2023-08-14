@@ -3,9 +3,13 @@
 
 #include <QImage>
 #include <QColor>
+#include <QThreadPool>
+#include <QMutex>
 
 class Converter
 {
+    static QThreadPool workerPool;
+    static QMutex imageMutex;
 public:
     Converter() = delete;
     Converter(Converter&) = delete;
