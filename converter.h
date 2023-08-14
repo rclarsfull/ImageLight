@@ -13,8 +13,8 @@ public:
     static QImage* combineChannels(QVector<QImage*> greyImageChannels);
     static unsigned int greyToCandela(unsigned int);
     static unsigned int getConversionPresition (unsigned int);
-    static void greyImageToColorImage(QImage* greyImage);
-    static inline QColor greyToColor(unsigned int);
+    static void greyImageToColorImage(QImage* greyImage, double modifyer);
+    static inline QColor greyToColor(unsigned int grey, double modifyer);
 };
 
 #endif // CONVERTER_H

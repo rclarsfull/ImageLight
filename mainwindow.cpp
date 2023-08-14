@@ -46,8 +46,8 @@ void MainWindow::converte()
     newPic = Converter::combineChannels(greyScaledChannels);
     newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
-
-    Converter::greyImageToColorImage(newPic);
+    qDebug() << (ui->horizontalSlider->sliderPosition()-50.0f)/100+1;
+    Converter::greyImageToColorImage(newPic,(ui->horizontalSlider->sliderPosition()-50.0f)/100+1);
     newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 

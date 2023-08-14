@@ -73,28 +73,28 @@ unsigned int Converter::getConversionPresition(unsigned int grey)
     return (after-before)/2;
 }
 
-void Converter::greyImageToColorImage(QImage* greyImage)
+void Converter::greyImageToColorImage(QImage* greyImage, double modifyer)
 {
     for(int y = 0; y < greyImage->height(); y++){
         for(int x = 0; x < greyImage->width(); x++){
                 unsigned int grey = greyImage->pixelColor(x,y).red();
-                greyImage->setPixelColor(x,y,Converter::greyToColor(grey));
+                greyImage->setPixelColor(x,y,Converter::greyToColor(grey,modifyer));
         }
     }
 }
 
-QColor Converter::greyToColor(unsigned int grey)
+QColor Converter::greyToColor(unsigned int grey, double modifyer)
 {
     double r = 0, g = 0, b = 0;
     if(grey == 0)
         grey = 1;
     if(grey < (255* 0.5))
-        b = 255 * cos(0.006184 * grey);
+        b = 255 * cos(0.006184 * modifyer * grey);
 
     if(grey > (255* 0.5))
-        r = 255 * cos(0.006184 * (grey-255));
+        r = 255 * cos(0.006184 * modifyer * (grey-255));
 
-    g =   255 * sin(0.012368 * grey);
+    g =  255 *  sin(2* 0.006184 * 1/modifyer * grey);
     if(r > 255)
         r = 255;
     if(g > 255)
@@ -107,5 +107,6 @@ QColor Converter::greyToColor(unsigned int grey)
         g = 0;
     if(b < 0)
         b = 0;
+    //qDebug() << r << g << b;
     return QColor(r , g, b);
 }
