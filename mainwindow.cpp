@@ -1,8 +1,9 @@
 #include <QMimeData>
-#include "converter.h"
-#include "mainwindow.h"
-#include "qevent.h"
-#include "ui_mainwindow.h"
+#include <ui_mainwindow.h>
+#include <converter.h>
+#include <mainwindow.h>
+#include <qevent.h>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -47,7 +48,7 @@ void MainWindow::converte()
     newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
     qDebug() << (ui->horizontalSlider->sliderPosition()-50.0f)/100+1;
-    Converter::greyImageToColorImage(newPic,(ui->horizontalSlider->sliderPosition()-50.0f)/100+1);
+    Converter::greyImageToColorImage(newPic, Converter::getMinGrey(newPic), Converter::getMaxGrey(newPic));
     newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 

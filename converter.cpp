@@ -73,40 +73,74 @@ unsigned int Converter::getConversionPresition(unsigned int grey)
     return (after-before)/2;
 }
 
-void Converter::greyImageToColorImage(QImage* greyImage, double modifyer)
+void Converter::greyImageToColorImage(QImage* greyImage, unsigned int minGrey, unsigned int maxGrey)
 {
     for(int y = 0; y < greyImage->height(); y++){
         for(int x = 0; x < greyImage->width(); x++){
                 unsigned int grey = greyImage->pixelColor(x,y).red();
-                greyImage->setPixelColor(x,y,Converter::greyToColor(grey,modifyer));
+                greyImage->setPixelColor(x,y,Converter::greyToColor(grey, minGrey, maxGrey));
         }
     }
 }
 
-QColor Converter::greyToColor(unsigned int grey, double modifyer)
+QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey)
 {
-    double r = 0, g = 0, b = 0;
-    if(grey == 0)
-        grey = 1;
-    if(grey < (255* 0.5))
-        b = 255 * cos(0.006184 * modifyer * grey);
+    double rot = 0, gruen = 0, blau = 0;
 
-    if(grey > (255* 0.5))
-        r = 255 * cos(0.006184 * modifyer * (grey-255));
+    double a = (maxGrey-minGrey)/4;
+    double b = (255 + minGrey)/(a*a);
 
-    g =  255 *  sin(2* 0.006184 * 1/modifyer * grey);
-    if(r > 255)
-        r = 255;
-    if(g > 255)
-        g = 255;
-    if(b > 255)
-        b = 255;
-    if(r < 0)
-        r = 0;
-    if(g < 0)
-        g = 0;
-    if(b < 0)
-        b = 0;
-    //qDebug() << r << g << b;
-    return QColor(r , g, b);
+    if(grey < 3.5*a){
+        rot = -(b*(grey-3*a-minGrey)*(grey-3*a-minGrey))+255;
+        gruen = -(b*(grey-2*a-minGrey)*(grey-2*a-minGrey))+255;
+        blau = -(b*(grey-a-minGrey)*(grey-a-minGrey))+255;
+    }else{
+        rot = blau = gruen = -(b*(grey-4*a-minGrey)*(grey-4*a-minGrey))+255;
+    }
+
+    if(rot > 255)
+        rot = 255;
+    if(gruen > 255)
+        gruen = 255;
+    if(blau > 255)
+        blau = 255;
+    if(rot < 0)
+        rot = 0;
+    if(gruen < 0)
+        gruen = 0;
+    if(blau < 0)
+        blau = 0;
+
+    //qDebug() << "a: " << a << "b: " << b << "rot: " <<rot << "gruen: " << gruen << "blau: "<< blau;
+    return QColor(rot , gruen, blau);
+}
+
+unsigned int Converter::getMinGrey(QImage *greyImage)
+{
+    unsigned int min = 255;
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            QColor color = greyImage->pixelColor(x,y);
+            if(color.red() == 0)
+                return 0;
+            if(color.red() < min)
+                min = color.red();
+        }
+    }
+    return min;
+}
+
+unsigned int Converter::getMaxGrey(QImage *greyImage)
+{
+    unsigned int max = 0;
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            QColor color = greyImage->pixelColor(x,y);
+            if(color.red() == 255)
+                return 255;
+            if(color.red() > max)
+                max = color.red();
+        }
+    }
+    return max;
 }
