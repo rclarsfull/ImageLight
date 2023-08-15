@@ -10,10 +10,9 @@
 class WorkerThread: public QRunnable
 {
 protected:
-    QImage* image;
     QMutex* imageMutex;
 public:
-    WorkerThread(QImage* a_image, QMutex* a_imageMutex):image(a_image), imageMutex(a_imageMutex){};
+    WorkerThread(QMutex* a_imageMutex): imageMutex(a_imageMutex){};
     virtual ~WorkerThread(){};
     void run() = 0;
 };
@@ -28,21 +27,56 @@ public:
 
 class WorkerThreadGreyToColor: public WorkerThread
 {
+    QImage* image;
     unsigned int minGrey;
     unsigned int maxGrey;
     unsigned int row;
 public:
-    WorkerThreadGreyToColor(QImage* a_image, QMutex* a_imageMutex, unsigned int a_minGrey, unsigned int a_maxGrey, unsigned int a_row)
-        :WorkerThread(a_image,a_imageMutex), minGrey(a_minGrey), maxGrey(a_maxGrey), row(a_row){};
+    WorkerThreadGreyToColor(QMutex* a_imageMutex, QImage* a_image, unsigned int a_minGrey, unsigned int a_maxGrey, unsigned int a_row)
+        :WorkerThread(a_imageMutex),image(a_image), minGrey(a_minGrey), maxGrey(a_maxGrey), row(a_row){};
     ~WorkerThreadGreyToColor(){};
     void run(){
-        for(int x = 0; x < image->width(); x++){
+        for(int y = row; y < row+50 && y < image->height(); y++){
+            for(int x = 0; x < image->width(); x++){
+                unsigned int grey = image->pixelColor(x,y).red();
                 imageMutex->lock();
-                unsigned int grey = image->pixelColor(x,row).red();
-                image->setPixelColor(x,row,Converter::greyToColor(grey, minGrey, maxGrey));
+                image->setPixelColor(x,y,Converter::greyToColor(grey, minGrey, maxGrey));
                 imageMutex->unlock();
+            }
         }
     };
 };
 
 #endif // WORKERTHREADGREYTOCOLOR_H
+
+#ifndef WORKERTHREADCOMBINECHANNELS_H
+#define WORKERTHREADCOMBINECHANNELS_H
+#include <QImage>
+#include <QRunnable>
+#include <QThread>
+
+class WorkerThreadCombineChannels: public WorkerThread
+{
+    QVector<QImage*>* greyImageChannels;
+    QImage* out;
+    unsigned int row;
+public:
+    WorkerThreadCombineChannels(QMutex* a_imageMutex, QVector<QImage*>* a_greyImageChannels, QImage* a_out, unsigned int a_row)
+        :WorkerThread(a_imageMutex), greyImageChannels(a_greyImageChannels), out(a_out), row(a_row){};
+    ~WorkerThreadCombineChannels(){};
+    void run(){
+        for(int y = row; y < row+50 && y < (*greyImageChannels)[0]->height(); y++){
+            for(int x = 0; x < (*greyImageChannels)[0]->width(); x++){
+                int redGrey = (*greyImageChannels)[0]->pixelColor(x,y).red();
+                int greenGrey = (*greyImageChannels)[1]->pixelColor(x,y).green();
+                int blueGrey = (*greyImageChannels)[2]->pixelColor(x,y).blue();
+                int durchschnitt = (redGrey + greenGrey + blueGrey)/3;
+                imageMutex->lock();
+                out->setPixelColor(x,y,QColor(durchschnitt,durchschnitt,durchschnitt));
+                imageMutex->unlock();
+            }
+        }
+    };
+};
+
+#endif // WORKERTHREADCOMBINECHANNELS_H

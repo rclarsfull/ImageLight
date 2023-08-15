@@ -12,13 +12,15 @@ SOURCES += \
     canvas.cpp \
     converter.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    perfomancetimer.cpp
     converter.cpp
 
 HEADERS += \
     canvas.h \
     converter.h \
     mainwindow.h \
+    perfomancetimer.h \
     workerthread.h
     converter.h
 

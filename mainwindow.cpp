@@ -3,6 +3,7 @@
 #include <converter.h>
 #include <mainwindow.h>
 #include <qevent.h>
+#include "perfomancetimer.h"
 
 
 
@@ -39,6 +40,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::converte()
 {
+    PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
     image = QImage(fileName);
     greyScaledChannels = Converter::getAsGreyScale(&image);
@@ -49,7 +51,6 @@ void MainWindow::converte()
     newPic = Converter::combineChannels(greyScaledChannels);
     newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
-    qDebug() << (ui->horizontalSlider->sliderPosition()-50.0f)/100+1;
     Converter::greyImageToColorImage(newPic, Converter::getMinGrey(newPic), Converter::getMaxGrey(newPic));
     newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
@@ -59,6 +60,7 @@ void MainWindow::converte()
     originalPic->resize();
     resultPic->resize();
     update();
+    //qDebug() <<timer.getTimeNS();
 
 }
 
