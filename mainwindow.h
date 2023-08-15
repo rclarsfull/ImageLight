@@ -3,6 +3,7 @@
 
 #include "canvas.h"
 #include <QMainWindow>
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,6 +25,7 @@ private:
     QImage* newPic;
     Canvas* originalPic;
     Canvas* resultPic;
+
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void resizeEvent(QResizeEvent *event);

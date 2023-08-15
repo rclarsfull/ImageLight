@@ -55,6 +55,7 @@ QPoint *Canvas::getPressedLocation()
 void Canvas::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+    resize();
     if(!image.isNull()){
         painter.setPen(QPen(Qt::black,3));
         painter.setBrush(QBrush(Qt::SolidPattern));

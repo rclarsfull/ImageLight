@@ -1,8 +1,11 @@
 #include <QMimeData>
-#include "converter.h"
-#include "mainwindow.h"
-#include "qevent.h"
-#include "ui_mainwindow.h"
+#include <ui_mainwindow.h>
+#include <converter.h>
+#include <mainwindow.h>
+#include <qevent.h>
+#include "perfomancetimer.h"
+
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     , newPic(NULL)
     , originalPic(new Canvas())
     , resultPic(new Canvas())
+
 {
     ui->setupUi(this);
     originalPic->setOtherCanvas(resultPic);
@@ -36,6 +40,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::converte()
 {
+    PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
     image = QImage(fileName);
     greyScaledChannels = Converter::getAsGreyScale(&image);
@@ -46,8 +51,7 @@ void MainWindow::converte()
     newPic = Converter::combineChannels(greyScaledChannels);
     newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
-
-    Converter::greyImageToColorImage(newPic);
+    Converter::greyImageToColorImage(newPic, Converter::getMinGrey(newPic), Converter::getMaxGrey(newPic));
     newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 
@@ -56,6 +60,7 @@ void MainWindow::converte()
     originalPic->resize();
     resultPic->resize();
     update();
+    //qDebug() <<timer.getTimeNS();
 
 }
 
