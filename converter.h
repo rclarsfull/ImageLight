@@ -13,21 +13,21 @@ class Converter
 public:
     Converter() = delete;
     Converter(Converter&) = delete;
-    static QVector<QImage*> getAsGreyScale(QImage* originalImage);
-    static QImage* combineChannels(QVector<QImage*> greyImageChannels);
+    static QImage* getAsGreyScale(QImage* originalImage);
     static unsigned int greyToCandela(unsigned int);
     static unsigned int getConversionPresition (unsigned int);
-    static void greyImageToColorImage(QImage* greyImage, unsigned int minGrey, unsigned int maxGrey);
+    static void recolorImage(QImage* image);
     static QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
     static unsigned int getMinGrey(QImage* greyImage){
         unsigned int min = 255;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
                 QColor color = greyImage->pixelColor(x,y);
-                if(color.red() == 0)
+                int durchschnitt = (color.red() + color.green() + color.blue())/3;
+                if(durchschnitt == 0)
                     return 0;
-                if(color.red() < min)
-                    min = color.red();
+                if(durchschnitt < min)
+                    min = durchschnitt;
             }
         }
         return min;
@@ -38,10 +38,11 @@ public:
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
                 QColor color = greyImage->pixelColor(x,y);
-                if(color.red() == 255)
+                int durchschnitt = (color.red() + color.green() + color.blue())/3;
+                if(durchschnitt == 255)
                     return 255;
-                if(color.red() > max)
-                    max = color.red();
+                if(durchschnitt > max)
+                    max = durchschnitt;
             }
         }
         return max;

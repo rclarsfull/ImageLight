@@ -42,25 +42,19 @@ void MainWindow::converte()
 {
     PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
+
     image = QImage(fileName);
-    greyScaledChannels = Converter::getAsGreyScale(&image);
-    //greyScaledChannels[0]->save("redChannel.jpg");
-    //greyScaledChannels[1]->save("greenChannel.jpg");
-    //greyScaledChannels[2]->save("blueChannel.jpg");
+    newPic = new QImage(fileName);
 
-    newPic = Converter::combineChannels(greyScaledChannels);
-    newPic->save(fileName.split(".")[0] + "[gray]." + fileName.split(".")[1]);
-    qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[gray]." + fileName.split(".")[1];
-    Converter::greyImageToColorImage(newPic, Converter::getMinGrey(newPic), Converter::getMaxGrey(newPic));
-    newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
-    qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
-
+    Converter::recolorImage(newPic);
     originalPic->setImage(image);
     resultPic->setImage(*newPic);
     originalPic->resize();
     resultPic->resize();
     update();
-    //qDebug() <<timer.getTimeNS();
+
+    newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
+    qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 
 }
 
