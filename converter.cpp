@@ -75,17 +75,23 @@ void Converter::recolorImage(QImage* image)
     for(int y = 0; y < image->height(); y++){
         for(int x = 0; x < image->width(); x++){
             QColor color = image->pixelColor(x,y);
-            if(color.red() == 255 && color.green() == 255 && color.blue() == 255){
-                //qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist überbelichtet. Verlust von Genauigkeit!";
-                image->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
-            }
-            if(color.red() == 0 && color.green() == 0 && color.blue() == 0){
-                //qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist unterbelichtet. Verlust von Genauigkeit!";
-                image->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
-            }
-            int durchschnitt = (color.red() + color.green() + color.blue())/3;
+            float red = (pow(color.red(),2.2));
+            float green = (pow(color.green(),2.2));
+            float blue = (pow(color.blue(),2.2));
+//            if(color.red() == pow(255,2.2) && color.green() == pow(255,2.2) && color.blue() == pow(255,2.2)){
+//                //qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist überbelichtet. Verlust von Genauigkeit!";
+//                image->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
+//                continue;
+//            }
+//            if(color.red() == 0 && color.green() == 0 && color.blue() == 0){
+//                //qDebug() << "Achtung Pixel [" << x << "; " << y << "] ist unterbelichtet. Verlust von Genauigkeit!";
+//                image->setPixelColor(QPoint(x,y),QColor(255,105,180)); //HotPink
+//                continue;
+//            }
+//            int durchschnitt = pow((red + green + blue)/3 ,1/2.2);
+            int luminance =  pow((red * 0.2126 + green * 0.7152 + blue * 0.0722) ,1/2.2);
 //            workerPool.waitForDone();
-            image->setPixelColor(x,y,Converter::greyToColor(durchschnitt,minGrey,maxGrey));
+            image->setPixelColor(x,y,Converter::greyToColor(luminance,minGrey,maxGrey));
         }
     }
 }
