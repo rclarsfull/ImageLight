@@ -157,7 +157,7 @@ inline QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, un
     double rot = 0, gruen = 0, blau = 0;
 
     double a = (maxGrey-minGrey)/4;
-    double b = (255 + minGrey)/(a*a);
+    double b = 255/(a*a);
 
     if(grey < 3.5*a){
         rot = -(b*(grey-3*a-minGrey)*(grey-3*a-minGrey))+255;
