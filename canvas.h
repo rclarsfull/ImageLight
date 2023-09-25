@@ -1,6 +1,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+#include "drawable.h"
 #include <QLabel>
 #include <QFrame>
 
@@ -11,6 +12,7 @@ class Canvas : public QFrame
     QPoint* pressedLocation;
     Canvas* otherCanvas;
     QLabel* debugLabel;
+    QVector<Drawable*> drawabels;
 public:
     Canvas();
     ~Canvas();
@@ -21,9 +23,12 @@ public:
     void setDebugLabel(QLabel *newDebugLabel);
     void resize();
 
+public slots:
+
 protected:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif // CANVAS_H

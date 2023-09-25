@@ -13,6 +13,7 @@ SOURCES += \
     converter.cpp \
     main.cpp \
     mainwindow.cpp \
+    messurebox.cpp \
     perfomancetimer.cpp
     converter.cpp
 
@@ -20,9 +21,11 @@ HEADERS += \
     canvas.h \
     converter.h \
     mainwindow.h \
+    messurebox.h \
     perfomancetimer.h \
-    workerthread.h
-    converter.h
+    workerthread.h \
+    converter.h \
+    drawable.h
 
 FORMS += \
     mainwindow.ui

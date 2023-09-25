@@ -4,6 +4,7 @@
 #include "canvas.h"
 #include "QPainter"
 #include "converter.h"
+#include "messurebox.h"
 
 
 
@@ -66,6 +67,9 @@ void Canvas::paintEvent(QPaintEvent *event)
             painter.setBrush(QBrush(Qt::NoBrush));
             painter.drawEllipse(*pressedLocation,5,5);
         }
+        for (Drawable* d:drawabels)
+            if(d!=NULL)
+                d->draw(&painter);
     }else{
         painter.setPen(QPen(Qt::black,3));
         painter.setBrush(QBrush(Qt::NoBrush));
@@ -94,4 +98,14 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     debugLabel->setText(QString::fromStdString(debugText.str()));
     update();
     otherCanvas->update();
+}
+
+void Canvas::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(pressedLocation != NULL && *pressedLocation != event->pos()){
+        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &image));
+        pressedLocation = NULL;
+        update();
+    }
+
 }
