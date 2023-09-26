@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , flaschfarbenBild(NULL)
-    , orginalCanvas(new Canvas())
+    , orginalCanvas(new Canvas(true))
     , resultCanvas(new Canvas())
     , isShowingOriginal(false)
 

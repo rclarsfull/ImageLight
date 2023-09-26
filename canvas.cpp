@@ -26,7 +26,14 @@ QVector<Drawable *>& Canvas::getDrawabels()
     return drawabels;
 }
 
-Canvas::Canvas():image(NULL), pressedLocation(NULL), otherCanvas(NULL)
+bool Canvas::getIsOriginalImage() const
+{
+    return isOriginalImage;
+}
+
+
+
+Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), image(NULL), pressedLocation(NULL), otherCanvas(NULL)
 {
 
 }
@@ -65,9 +72,6 @@ void Canvas::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     resize();
     if(!image.isNull()){
-        painter.setPen(QPen(Qt::black,3));
-        painter.setBrush(QBrush(Qt::SolidPattern));
-        painter.drawRect(0,0,width(),height());
         painter.drawImage(QPoint(0,0),resizedImage);
         if(pressedLocation){
             painter.setPen(QPen(Qt::red,1));
@@ -77,11 +81,8 @@ void Canvas::paintEvent(QPaintEvent *event)
         for (Drawable* d:drawabels)
             if(d!=NULL)
                 d->draw(&painter);
-    }else{
-        painter.setPen(QPen(Qt::black,3));
-        painter.setBrush(QBrush(Qt::NoBrush));
-        painter.drawRect(0,0,width(),height());
     }
+
 
 }
 
@@ -111,7 +112,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     debugText << " B: " << resizedImage.pixelColor(*pressedLocation).blue();
 
     unsigned int grey;
-    if(resizedImage.pixelColor(*pressedLocation).green() == resizedImage.pixelColor(*pressedLocation).red() && resizedImage.pixelColor(*pressedLocation).red() == resizedImage.pixelColor(*pressedLocation).green())
+    if(isOriginalImage)
         grey = Converter::colorToGrey(resizedImage.pixelColor(*pressedLocation));
     else
         grey = Converter::colorToGrey(otherCanvas->resizedImage.pixelColor(*pressedLocation));
@@ -127,8 +128,14 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
+    if(isOriginalImage){
         drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
         otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
+    }else{
+        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
+        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
+    }
+
         pressedLocation = NULL;
         update();
         otherCanvas->update();

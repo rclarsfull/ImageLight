@@ -7,6 +7,7 @@
 
 class Canvas : public QFrame
 {
+    bool isOriginalImage;
     QImage image;
     QImage resizedImage;
     QPoint* pressedLocation;
@@ -14,7 +15,7 @@ class Canvas : public QFrame
     QLabel* debugLabel;
     QVector<Drawable*> drawabels;
 public:
-    Canvas();
+    Canvas(bool isOriginalImage = false);
     ~Canvas();
     void setImage(const QImage &newImage);
     void setOtherCanvas(Canvas* other);
@@ -24,6 +25,9 @@ public:
     void resize();
 
     QVector<Drawable *>& getDrawabels();
+
+    bool getIsOriginalImage() const;
+
 
 public slots:
 

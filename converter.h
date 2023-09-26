@@ -1,6 +1,7 @@
 #ifndef CONVERTER_H
 #define CONVERTER_H
 
+#include "perfomancetimer.h"
 #include <QImage>
 #include <QColor>
 #include <QThreadPool>
@@ -16,9 +17,10 @@ public:
     static unsigned int greyToCandela(unsigned int);
     static unsigned int getConversionPresition (unsigned int);
     static void recolorImage(QImage* image);
-    static QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
+    static inline QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
     static unsigned int colorToGrey(QColor color);
     static unsigned int getMinGrey(QImage* greyImage){
+        PerfomanceTimer timer("min");
         unsigned int min = 255;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
@@ -33,6 +35,7 @@ public:
     };
     static unsigned int getMaxGrey(QImage* greyImage)
     {
+        PerfomanceTimer timer("max");
         unsigned int max = 0;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
