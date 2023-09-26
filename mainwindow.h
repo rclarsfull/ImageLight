@@ -19,12 +19,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QImage image;
-    QImage greyScalePic;
-    QVector<QImage*> greyScaledChannels;
-    QImage* newPic;
-    Canvas* originalPic;
-    Canvas* resultPic;
+    QImage image;   
+    QImage* flaschfarbenBild;
+    Canvas* orginalCanvas;
+    Canvas* resultCanvas;
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);

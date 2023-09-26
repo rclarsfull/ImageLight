@@ -11,30 +11,27 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , newPic(NULL)
-    , originalPic(new Canvas())
-    , resultPic(new Canvas())
+    , flaschfarbenBild(NULL)
+    , orginalCanvas(new Canvas())
+    , resultCanvas(new Canvas())
 
 {
     ui->setupUi(this);
-    originalPic->setOtherCanvas(resultPic);
-    resultPic->setOtherCanvas(originalPic);
-    ui->verticalLayout_3->replaceWidget(ui->frame,originalPic);
-    ui->verticalLayout_3->replaceWidget(ui->frame_2,resultPic);
+    orginalCanvas->setOtherCanvas(resultCanvas);
+    resultCanvas->setOtherCanvas(orginalCanvas);
+    ui->verticalLayout_3->replaceWidget(ui->frame,orginalCanvas);
+    ui->verticalLayout_3->replaceWidget(ui->frame_2,resultCanvas);
     delete ui->frame;
     delete ui->frame_2;
-    originalPic->setDebugLabel(ui->label);
-    resultPic->setDebugLabel(ui->label);
+    orginalCanvas->setDebugLabel(ui->label);
+    resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()
 {
-    if(newPic != NULL)
-        delete newPic;
-    delete greyScaledChannels[0];
-    delete greyScaledChannels[1];
-    delete greyScaledChannels[2];
+    if(flaschfarbenBild != NULL)
+        delete flaschfarbenBild;
     delete ui;
 }
 
@@ -44,16 +41,16 @@ void MainWindow::converte()
     QString fileName = ui->lineEdit->text();
 
     image = QImage(fileName);
-    newPic = new QImage(fileName);
+    flaschfarbenBild = new QImage(fileName);
 
-    Converter::recolorImage(newPic);
-    originalPic->setImage(image);
-    resultPic->setImage(*newPic);
-    originalPic->resize();
-    resultPic->resize();
+    Converter::recolorImage(flaschfarbenBild);
+    orginalCanvas->setImage(image);
+    resultCanvas->setImage(*flaschfarbenBild);
+    orginalCanvas->resize();
+    resultCanvas->resize();
     update();
 
-    newPic->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
+    flaschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 
 }
@@ -77,8 +74,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    originalPic->resize();
-    resultPic->resize();
+    orginalCanvas->resize();
+    resultCanvas->resize();
     update();
 }
 

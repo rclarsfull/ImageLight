@@ -80,6 +80,15 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
+    bool delAction = false;
+    for (Drawable*& d:drawabels){
+        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+            delete d;
+            d = NULL;
+            delAction = true;
+        }
+    }
+    if(!delAction){
     setPressedLocation(new QPoint(event->pos()));
     otherCanvas->setPressedLocation(new QPoint(event->pos()));
     std::stringstream debugText;
@@ -89,13 +98,14 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
     unsigned int grey;
     if(resizedImage.pixelColor(*pressedLocation).green() == resizedImage.pixelColor(*pressedLocation).red() && resizedImage.pixelColor(*pressedLocation).red() == resizedImage.pixelColor(*pressedLocation).green())
-        grey =resizedImage.pixelColor(*pressedLocation).red();
+        grey = Converter::colorToGrey(resizedImage.pixelColor(*pressedLocation));
     else
-        grey = otherCanvas->resizedImage.pixelColor(*pressedLocation).red();
+        grey = Converter::colorToGrey(otherCanvas->resizedImage.pixelColor(*pressedLocation));
     debugText << "\tGrauwert Pixel:  " << grey;
     debugText << "\tCandela: " << Converter::greyToCandela(grey);
     debugText << "[+/- " << Converter::getConversionPresition(grey) << " ]";
     debugLabel->setText(QString::fromStdString(debugText.str()));
+    }
     update();
     otherCanvas->update();
 }

@@ -41,7 +41,8 @@ unsigned int Converter::greyToCandela(unsigned int grey){
 //        candela = 0;
 //    if (candela > 4000)
 //        candela = 4000;
-    return candela;
+    //return candela;
+    return grey;
 }
 
 unsigned int Converter::getConversionPresition(unsigned int grey)

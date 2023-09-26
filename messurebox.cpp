@@ -20,5 +20,5 @@ void MessureBox::draw(QPainter *painter)
             sum += Converter::greyToCandela(Converter::greyToCandela(Converter::colorToGrey(image->pixelColor(origen.x()+i,origen.y()+y))));
         }
     }
-    painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(sum/(xSize*ySize)));
+    painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(qRound(sum/(xSize*ySize))));
 }
