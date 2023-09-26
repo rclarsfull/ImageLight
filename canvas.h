@@ -23,6 +23,8 @@ public:
     void setDebugLabel(QLabel *newDebugLabel);
     void resize();
 
+    QVector<Drawable *>& getDrawabels();
+
 public slots:
 
 protected:

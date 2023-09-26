@@ -47,7 +47,7 @@ unsigned int Converter::greyToCandela(unsigned int grey){
 
 unsigned int Converter::getConversionPresition(unsigned int grey)
 {
-    PerfomanceTimer timer("getConversionPresition");
+    //PerfomanceTimer timer("getConversionPresition");
     int candela = 0.002*grey*grey*grey - 0.0382*grey*grey + 4.224*grey - 4.073;
     int before, after;
     if(grey > 0){

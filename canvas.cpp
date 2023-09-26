@@ -18,6 +18,12 @@ void Canvas::resize()
 {
     if(!image.isNull())
         resizedImage = image.scaledToWidth(width(),Qt::SmoothTransformation);
+
+}
+
+QVector<Drawable *>& Canvas::getDrawabels()
+{
+    return drawabels;
 }
 
 Canvas::Canvas():image(NULL), pressedLocation(NULL), otherCanvas(NULL)
@@ -34,6 +40,7 @@ Canvas::~Canvas()
 void Canvas::setImage(const QImage &newImage)
 {
     image = newImage;
+    resize();
 }
 
 void Canvas::setOtherCanvas(Canvas *other)
@@ -88,11 +95,18 @@ void Canvas::mousePressEvent(QMouseEvent *event)
             delAction = true;
         }
     }
+    for (Drawable*& d:otherCanvas->getDrawabels()){
+        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+            delete d;
+            d = NULL;
+            delAction = true;
+        }
+    }
     if(!delAction){
     setPressedLocation(new QPoint(event->pos()));
     otherCanvas->setPressedLocation(new QPoint(event->pos()));
     std::stringstream debugText;
-    debugText << "Ausgewähltes Pixel: R: " << image.pixelColor(*pressedLocation).red();
+    debugText << "Ausgewähltes Pixel: R: " << resizedImage.pixelColor(*pressedLocation).red();
     debugText << " G: " << resizedImage.pixelColor(*pressedLocation).green();
     debugText << " B: " << resizedImage.pixelColor(*pressedLocation).blue();
 
@@ -112,10 +126,12 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(pressedLocation != NULL && *pressedLocation != event->pos()){
-        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &image));
+    if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
+        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
+        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
         pressedLocation = NULL;
         update();
+        otherCanvas->update();
     }
 
 }

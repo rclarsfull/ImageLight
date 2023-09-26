@@ -23,6 +23,7 @@ private:
     QImage* flaschfarbenBild;
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
+    bool isShowingOriginal;
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);

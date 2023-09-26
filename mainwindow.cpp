@@ -14,15 +14,18 @@ MainWindow::MainWindow(QWidget *parent)
     , flaschfarbenBild(NULL)
     , orginalCanvas(new Canvas())
     , resultCanvas(new Canvas())
+    , isShowingOriginal(false)
 
 {
     ui->setupUi(this);
     orginalCanvas->setOtherCanvas(resultCanvas);
     resultCanvas->setOtherCanvas(orginalCanvas);
-    ui->verticalLayout_3->replaceWidget(ui->frame,orginalCanvas);
-    ui->verticalLayout_3->replaceWidget(ui->frame_2,resultCanvas);
-    delete ui->frame;
-    delete ui->frame_2;
+    ui->tabWidget->removeTab(1);
+    ui->tabWidget->removeTab(0);
+    ui->tabWidget->addTab(orginalCanvas," Original");
+    ui->tabWidget->addTab(resultCanvas,"Falschfarben");
+    ui->tabWidget->setTabPosition(QTabWidget::South);
+
     orginalCanvas->setDebugLabel(ui->label);
     resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
@@ -54,6 +57,8 @@ void MainWindow::converte()
     qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
 
 }
+
+
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
