@@ -9,12 +9,10 @@
 
 
 
-void Converter::recolorImage(QImage* image)
+void Converter::recolorImage(QImage* image, int minGrey, int maxGrey)
 {
     PerfomanceTimer timer("recolorImage");
-    int minGrey = 0, maxGrey = 255;
-    minGrey = Converter::getMinGrey(image);
-    maxGrey = Converter::getMaxGrey(image);
+
     qDebug() << minGrey << " : " <<maxGrey;
 
     for(int y = 0; y < image->height(); y++){
@@ -66,17 +64,28 @@ unsigned int Converter::getConversionPresition(unsigned int grey)
 inline QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey)
 {
     //PerfomanceTimer timer("greyToColor");
+    if(grey > maxGrey)
+        return QColor(255,255,255);
+    if(grey < minGrey)
+        return QColor(0,0,0);
+
     double rot = 0, gruen = 0, blau = 0;
 
     double a = (maxGrey-minGrey)/4;
     double b = 255/(a*a);
 
-    if(grey < 3.5*a){
+    if(grey < (minGrey + 3*a)){
         rot = -(b*(grey-3*a-minGrey)*(grey-3*a-minGrey))+255;
         gruen = -(b*(grey-2*a-minGrey)*(grey-2*a-minGrey))+255;
         blau = -(b*(grey-a-minGrey)*(grey-a-minGrey))+255;
+    }else if(grey < (minGrey + 3*a)){
+        rot = 255;
+        gruen = 0;
+        blau = -(b*(grey-4*a-minGrey)*(grey-4*a-minGrey))+255;
     }else{
-        rot = blau = gruen = -(b*(grey-4*a-minGrey)*(grey-4*a-minGrey))+255;
+        rot = 255;
+        blau = -(b*(grey-4*a-minGrey)*(grey-4*a-minGrey))+255;
+        gruen = -(b*(grey-4.5*a-minGrey)*(grey-4*a-minGrey))+255;
     }
 
 

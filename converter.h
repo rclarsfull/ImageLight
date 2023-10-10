@@ -16,7 +16,7 @@ public:
     Converter(Converter&) = delete;
     static unsigned int greyToCandela(unsigned int);
     static unsigned int getConversionPresition (unsigned int);
-    static void recolorImage(QImage* image);
+    static void recolorImage(QImage* image, int minGrey, int maxGrey);
     static inline QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
     static unsigned int colorToGrey(QColor color);
     static unsigned int getMinGrey(QImage* greyImage){
@@ -24,7 +24,7 @@ public:
         unsigned int min = 255;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
-                int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
+                unsigned int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
                 if(durchschnitt == 0)
                     return 0;
                 if(durchschnitt < min)
@@ -39,7 +39,7 @@ public:
         unsigned int max = 0;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
-                int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
+                unsigned int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
                 if(durchschnitt == 255)
                     return 255;
                 if(durchschnitt > max)

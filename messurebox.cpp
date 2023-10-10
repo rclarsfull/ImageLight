@@ -14,11 +14,14 @@ void MessureBox::draw(QPainter *painter)
     painter->drawEllipse(origen,5,5);
     painter->setPen(QPen(Qt::white,2,Qt::SolidLine));
     painter->drawText(origen+QPoint(-4,4),"X");
-    double sum = 0;
-    for(int i = 0; i<xSize; i++){
-        for(int y = 0; y < ySize; y++){
-            sum += Converter::greyToCandela(Converter::greyToCandela(Converter::colorToGrey(image->pixelColor(origen.x()+i,origen.y()+y))));
+
+    if(image != NULL){
+        double sum = 0;
+        for(int i = 0; i<xSize; i++){
+            for(int y = 0; y < ySize; y++){
+                sum += Converter::greyToCandela(Converter::greyToCandela(Converter::colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y))));
+            }
         }
+        painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(qRound(sum/(xSize*ySize))));
     }
-    painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(qRound(sum/(xSize*ySize))));
 }

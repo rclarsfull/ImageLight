@@ -8,8 +8,9 @@
 class Canvas : public QFrame
 {
     bool isOriginalImage;
-    QImage image;
-    QImage resizedImage;
+    int minGrey, maxGrey;
+    QImage* image;
+    QImage* resizedImage;
     QPoint* pressedLocation;
     Canvas* otherCanvas;
     QLabel* debugLabel;
@@ -17,7 +18,7 @@ class Canvas : public QFrame
 public:
     Canvas(bool isOriginalImage = false);
     ~Canvas();
-    void setImage(const QImage &newImage);
+    void setImage(QImage *newImage);
     void setOtherCanvas(Canvas* other);
     void setPressedLocation(QPoint* point);
     QPoint* getPressedLocation();
@@ -28,6 +29,14 @@ public:
 
     bool getIsOriginalImage() const;
 
+
+    QImage* getImage();
+
+    int getMinGrey() const;
+    void setMinGrey(int newMinGrey);
+
+    int getMaxGrey() const;
+    void setMaxGrey(int newMaxGrey);
 
 public slots:
 

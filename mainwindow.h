@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QImage image;   
+    QImage* image;
     QImage* flaschfarbenBild;
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
@@ -31,5 +31,7 @@ private:
 
 private slots:
     void converte();
+    void sliderEvent();
+    void speichernUnter();
 };
 #endif // MAINWINDOW_H

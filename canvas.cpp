@@ -16,9 +16,15 @@ void Canvas::setDebugLabel(QLabel *newDebugLabel)
 
 void Canvas::resize()
 {
-    if(!image.isNull())
-        resizedImage = image.scaledToWidth(width(),Qt::SmoothTransformation);
-
+    if(image != NULL){
+        if(resizedImage != NULL)
+            delete resizedImage;
+        if(otherCanvas->resizedImage != NULL)
+            delete otherCanvas->resizedImage;
+        resizedImage = new QImage(image->scaledToWidth(width()-75,Qt::SmoothTransformation));
+        otherCanvas->resizedImage = new QImage(otherCanvas->image->scaledToWidth(width()-75,Qt::SmoothTransformation));
+    }else
+        qDebug() << "Fehler Image Null resize ignored";
 }
 
 QVector<Drawable *>& Canvas::getDrawabels()
@@ -33,7 +39,32 @@ bool Canvas::getIsOriginalImage() const
 
 
 
-Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), image(NULL), pressedLocation(NULL), otherCanvas(NULL)
+QImage* Canvas::getImage()
+{
+    return image;
+}
+
+int Canvas::getMinGrey() const
+{
+    return minGrey;
+}
+
+void Canvas::setMinGrey(int newMinGrey)
+{
+    minGrey = newMinGrey;
+}
+
+int Canvas::getMaxGrey() const
+{
+    return maxGrey;
+}
+
+void Canvas::setMaxGrey(int newMaxGrey)
+{
+    maxGrey = newMaxGrey;
+}
+
+Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), image(NULL), resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL)
 {
 
 }
@@ -44,10 +75,9 @@ Canvas::~Canvas()
         delete pressedLocation;
 }
 
-void Canvas::setImage(const QImage &newImage)
+void Canvas::setImage(QImage *newImage)
 {
     image = newImage;
-    resize();
 }
 
 void Canvas::setOtherCanvas(Canvas *other)
@@ -71,8 +101,8 @@ void Canvas::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     resize();
-    if(!image.isNull()){
-        painter.drawImage(QPoint(0,0),resizedImage);
+    if(image != NULL){
+        painter.drawImage(QPoint(0,0),*resizedImage);
         if(pressedLocation){
             painter.setPen(QPen(Qt::red,1));
             painter.setBrush(QBrush(Qt::NoBrush));
@@ -81,9 +111,22 @@ void Canvas::paintEvent(QPaintEvent *event)
         for (Drawable* d:drawabels)
             if(d!=NULL)
                 d->draw(&painter);
+
+        painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
+        painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
+        int tmp = height() /(maxGrey-minGrey);
+        for (int i = minGrey; i < maxGrey; i++){
+            painter.setPen(QPen(Converter::greyToColor(i,minGrey,maxGrey),1));
+            painter.setBrush(QBrush(Converter::greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
+            painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * tmp ),QPoint(width()-25,(i+tmp)*tmp)));
+            if(i%10 == 0){
+                painter.setPen(QPen(Qt::white,3));
+                painter.drawText(QPoint(width()-20,i * tmp)+QPoint(-4,4),QString::number(Converter::greyToCandela(i)));
+            }
+        }
+//        painter.setPen(QPen(Qt::yellow,3));
+//        painter.drawLine(QPoint(resizedImage->width(),minGrey*tmp),QPoint(width(),minGrey*tmp));
     }
-
-
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
@@ -107,15 +150,17 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     setPressedLocation(new QPoint(event->pos()));
     otherCanvas->setPressedLocation(new QPoint(event->pos()));
     std::stringstream debugText;
-    debugText << "Ausgewähltes Pixel: R: " << resizedImage.pixelColor(*pressedLocation).red();
-    debugText << " G: " << resizedImage.pixelColor(*pressedLocation).green();
-    debugText << " B: " << resizedImage.pixelColor(*pressedLocation).blue();
+    debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
+                                              debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
+    debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
 
     unsigned int grey;
+    resize();
+    otherCanvas->resize();
     if(isOriginalImage)
-        grey = Converter::colorToGrey(resizedImage.pixelColor(*pressedLocation));
+            grey = Converter::colorToGrey(resizedImage->pixelColor(*pressedLocation));
     else
-        grey = Converter::colorToGrey(otherCanvas->resizedImage.pixelColor(*pressedLocation));
+            grey = Converter::colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
     debugText << "\tGrauwert Pixel:  " << grey;
     debugText << "\tCandela: " << Converter::greyToCandela(grey);
     debugText << "[+/- " << Converter::getConversionPresition(grey) << " ]";
@@ -129,9 +174,11 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
     if(isOriginalImage){
+        resize();
         drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
         otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
     }else{
+        otherCanvas->resize();
         drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
         otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
     }
