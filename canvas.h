@@ -15,6 +15,7 @@ class Canvas : public QFrame
     Canvas* otherCanvas;
     QLabel* debugLabel;
     QVector<Drawable*> drawabels;
+    QImage canvas;
 public:
     Canvas(bool isOriginalImage = false);
     ~Canvas();
@@ -37,6 +38,8 @@ public:
 
     int getMaxGrey() const;
     void setMaxGrey(int newMaxGrey);
+
+    QImage* getCanvas();
 
 public slots:
 

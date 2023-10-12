@@ -64,7 +64,12 @@ void Canvas::setMaxGrey(int newMaxGrey)
     maxGrey = newMaxGrey;
 }
 
-Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), image(NULL), resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL)
+QImage *Canvas::getCanvas()
+{
+    return &canvas;
+}
+
+Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), image(NULL), resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas()
 {
 
 }
@@ -99,7 +104,9 @@ QPoint *Canvas::getPressedLocation()
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
+    QPainter finalPainter(this);
+    canvas = QImage(width(),height(), QImage::Format_RGB888);
+    QPainter painter(&canvas);
     resize();
     if(image != NULL){
         painter.drawImage(QPoint(0,0),*resizedImage);
@@ -114,18 +121,22 @@ void Canvas::paintEvent(QPaintEvent *event)
 
         painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
         painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
-        int tmp = height() /(maxGrey-minGrey);
+        int scaleFactor = height() /(maxGrey-minGrey);
+        int space = (height()-(maxGrey-minGrey)*scaleFactor)/2;
         for (int i = minGrey; i < maxGrey; i++){
+
             painter.setPen(QPen(Converter::greyToColor(i,minGrey,maxGrey),1));
             painter.setBrush(QBrush(Converter::greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
-            painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * tmp ),QPoint(width()-25,(i+tmp)*tmp)));
+            painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
             if(i%10 == 0){
-                painter.setPen(QPen(Qt::white,3));
-                painter.drawText(QPoint(width()-20,i * tmp)+QPoint(-4,4),QString::number(Converter::greyToCandela(i)));
+                painter.setPen(QPen(Qt::white,1));
+                painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(Converter::greyToCandela(i)));
             }
+
         }
 //        painter.setPen(QPen(Qt::yellow,3));
 //        painter.drawLine(QPoint(resizedImage->width(),minGrey*tmp),QPoint(width(),minGrey*tmp));
+        finalPainter.drawImage(QPoint(0,0),canvas);
     }
 }
 

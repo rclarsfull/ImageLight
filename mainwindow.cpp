@@ -93,9 +93,8 @@ void MainWindow::speichernUnter()
     if(flaschfarbenBild != NULL){
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                     "/home/jana/untitled.png",
-                                                    tr("Images (*.png *.xpm *.jpg)"));
-    flaschfarbenBild->save(fileName);
-
+                                                    tr("Images (*.png *.jpg)"));
+        qDebug() << resultCanvas->getCanvas()->save(fileName);
     }
 
 }
