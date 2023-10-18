@@ -5,6 +5,7 @@
 #include "QPainter"
 #include "converter.h"
 #include "messurebox.h"
+#include "mainwindow.h"
 
 
 
@@ -69,9 +70,9 @@ QImage *Canvas::getCanvas()
     return &canvas;
 }
 
-Canvas::Canvas(bool isOriginalImage):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), image(NULL), resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas()
+Canvas::Canvas(bool isOriginalImage, Converter *converter):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), converter(converter), image(NULL),
+    resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas()
 {
-
 }
 
 Canvas::~Canvas()
@@ -125,17 +126,15 @@ void Canvas::paintEvent(QPaintEvent *event)
         int space = (height()-(maxGrey-minGrey)*scaleFactor)/2;
         for (int i = minGrey; i < maxGrey; i++){
 
-            painter.setPen(QPen(Converter::greyToColor(i,minGrey,maxGrey),1));
-            painter.setBrush(QBrush(Converter::greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
+            painter.setPen(QPen(converter->greyToColor(i,minGrey,maxGrey),1));
+            painter.setBrush(QBrush(converter->greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
             painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
             if(i%10 == 0){
                 painter.setPen(QPen(Qt::white,1));
-                painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(Converter::greyToCandela(i)));
+                painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(converter->greyToCandela(i)));
             }
 
         }
-//        painter.setPen(QPen(Qt::yellow,3));
-//        painter.drawLine(QPoint(resizedImage->width(),minGrey*tmp),QPoint(width(),minGrey*tmp));
         finalPainter.drawImage(QPoint(0,0),canvas);
     }
 }
@@ -169,12 +168,12 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     resize();
     otherCanvas->resize();
     if(isOriginalImage)
-            grey = Converter::colorToGrey(resizedImage->pixelColor(*pressedLocation));
+            grey = converter->colorToGrey(resizedImage->pixelColor(*pressedLocation));
     else
-            grey = Converter::colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
+            grey = converter->colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
     debugText << "\tGrauwert Pixel:  " << grey;
-    debugText << "\tCandela: " << Converter::greyToCandela(grey);
-    debugText << "[+/- " << Converter::getConversionPresition(grey) << " ]";
+    debugText << "\tCandela: " << converter->greyToCandela(grey);
+    debugText << "[+/- " << converter->getConversionPresition(grey) << " ]";
     debugLabel->setText(QString::fromStdString(debugText.str()));
     }
     update();
@@ -186,12 +185,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
     if(isOriginalImage){
         resize();
-        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
-        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage));
+        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter));
+        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter));
     }else{
         otherCanvas->resize();
-        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
-        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage));
+        drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter));
+        otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter));
     }
 
         pressedLocation = NULL;

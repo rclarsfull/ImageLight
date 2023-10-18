@@ -1,13 +1,12 @@
-#include "messurebox.h"
+#include "referencebox.h"
 #include "converter.h"
 
-
-void MessureBox::draw(QPainter *painter)
+void ReferenceBox::draw(QPainter *painter)
 {
     int xSize = end.x() - origen.x();
     int ySize = end.y() - origen.y();
     painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(Qt::yellow,2,Qt::DashDotDotLine));
+    painter->setPen(QPen(Qt::red,2,Qt::DashDotDotLine));
     painter->drawRect(origen.x(),origen.y(), xSize, ySize);
     painter->setBrush(QBrush(Qt::red, Qt::SolidPattern));
     painter->setPen(QPen(Qt::red,2,Qt::SolidLine));
@@ -21,8 +20,13 @@ void MessureBox::draw(QPainter *painter)
             for(int y = 0; y < ySize; y++){
                 sum += converter->greyToCandela(converter->colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y)));
             }
-
         }
-        painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(static_cast<double>(sum/(xSize*ySize))));
+        avgGrey = sum/(xSize*ySize);
+        painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),QString::number(avgGrey));
     }
+}
+
+int ReferenceBox::getAvgGrey()
+{
+    return avgGrey;
 }

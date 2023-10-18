@@ -14,7 +14,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     messurebox.cpp \
-    perfomancetimer.cpp
+    perfomancetimer.cpp \
+    referencebox.cpp
     converter.cpp
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     mainwindow.h \
     messurebox.h \
     perfomancetimer.h \
+    referencebox.h \
     workerthread.h \
     converter.h \
     drawable.h

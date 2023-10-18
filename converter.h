@@ -4,27 +4,30 @@
 #include "perfomancetimer.h"
 #include <QImage>
 #include <QColor>
-#include <QThreadPool>
-#include <QMutex>
+//#include <QThreadPool>
+//#include <QMutex>
 
+class MainWindow;
 class Converter
 {
-    static QThreadPool workerPool;
-    static QMutex imageMutex;
+    //static QThreadPool workerPool;
+   // static QMutex imageMutex;
+    MainWindow* mainWindow ;
 public:
-    Converter() = delete;
-    Converter(Converter&) = delete;
-    static unsigned int greyToCandela(unsigned int);
-    static unsigned int getConversionPresition (unsigned int);
-    static void recolorImage(QImage* image, int minGrey, int maxGrey);
-    static inline QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
-    static unsigned int colorToGrey(QColor color);
-    static unsigned int getMinGrey(QImage* greyImage){
+    Converter(MainWindow* mainWindow):mainWindow(mainWindow){};
+    Converter(Converter&);
+
+    unsigned int greyToCandela(unsigned int);
+    unsigned int getConversionPresition (unsigned int);
+    void recolorImage(QImage* image, int minGrey, int maxGrey);
+    inline QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
+    unsigned int colorToGrey(QColor color);
+    unsigned int getMinGrey(QImage* greyImage){
         PerfomanceTimer timer("min");
         unsigned int min = 255;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
-                unsigned int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
+                unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
                 if(durchschnitt == 0)
                     return 0;
                 if(durchschnitt < min)
@@ -33,13 +36,13 @@ public:
         }
         return min;
     };
-    static unsigned int getMaxGrey(QImage* greyImage)
+    unsigned int getMaxGrey(QImage* greyImage)
     {
         PerfomanceTimer timer("max");
         unsigned int max = 0;
         for(int y = 0; y < greyImage->height(); y++){
             for(int x = 0; x < greyImage->width(); x++){
-                unsigned int durchschnitt = Converter::colorToGrey(greyImage->pixelColor(x,y));
+                unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
                 if(durchschnitt == 255)
                     return 255;
                 if(durchschnitt > max)

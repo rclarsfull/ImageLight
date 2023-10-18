@@ -4,11 +4,12 @@
 #include "drawable.h"
 #include <QLabel>
 #include <QFrame>
-
+class MainWindow;
 class Canvas : public QFrame
 {
     bool isOriginalImage;
     int minGrey, maxGrey;
+    Converter* converter;
     QImage* image;
     QImage* resizedImage;
     QPoint* pressedLocation;
@@ -16,8 +17,9 @@ class Canvas : public QFrame
     QLabel* debugLabel;
     QVector<Drawable*> drawabels;
     QImage canvas;
+
 public:
-    Canvas(bool isOriginalImage = false);
+    Canvas(bool isOriginalImage, Converter* converter);
     ~Canvas();
     void setImage(QImage *newImage);
     void setOtherCanvas(Canvas* other);

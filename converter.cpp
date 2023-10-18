@@ -6,7 +6,7 @@
 #include "converter.h"
 #include "workerthread.h"
 #include "perfomancetimer.h"
-
+#include "mainwindow.h"
 
 
 void Converter::recolorImage(QImage* image, int minGrey, int maxGrey)
@@ -32,16 +32,18 @@ unsigned int Converter::colorToGrey(QColor color){
     return luminance;
 }
 
+
 unsigned int Converter::greyToCandela(unsigned int grey){
+    if(mainWindow->getMode() == withoutReference)
+        return 0.0145*grey*grey + 0.1628*grey + 22.017;
+    else
+        return grey+mainWindow->getReferenceValue();
     //PerfomanceTimer timer("greyToCandela");
-    int candela = 0.002*grey*grey*grey - 0.0382*grey*grey + 4.224*grey - 4.073;
-//    if (candela < 0)
-//        candela = 0;
-//    if (candela > 4000)
-//        candela = 4000;
-    //return candela;
-    return grey;
+    //return 0.0185*grey*grey - 0.753*grey + 47.205;
+    // return 23.806 * qExp(0.0189*grey);
+    // return grey;
 }
+
 
 unsigned int Converter::getConversionPresition(unsigned int grey)
 {

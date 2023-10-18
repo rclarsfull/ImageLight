@@ -81,6 +81,34 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Referenzpunkt:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QCheckBox" name="referenceCheckBox">
+        <property name="text">
+         <string>Referenzpunkt nutzen</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="referenceLineEdit"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="berreichSetzenButton">
+        <property name="text">
+         <string>Berreich setzen</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QLabel" name="label_2">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -211,10 +239,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>referenceCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>395</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>berreichSetzenButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectReference()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>452</x>
+     <y>395</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>converte()</slot>
   <slot>sliderEvent()</slot>
   <slot>speichernUnter()</slot>
+  <slot>changeMode()</slot>
+  <slot>selectReference()</slot>
  </slots>
 </ui>

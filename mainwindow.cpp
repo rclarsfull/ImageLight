@@ -11,13 +11,14 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , mode(withoutReference)
     , ui(new Ui::MainWindow)
     , image(NULL)
     , flaschfarbenBild(NULL)
-    , orginalCanvas(new Canvas(true))
-    , resultCanvas(new Canvas())
+    , orginalCanvas(new Canvas(true, &converter))
+    , resultCanvas(new Canvas(false, &converter))
+    , converter(this)
     , isShowingOriginal(false)
-
 {
     ui->setupUi(this);
     orginalCanvas->setOtherCanvas(resultCanvas);
@@ -31,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
     orginalCanvas->setDebugLabel(ui->label);
     resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
+
+    ui->referenceLineEdit->setDisabled(true);
+    ui->berreichSetzenButton->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -44,6 +48,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+programmModes MainWindow::getMode()
+{
+    return mode;
+}
+
+int MainWindow::getReferenceValue()
+{
+    if(ui->referenceLineEdit->text() == "" )
+        return 0;
+
+    bool ok;
+    int reference = ui->referenceLineEdit->text().toInt(&ok);
+    if(ok)
+        return reference;
+    else{
+        qDebug() << "Error: Reference not an Integer! replaced with 0";
+        return 0;
+    }
+}
+
+
 void MainWindow::converte()
 {
     PerfomanceTimer timer("Converte Time");
@@ -52,24 +77,19 @@ void MainWindow::converte()
     image = new QImage(fileName);
     flaschfarbenBild = new QImage(fileName);
     int minGrey = 0, maxGrey = 255;
-    minGrey = Converter::getMinGrey(flaschfarbenBild);
-    maxGrey = Converter::getMaxGrey(flaschfarbenBild);
+    minGrey = converter.getMinGrey(flaschfarbenBild);
+    maxGrey = converter.getMaxGrey(flaschfarbenBild);
     ui->minSlider->setSliderPosition(minGrey);
     ui->maxSlider->setSliderPosition(maxGrey);
     orginalCanvas->setMaxGrey(maxGrey);
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    Converter::recolorImage(flaschfarbenBild,minGrey,maxGrey);
+    converter.recolorImage(flaschfarbenBild,minGrey,maxGrey);
     orginalCanvas->setImage(image);
     resultCanvas->setImage(flaschfarbenBild);
-//    orginalCanvas->resize();
-//    resultCanvas->resize();
     update();
-
     flaschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
-    //qDebug() << "Picture saved as:" << fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1];
-
 }
 
 void MainWindow::sliderEvent()
@@ -84,7 +104,7 @@ void MainWindow::sliderEvent()
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    Converter::recolorImage(resultCanvas->getImage(),minGrey,maxGrey);
+    converter.recolorImage(resultCanvas->getImage(),minGrey,maxGrey);
     resultCanvas->update();
 }
 
@@ -97,6 +117,24 @@ void MainWindow::speichernUnter()
         qDebug() << resultCanvas->getCanvas()->save(fileName);
     }
 
+}
+
+void MainWindow::changeMode()
+{
+    if(ui->referenceCheckBox->isChecked())
+        mode = withReference;
+    else
+        mode = withoutReference;
+
+    ui->referenceLineEdit->setDisabled(mode == withoutReference);
+    ui->berreichSetzenButton->setDisabled(mode == withoutReference);
+    qDebug() << "mode changed: " << mode;
+}
+
+void MainWindow::selectReference()
+{
+    mode = referenceSelection;
+    qDebug() << "mode changed: " << mode;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -122,6 +160,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 //    resultCanvas->resize();
     update();
 }
+
+
 
 
 
