@@ -10,8 +10,8 @@ class ReferenceBox: public Drawable
 public:
     ReferenceBox():Drawable(){};
     ReferenceBox(QPoint origen, QPoint end, QImage** image, Converter* converter):Drawable(origen, converter), end(end), image(image){};
-    virtual ~ReferenceBox(){};
-    virtual void draw(QPainter* painter);
+    ~ReferenceBox(){};
+    void draw(QPainter* painter);
     int getAvgGrey();
 };
 

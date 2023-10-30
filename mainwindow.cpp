@@ -1,13 +1,10 @@
+#include "perfomancetimer.h"
 #include <QMimeData>
 #include <ui_mainwindow.h>
 #include <converter.h>
 #include <mainwindow.h>
 #include <qevent.h>
 #include <QFileDialog>
-#include "perfomancetimer.h"
-
-
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,11 +43,6 @@ MainWindow::~MainWindow()
         delete image;
 
     delete ui;
-}
-
-programmModes MainWindow::getMode()
-{
-    return mode;
 }
 
 int MainWindow::getReferenceValue()
@@ -161,7 +153,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     update();
 }
 
-
+programmModes MainWindow::getMode()
+{
+    return mode;
+}
 
 
 

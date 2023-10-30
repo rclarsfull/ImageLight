@@ -1,12 +1,13 @@
+#include "converter.h"
+#include "workerthread.h"
+#include "perfomancetimer.h"
+#include "mainwindow.h"
 #include <QDebug>
 #include <QColor>
 #include <math.h>
 #include <QVector3D>
 #include <QThread>
-#include "converter.h"
-#include "workerthread.h"
-#include "perfomancetimer.h"
-#include "mainwindow.h"
+
 
 
 void Converter::recolorImage(QImage* image, int minGrey, int maxGrey)
@@ -30,6 +31,37 @@ unsigned int Converter::colorToGrey(QColor color){
     float blue = (pow(color.blue(),2.2));
     int luminance =  pow((red * 0.2126 + green * 0.7152 + blue * 0.0722) ,1/2.2);
     return luminance;
+}
+
+unsigned int Converter::getMinGrey(QImage *greyImage){
+    PerfomanceTimer timer("min");
+    unsigned int min = 255;
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
+            if(durchschnitt == 0)
+                return 0;
+            if(durchschnitt < min)
+                min = durchschnitt;
+        }
+    }
+    return min;
+}
+
+unsigned int Converter::getMaxGrey(QImage *greyImage)
+{
+    PerfomanceTimer timer("max");
+    unsigned int max = 0;
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
+            if(durchschnitt == 255)
+                return 255;
+            if(durchschnitt > max)
+                max = durchschnitt;
+        }
+    }
+    return max;
 }
 
 

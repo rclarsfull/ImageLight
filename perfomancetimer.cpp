@@ -3,11 +3,11 @@
 #include <iostream>
 #include <QDebug>
 
-PerfomanceTimer::PerfomanceTimer(std::string a_name): start(std::chrono::high_resolution_clock::now()), name(a_name)
+PerfomanceTimer::PerfomanceTimer(std::string a_name): name(a_name), start(std::chrono::high_resolution_clock::now())
 {
 }
 
-PerfomanceTimer::PerfomanceTimer(): start(std::chrono::high_resolution_clock::now()), name("Timer")
+PerfomanceTimer::PerfomanceTimer(): name("Timer"), start(std::chrono::high_resolution_clock::now())
 {
 }
 PerfomanceTimer::~PerfomanceTimer()

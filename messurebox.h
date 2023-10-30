@@ -10,8 +10,8 @@ class MessureBox : public Drawable
 public:
     MessureBox():Drawable(){};
     MessureBox(QPoint origen, QPoint end, QImage** image, Converter* converter):Drawable(origen,converter), end(end), image(image){};
-    virtual ~MessureBox(){};
-    virtual void draw(QPainter* painter);
+    ~MessureBox(){};
+    void draw(QPainter* painter);
 };
 
 #endif // MESSUREBOX_H
