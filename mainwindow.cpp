@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , image(NULL)
     , flaschfarbenBild(NULL)
-    , orginalCanvas(new Canvas(true, &converter))
-    , resultCanvas(new Canvas(false, &converter))
+    , orginalCanvas(new Canvas(true, &converter, this))
+    , resultCanvas(new Canvas(false, &converter, this))
     , converter(this)
     , isShowingOriginal(false)
 {
@@ -77,7 +77,7 @@ void MainWindow::converte()
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    converter.recolorImage(flaschfarbenBild,minGrey,maxGrey);
+    converter.recolorImage(flaschfarbenBild, minGrey, maxGrey);
     orginalCanvas->setImage(image);
     resultCanvas->setImage(flaschfarbenBild);
     update();

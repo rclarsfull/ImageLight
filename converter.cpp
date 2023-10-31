@@ -67,7 +67,7 @@ unsigned int Converter::getMaxGrey(QImage *greyImage)
 
 unsigned int Converter::greyToCandela(unsigned int grey){
     if(mainWindow->getMode() == withoutReference)
-        return 0.0145*grey*grey + 0.1628*grey + 22.017;
+        return 3.352*grey - 13.925;
     else
         return grey+mainWindow->getReferenceValue();
     //PerfomanceTimer timer("greyToCandela");

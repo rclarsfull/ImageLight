@@ -2,6 +2,7 @@
 #include "QPainter"
 #include "converter.h"
 #include "messurebox.h"
+#include "mainwindow.h"
 #include <QMouseEvent>
 #include <QTextStream>
 #include <sstream>
@@ -55,41 +56,44 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    if()
-    bool delAction = false;
-    for (Drawable*& d:drawabels){
-        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-            delete d;
-            d = NULL;
-            delAction = true;
+    if(mainWindow->getMode() == referenceSelection){
+       // drawabels.push_front(new ReferenceBox())
+    }else{
+        bool delAction = false;
+        for (Drawable*& d:drawabels){
+            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+                delete d;
+                d = NULL;
+                delAction = true;
+            }
         }
-    }
-    for (Drawable*& d:otherCanvas->getDrawabels()){
-        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-            delete d;
-            d = NULL;
-            delAction = true;
+        for (Drawable*& d:otherCanvas->getDrawabels()){
+            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+                delete d;
+                d = NULL;
+                delAction = true;
+            }
         }
-    }
-    if(!delAction){
-        setPressedLocation(new QPoint(event->pos()));
-        otherCanvas->setPressedLocation(new QPoint(event->pos()));
-        std::stringstream debugText;
-        debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
-                                                  debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
-        debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
+        if(!delAction){
+            setPressedLocation(new QPoint(event->pos()));
+            otherCanvas->setPressedLocation(new QPoint(event->pos()));
+            std::stringstream debugText;
+            debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
+                                                      debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
+            debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
 
-        unsigned int grey;
-        resize();
-        otherCanvas->resize();
-        if(isOriginalImage)
-            grey = converter->colorToGrey(resizedImage->pixelColor(*pressedLocation));
-        else
-            grey = converter->colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
-        debugText << "\tGrauwert Pixel:  " << grey;
-        debugText << "\tCandela: " << converter->greyToCandela(grey);
-        debugText << "[+/- " << converter->getConversionPresition(grey) << " ]";
-        debugLabel->setText(QString::fromStdString(debugText.str()));
+            unsigned int grey;
+            resize();
+            otherCanvas->resize();
+            if(isOriginalImage)
+                grey = converter->colorToGrey(resizedImage->pixelColor(*pressedLocation));
+            else
+                grey = converter->colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
+            debugText << "\tGrauwert Pixel:  " << grey;
+            debugText << "\tCandela: " << converter->greyToCandela(grey);
+            debugText << "[+/- " << converter->getConversionPresition(grey) << " ]";
+            debugLabel->setText(QString::fromStdString(debugText.str()));
+        }
     }
     update();
     otherCanvas->update();
