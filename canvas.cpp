@@ -13,10 +13,21 @@ Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindo
 {
 }
 
+void Canvas::delDrawabels()
+{
+    for(Drawable*& d:drawabels){
+        if(d != NULL){
+            delete d;
+            d = NULL;
+        }
+    }
+}
+
 Canvas::~Canvas()
 {
     if(pressedLocation != NULL)
         delete pressedLocation;
+    delDrawabels();
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
@@ -58,24 +69,24 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
     if(mainWindow->getMode() == referenceSelection){
-       // drawabels.push_front(new ReferenceBox())
+        // drawabels.push_front(new ReferenceBox())
     }else{
-        bool delAction = false;
+        isDelAction = false;
         for (Drawable*& d:drawabels){
             if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
                 delete d;
                 d = NULL;
-                delAction = true;
+                isDelAction = true;
             }
         }
-        for (Drawable*& d:otherCanvas->getDrawabels()){
-            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-                delete d;
-                d = NULL;
-                delAction = true;
-            }
-        }
-        if(!delAction){
+//        for (Drawable*& d:otherCanvas->getDrawabels()){
+//            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+//                delete d;
+//                d = NULL;
+//                isDelAction = true;
+//            }
+//        }
+        if(!isDelAction){
             setPressedLocation(new QPoint(event->pos()));
             otherCanvas->setPressedLocation(new QPoint(event->pos()));
             std::stringstream debugText;
@@ -102,22 +113,25 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
-        if(isOriginalImage){
-            resize();
-            drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter));
-            otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter));
-        }else{
-            otherCanvas->resize();
-            drawabels.push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter));
-            otherCanvas->getDrawabels().push_back(new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter));
+    if(!isDelAction){
+        if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
+            if(isOriginalImage){
+                resize();
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter);
+                drawabels.push_back(tmp);
+                otherCanvas->getDrawabels().push_back(tmp);
+            }else{
+                otherCanvas->resize();
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter);
+                drawabels.push_back(tmp);
+                otherCanvas->getDrawabels().push_back(tmp);
+            }
+
+            pressedLocation = NULL;
+            update();
+            otherCanvas->update();
         }
-
-        pressedLocation = NULL;
-        update();
-        otherCanvas->update();
     }
-
 }
 
 void Canvas::resize()
@@ -188,12 +202,15 @@ void Canvas::saveDataAsCSV(QString fileName)
     QFile csvFile(fileName);
     csvFile.open(QFile::WriteOnly);
     QTextStream stream(&csvFile);
-    for(Drawable* d:drawabels){
-        MessureBox* messureBox = dynamic_cast<MessureBox*>(d);
+    stream << ";" << "ID" << ";" << "Candela" << ";\n";
+    for(int i = 0; i < drawabels.size(); i++){
+        MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
         if(messureBox == NULL)
             continue;
-        stream << ";" << messureBox->getAvgCandala() << ";\n";
+        stream << ";" << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
+        qDebug() << ";" << messureBox->getAvgCandala() << ";\n";
     }
+
     csvFile.close();
 }
 

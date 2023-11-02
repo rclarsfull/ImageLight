@@ -19,6 +19,7 @@ class Canvas : public QFrame
     QVector<Drawable*> drawabels;
     QImage canvas;
     MainWindow* mainWindow;
+    bool isDelAction;
 
 public:
     Canvas(bool isOriginalImage, Converter* converter, MainWindow* mainWindow);
@@ -39,6 +40,8 @@ public:
     void setMaxGrey(int newMaxGrey);
     QImage* getCanvas();
     void saveDataAsCSV(QString fileName);
+
+    void delDrawabels();
 
 public slots:
 

@@ -7,14 +7,17 @@ class MessureBox : public Drawable
 {
     QPoint end;
     QImage** image;
-    int avgCandala;
+    double avgCandala;
+    int id;
+    static int counter;
     void calcAvgCanela();
 public:
     MessureBox():Drawable(){};
-    MessureBox(QPoint origen, QPoint end, QImage** image, Converter* converter);;
+    MessureBox(QPoint origen, QPoint end, QImage** image, Converter* converter);
     ~MessureBox(){};
     void draw(QPainter* painter);
     int getAvgCandala(){return avgCandala;};
+    int getId(){return id;};
 
 };
 

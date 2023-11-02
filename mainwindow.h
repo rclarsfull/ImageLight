@@ -41,5 +41,6 @@ private slots:
     void changeMode();
     void selectReference();
     void saveData();
+    void delDrawabels(){orginalCanvas->delDrawabels(); update();};
 };
 #endif // MAINWINDOW_H

@@ -133,8 +133,8 @@ void MainWindow::saveData()
 {
     if(flaschfarbenBild != NULL){
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                        "/home/jana/untitled.png",
-                                                        tr("Documents (*.csv)"));
+                                                        "untitled.csv",
+                                                        tr("Images (*.csv)"));
         orginalCanvas->saveDataAsCSV(fileName);
     }
 }

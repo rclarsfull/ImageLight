@@ -149,7 +149,14 @@
     <addaction name="actionSpeichern_unter"/>
     <addaction name="actionSaveDataAsCSV"/>
    </widget>
+   <widget class="QMenu" name="menuBearbeiten">
+    <property name="title">
+     <string>Bearbeiten</string>
+    </property>
+    <addaction name="actionClear"/>
+   </widget>
    <addaction name="menuDatei"/>
+   <addaction name="menuBearbeiten"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSpeichern_unter">
@@ -160,6 +167,11 @@
   <action name="actionSaveDataAsCSV">
    <property name="text">
     <string>SaveDataAsCSV</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>Clear</string>
    </property>
   </action>
  </widget>
@@ -293,6 +305,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionClear</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>delDrawabels()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>converte()</slot>
@@ -301,5 +329,6 @@
   <slot>changeMode()</slot>
   <slot>selectReference()</slot>
   <slot>saveData()</slot>
+  <slot>delDrawabels()</slot>
  </slots>
 </ui>
