@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ImageLight</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -139,7 +139,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -147,6 +147,7 @@
      <string>Datei</string>
     </property>
     <addaction name="actionSpeichern_unter"/>
+    <addaction name="actionSaveDataAsCSV"/>
    </widget>
    <addaction name="menuDatei"/>
   </widget>
@@ -154,6 +155,11 @@
   <action name="actionSpeichern_unter">
    <property name="text">
     <string>Speichern unter</string>
+   </property>
+  </action>
+  <action name="actionSaveDataAsCSV">
+   <property name="text">
+    <string>SaveDataAsCSV</string>
    </property>
   </action>
  </widget>
@@ -271,6 +277,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSaveDataAsCSV</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>converte()</slot>
@@ -278,5 +300,6 @@
   <slot>speichernUnter()</slot>
   <slot>changeMode()</slot>
   <slot>selectReference()</slot>
+  <slot>saveData()</slot>
  </slots>
 </ui>

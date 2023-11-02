@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QTextStream>
 #include <sstream>
+#include <QFile>
 
 Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), converter(converter), image(NULL), resizedImage(NULL),
     pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
@@ -180,6 +181,20 @@ void Canvas::setMaxGrey(int newMaxGrey)
 QImage *Canvas::getCanvas()
 {
     return &canvas;
+}
+
+void Canvas::saveDataAsCSV(QString fileName)
+{
+    QFile csvFile(fileName);
+    csvFile.open(QFile::WriteOnly);
+    QTextStream stream(&csvFile);
+    for(Drawable* d:drawabels){
+        MessureBox* messureBox = dynamic_cast<MessureBox*>(d);
+        if(messureBox == NULL)
+            continue;
+        stream << ";" << messureBox->getAvgCandala() << ";\n";
+    }
+    csvFile.close();
 }
 
 void Canvas::setOtherCanvas(Canvas *other)

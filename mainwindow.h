@@ -40,5 +40,6 @@ private slots:
     void speichernUnter();
     void changeMode();
     void selectReference();
+    void saveData();
 };
 #endif // MAINWINDOW_H

@@ -129,6 +129,16 @@ void MainWindow::selectReference()
     qDebug() << "mode changed: " << mode;
 }
 
+void MainWindow::saveData()
+{
+    if(flaschfarbenBild != NULL){
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                        "/home/jana/untitled.png",
+                                                        tr("Documents (*.csv)"));
+        orginalCanvas->saveDataAsCSV(fileName);
+    }
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) {

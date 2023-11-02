@@ -38,6 +38,7 @@ public:
     int getMaxGrey() const;
     void setMaxGrey(int newMaxGrey);
     QImage* getCanvas();
+    void saveDataAsCSV(QString fileName);
 
 public slots:
 
