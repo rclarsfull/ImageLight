@@ -13,6 +13,9 @@ class Converter
    // static QMutex imageMutex;
     MainWindow* mainWindow ;
 public:
+    static double redModifer;
+    static double greenModifer;
+    static double blueModifer;
     Converter(MainWindow* mainWindow):mainWindow(mainWindow){};
 
     unsigned int greyToCandela(unsigned int);
@@ -23,5 +26,6 @@ public:
     unsigned int getMinGrey(QImage* greyImage);;
     unsigned int getMaxGrey(QImage* greyImage);
 };
+
 
 #endif // CONVERTER_H

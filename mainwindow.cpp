@@ -32,15 +32,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->referenceLineEdit->setDisabled(true);
     ui->berreichSetzenButton->setDisabled(true);
+
 }
 
 MainWindow::~MainWindow()
 {
     if(flaschfarbenBild != NULL){
         delete flaschfarbenBild;
+        flaschfarbenBild = NULL;
     }
-    if(image != NULL)
+    if(image != NULL){
         delete image;
+        image = NULL;
+    }
 
     delete ui;
 }
@@ -97,6 +101,15 @@ void MainWindow::sliderEvent()
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
     converter.recolorImage(resultCanvas->getImage(),minGrey,maxGrey);
+
+    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
+    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
+    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
+    // R:  0.68 G:  0.88 B:  1.6
+    //R:  1.014 G:  0.988 B:  1.014
+
+    qDebug() << "R: " << Converter::redModifer << "G: " << Converter::greenModifer << "B: " << Converter::blueModifer;
+    update();
     resultCanvas->update();
 }
 

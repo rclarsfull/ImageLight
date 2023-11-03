@@ -15,19 +15,32 @@ Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindo
 
 void Canvas::delDrawabels()
 {
-    for(Drawable*& d:drawabels){
-        if(d != NULL){
-            delete d;
-            d = NULL;
+    if(isOriginalImage){
+        for (Drawable*& d:drawabels){
+            if (d!= NULL){
+                d = NULL;
+                isDelAction = true;
+            }
+        }
+        for (Drawable*& d:otherCanvas->getDrawabels()){
+            if (d!= NULL){
+                delete d;
+                d = NULL;
+                isDelAction = true;
+            }
         }
     }
+
 }
 
 Canvas::~Canvas()
 {
-    if(pressedLocation != NULL)
+    if(pressedLocation != NULL){
         delete pressedLocation;
+        pressedLocation = NULL;
+    }
     delDrawabels();
+
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
@@ -43,7 +56,7 @@ void Canvas::paintEvent(QPaintEvent *event)
             painter.setBrush(QBrush(Qt::NoBrush));
             painter.drawEllipse(*pressedLocation,5,5);
         }
-        for (Drawable* d:drawabels)
+        for (Drawable*& d:drawabels)
             if(d!=NULL)
                 d->draw(&painter);
 
@@ -72,20 +85,20 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         // drawabels.push_front(new ReferenceBox())
     }else{
         isDelAction = false;
+
         for (Drawable*& d:drawabels){
+            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+                d = NULL;
+                isDelAction = true;
+            }
+        }
+        for (Drawable*& d:otherCanvas->getDrawabels()){
             if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
                 delete d;
                 d = NULL;
                 isDelAction = true;
             }
         }
-//        for (Drawable*& d:otherCanvas->getDrawabels()){
-//            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-//                delete d;
-//                d = NULL;
-//                isDelAction = true;
-//            }
-//        }
         if(!isDelAction){
             setPressedLocation(new QPoint(event->pos()));
             otherCanvas->setPressedLocation(new QPoint(event->pos()));

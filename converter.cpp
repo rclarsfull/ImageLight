@@ -8,7 +8,9 @@
 #include <QVector3D>
 #include <QThread>
 
-
+double Converter::redModifer = 1;
+double Converter::greenModifer = 1;
+double Converter::blueModifer = 1;
 
 void Converter::recolorImage(QImage* image, int minGrey, int maxGrey)
 {
@@ -29,7 +31,11 @@ unsigned int Converter::colorToGrey(QColor color){
     float red = (pow(color.red(),2.2));
     float green = (pow(color.green(),2.2));
     float blue = (pow(color.blue(),2.2));
-    int luminance =  pow((red * 0.2126 + green * 0.7152 + blue * 0.0722) ,1/2.2);
+//R:  0.686 G:  0.878 B:  1.616
+    //int luminance =  pow((red * redModifer * 1.014 * 0.68 * 0.2126 + green * greenModifer * 0.988 * 0.88 * 0.7152 + blue * blueModifer * 1.014 * 1.6 * 0.0722) ,1/2.2);
+    int luminance =  pow((red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722) ,1/2.2);
+    if(luminance<0)
+        luminance=0;
     return luminance;
 }
 
@@ -67,7 +73,8 @@ unsigned int Converter::getMaxGrey(QImage *greyImage)
 
 unsigned int Converter::greyToCandela(unsigned int grey){
     if(mainWindow->getMode() == withoutReference)
-        return 3.352*grey - 13.925;
+        //return 2.9852*grey - 12.087;
+        return 3.1916*grey - 10.193;
     else
         return grey+mainWindow->getReferenceValue();
     //PerfomanceTimer timer("greyToCandela");
