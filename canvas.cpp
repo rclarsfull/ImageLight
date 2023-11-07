@@ -46,7 +46,7 @@ Canvas::~Canvas()
 void Canvas::paintEvent(QPaintEvent *event)
 {
     QPainter finalPainter(this);
-    canvas = QImage(width(),height(), QImage::Format_RGB888);
+    canvas = QPixmap(width(),height());
     QPainter painter(&canvas);
     resize();
     if(image != NULL){
@@ -75,7 +75,7 @@ void Canvas::paintEvent(QPaintEvent *event)
             }
 
         }
-        finalPainter.drawImage(QPoint(0,0),canvas);
+        finalPainter.drawPixmap(QPoint(0,0),canvas);
     }
 }
 
@@ -205,7 +205,7 @@ void Canvas::setMaxGrey(int newMaxGrey)
     maxGrey = newMaxGrey;
 }
 
-QImage *Canvas::getCanvas()
+QPixmap *Canvas::getCanvas()
 {
     return &canvas;
 }
@@ -221,7 +221,7 @@ void Canvas::saveDataAsCSV(QString fileName)
         if(messureBox == NULL)
             continue;
         stream << ";" << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
-        qDebug() << ";" << messureBox->getAvgCandala() << ";\n";
+        //qDebug() << ";" << messureBox->getAvgCandala() << ";\n";
     }
 
     csvFile.close();

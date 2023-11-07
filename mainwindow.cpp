@@ -116,7 +116,8 @@ void MainWindow::sliderEvent()
 void MainWindow::speichernUnter()
 {
     if(flaschfarbenBild != NULL){
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+        resultCanvas->update();
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                     "/home/jana/untitled.png",
                                                     tr("Images (*.png *.jpg)"));
         qDebug() << resultCanvas->getCanvas()->save(fileName);

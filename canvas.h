@@ -17,7 +17,7 @@ class Canvas : public QFrame
     Canvas* otherCanvas;
     QLabel* debugLabel;
     QVector<Drawable*> drawabels;
-    QImage canvas;
+    QPixmap canvas;
     MainWindow* mainWindow;
     bool isDelAction;
 
@@ -38,7 +38,7 @@ public:
     void setMinGrey(int newMinGrey);
     int getMaxGrey() const;
     void setMaxGrey(int newMaxGrey);
-    QImage* getCanvas();
+    QPixmap* getCanvas();
     void saveDataAsCSV(QString fileName);
 
     void delDrawabels();
