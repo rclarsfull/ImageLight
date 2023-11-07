@@ -7,7 +7,7 @@ class MessureBox : public Drawable
 {
     QPoint end;
     QImage** image;
-    double avgCandala;
+    int avgCandala;
     int id;
     static int counter;
     void calcAvgCanela();

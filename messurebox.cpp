@@ -1,5 +1,6 @@
 #include "messurebox.h"
 #include "converter.h"
+#include "qdebug.h"
 int MessureBox::counter = 1;
 
 MessureBox::MessureBox(QPoint origen, QPoint end, QImage **image, Converter *converter):Drawable(origen,converter), end(end), image(image), id(counter){
@@ -22,7 +23,7 @@ void MessureBox::draw(QPainter *painter)
     painter->drawText(origen+QPoint(-4,4),"X");
     calcAvgCanela();
     painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),"ID: "+ QString::number(id));
-    painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+15),"Candela: "+ QString::number(avgCandala,'f',2));
+    painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+15),"Candela: "+ QString::number(avgCandala));
 
 }
 
@@ -38,6 +39,6 @@ void MessureBox::calcAvgCanela()
             }
 
         }
-        avgCandala = (sum/(xSize*ySize));
+        qDebug() << (avgCandala = (sum/(double)(xSize*ySize))+0.5);
     }
 }

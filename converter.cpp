@@ -31,7 +31,7 @@ unsigned int Converter::colorToGrey(QColor color){
     float red = (pow(color.red(),2.2));
     float green = (pow(color.green(),2.2));
     float blue = (pow(color.blue(),2.2));
-//R:  0.686 G:  0.878 B:  1.616
+    //R:  0.686 G:  0.878 B:  1.616
     //int luminance =  pow((red * redModifer * 1.014 * 0.68 * 0.2126 + green * greenModifer * 0.988 * 0.88 * 0.7152 + blue * blueModifer * 1.014 * 1.6 * 0.0722) ,1/2.2);
     int luminance =  pow((red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722) ,1/2.2);
     if(luminance<0)
@@ -72,11 +72,16 @@ unsigned int Converter::getMaxGrey(QImage *greyImage)
 
 
 unsigned int Converter::greyToCandela(unsigned int grey){
-    if(mainWindow->getMode() == withoutReference)
+    if(mainWindow->getMode() == withoutReference){
         //return 2.9852*grey - 12.087;
-        return 3.1916*grey - 10.193;
-    else
+        int tmp = 3.1916*grey - 10.193;
+        if(tmp < 0){
+            return 0;
+        }else
+            return tmp;
         return grey+mainWindow->getReferenceValue();
+    }
+    return 0;
     //PerfomanceTimer timer("greyToCandela");
     //return 0.0185*grey*grey - 0.753*grey + 47.205;
     // return 23.806 * qExp(0.0189*grey);
