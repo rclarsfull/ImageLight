@@ -81,7 +81,7 @@ unsigned int Converter::greyToCandela(unsigned int grey){
             return tmp;
         return grey+mainWindow->getReferenceValue();
     }
-    return 0;
+    return grey;
     //PerfomanceTimer timer("greyToCandela");
     //return 0.0185*grey*grey - 0.753*grey + 47.205;
     // return 23.806 * qExp(0.0189*grey);
