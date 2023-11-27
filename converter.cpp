@@ -1,50 +1,61 @@
 #include "converter.h"
 #include "workerthread.h"
-#include "perfomancetimer.h"
+//#include "perfomancetimer.h"
 #include "mainwindow.h"
 #include <QDebug>
 #include <QColor>
 #include <math.h>
 #include <QVector3D>
 #include <QThread>
+#include <fstream>
 
 double Converter::redModifer = 1;
 double Converter::greenModifer = 1;
 double Converter::blueModifer = 1;
 
-void Converter::recolorImage(QImage* image, int minGrey, int maxGrey)
+
+Converter::Converter(MainWindow *mainWindow):mainWindow(mainWindow){
+    lightCorrectionMatrix = new float[xReselution][yReselution];
+    std::ifstream in("correctionFile.dat", std::ios_base::binary);
+    if(! in.read((char*)lightCorrectionMatrix,sizeof(float)*xReselution*yReselution)){
+        resetLightCorrectionMatrix();
+        qDebug() << "cant open Correction file";
+    }
+}
+
+Converter::~Converter(){
+    delete[] lightCorrectionMatrix;
+}
+
+void Converter::recolorImage(QImage* greyImage,QImage* falschfarbenBild, int minGrey, int maxGrey)
 {
-    PerfomanceTimer timer("recolorImage");
-
-    qDebug() << minGrey << " : " <<maxGrey;
-
-    for(int y = 0; y < image->height(); y++){
-        for(int x = 0; x < image->width(); x++){
-            QColor color = image->pixelColor(x,y);
-            image->setPixelColor(x,y,Converter::greyToColor(Converter::colorToGrey(color),minGrey,maxGrey));
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            int grey = Converter::colorToGrey(greyImage->pixelColor(x,y),x,y);
+            QColor color(grey,grey,grey);
+            //qDebug() << color.red() << color.green() << color.blue();
+            greyImage->setPixelColor(x, y, color);
+            falschfarbenBild->setPixelColor(x,y,Converter::greyToColor(greyImage->pixelColor(x,y).red(),minGrey,maxGrey));
         }
     }
 }
 
 
-unsigned int Converter::colorToGrey(QColor color){
+unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y){
     float red = (pow(color.red(),2.2));
     float green = (pow(color.green(),2.2));
     float blue = (pow(color.blue(),2.2));
-    //R:  0.686 G:  0.878 B:  1.616
-    //int luminance =  pow((red * redModifer * 1.014 * 0.68 * 0.2126 + green * greenModifer * 0.988 * 0.88 * 0.7152 + blue * blueModifer * 1.014 * 1.6 * 0.0722) ,1/2.2);
-    int luminance =  pow((red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722) ,1/2.2);
+    float luminance =  pow((red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722) ,1/2.2);
     if(luminance<0)
         luminance=0;
-    return luminance;
+    return qRound(luminance * lightCorrectionMatrix[x][y]);
 }
 
 unsigned int Converter::getMinGrey(QImage *greyImage){
-    PerfomanceTimer timer("min");
     unsigned int min = 255;
     for(int y = 0; y < greyImage->height(); y++){
         for(int x = 0; x < greyImage->width(); x++){
-            unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
+            unsigned int durchschnitt = greyImage->pixelColor(x,y).red();
             if(durchschnitt == 0)
                 return 0;
             if(durchschnitt < min)
@@ -56,11 +67,10 @@ unsigned int Converter::getMinGrey(QImage *greyImage){
 
 unsigned int Converter::getMaxGrey(QImage *greyImage)
 {
-    PerfomanceTimer timer("max");
     unsigned int max = 0;
     for(int y = 0; y < greyImage->height(); y++){
         for(int x = 0; x < greyImage->width(); x++){
-            unsigned int durchschnitt = colorToGrey(greyImage->pixelColor(x,y));
+            unsigned int durchschnitt = greyImage->pixelColor(x,y).red();
             if(durchschnitt == 255)
                 return 255;
             if(durchschnitt > max)
@@ -69,6 +79,40 @@ unsigned int Converter::getMaxGrey(QImage *greyImage)
     }
     return max;
 }
+
+void Converter::calibrateLightCorrectionMatrix(QImage *image){
+    if(image != NULL){
+        std::ofstream out("correctionFile.dat",std::ios_base::binary);
+        unsigned long sum = 0;
+        resetLightCorrectionMatrix();
+        for(int y = 0; y < yReselution; y++){
+            for(int x = 0; x < xReselution; x++){
+                sum += colorToGrey(image->pixelColor(QPoint(x,y)), x, y);
+            }
+        }
+        double avg = sum / (yReselution*xReselution);
+        for(int y = 0; y < yReselution; y++){
+            for(int x = 0; x < xReselution; x++){
+                lightCorrectionMatrix[x][y] = avg / colorToGrey(image->pixelColor(QPoint(x,y)), x, y); 
+            }
+
+        }
+        out.write((char*)lightCorrectionMatrix,sizeof(float)*xReselution*yReselution);
+        out.close();
+        qDebug() << "calibrated";
+    }else
+        qDebug() << "Error: no Image loaded";
+}
+
+void Converter::resetLightCorrectionMatrix(){
+    for (int i = 0; i< yReselution; i++) {
+        for (int j = 0; j < xReselution; ++j) {
+            lightCorrectionMatrix[j][i] = 1.0;
+        }
+    }
+}
+
+
 
 
 unsigned int Converter::greyToCandela(unsigned int grey){
@@ -88,24 +132,6 @@ unsigned int Converter::greyToCandela(unsigned int grey){
     // return grey;
 }
 
-
-unsigned int Converter::getConversionPresition(unsigned int grey)
-{
-    //PerfomanceTimer timer("getConversionPresition");
-    int candela = 0.002*grey*grey*grey - 0.0382*grey*grey + 4.224*grey - 4.073;
-    int before, after;
-    if(grey > 0){
-        unsigned int tmp = grey - 1;
-        before = 0.002*tmp*tmp*tmp - 0.0382*tmp*tmp + 4.224*tmp - 4.073;
-    }else
-        before = candela;
-    if(grey > 255){
-        unsigned int tmp = grey + 1;
-        after = 0.002*tmp*tmp*tmp - 0.0382*tmp*tmp + 4.224*tmp - 4.073;
-    }else
-        after = candela;
-    return (after-before)/2;
-}
 
 inline QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey)
 {

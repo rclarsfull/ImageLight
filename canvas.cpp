@@ -8,8 +8,18 @@
 #include <sstream>
 #include <QFile>
 
+QImage *Canvas::getResizedImage() const
+{
+    return resizedImage;
+}
+
+void Canvas::setGreyImage(QImage *newGreyImage)
+{
+    greyImage = newGreyImage;
+}
+
 Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), converter(converter), image(NULL), resizedImage(NULL),
-    pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
+    greyImage(NULL), resizedGreyImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
 {
 }
 
@@ -65,7 +75,6 @@ void Canvas::paintEvent(QPaintEvent *event)
         int scaleFactor = height() /(maxGrey-minGrey);
         int space = (height()-(maxGrey-minGrey)*scaleFactor)/2;
         for (int i = minGrey; i < maxGrey; i++){
-
             painter.setPen(QPen(converter->greyToColor(i,minGrey,maxGrey),1));
             painter.setBrush(QBrush(converter->greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
             painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
@@ -73,7 +82,6 @@ void Canvas::paintEvent(QPaintEvent *event)
                 painter.setPen(QPen(Qt::white,1));
                 painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(converter->greyToCandela(i)));
             }
-
         }
         finalPainter.drawPixmap(QPoint(0,0),canvas);
     }
@@ -110,13 +118,10 @@ void Canvas::mousePressEvent(QMouseEvent *event)
             unsigned int grey;
             resize();
             otherCanvas->resize();
-            if(isOriginalImage)
-                grey = converter->colorToGrey(resizedImage->pixelColor(*pressedLocation));
-            else
-                grey = converter->colorToGrey(otherCanvas->resizedImage->pixelColor(*pressedLocation));
+            grey = resizedGreyImage->pixelColor(*pressedLocation).red();
+
             debugText << "\tGrauwert Pixel:  " << grey;
             debugText << "\tCandela: " << converter->greyToCandela(grey);
-            debugText << "[+/- " << converter->getConversionPresition(grey) << " ]";
             debugLabel->setText(QString::fromStdString(debugText.str()));
         }
     }
@@ -130,12 +135,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
             if(isOriginalImage){
                 resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &resizedImage, converter);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &resizedGreyImage, converter);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }else{
                 otherCanvas->resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedImage, converter);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedGreyImage, converter);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }
@@ -149,6 +154,16 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
 void Canvas::resize()
 {
+    if(greyImage != NULL){
+        if(resizedGreyImage != NULL)
+            delete resizedGreyImage;
+        if(otherCanvas->resizedGreyImage != NULL)
+            delete otherCanvas->resizedGreyImage;
+        resizedGreyImage = new QImage(greyImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
+        otherCanvas->resizedGreyImage = new QImage(otherCanvas->greyImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
+    }else
+        qDebug() << "Fehler Grey Image Null resize ignored";
+
     if(image != NULL){
         if(resizedImage != NULL)
             delete resizedImage;

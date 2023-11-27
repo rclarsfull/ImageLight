@@ -12,7 +12,6 @@ void MessureBox::draw(QPainter *painter)
 {
     int xSize = end.x() - origen.x();
     int ySize = end.y() - origen.y();
-
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(Qt::yellow,2,Qt::DashDotDotLine));
     painter->drawRect(origen.x(),origen.y(), xSize, ySize);
@@ -24,7 +23,6 @@ void MessureBox::draw(QPainter *painter)
     calcAvgCanela();
     painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),"ID: "+ QString::number(id));
     painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+15),"Candela: "+ QString::number(avgCandala));
-
 }
 
 void MessureBox::calcAvgCanela()
@@ -35,10 +33,9 @@ void MessureBox::calcAvgCanela()
         long double sum = 0;
         for(int i = 0; i<xSize; i++){
             for(int y = 0; y < ySize; y++){
-                sum += converter->greyToCandela(converter->colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y)));
+                sum += converter->greyToCandela((*image)->pixelColor(origen.x()+i,origen.y()+y).red());
             }
-
         }
-        qDebug() << (avgCandala = (sum/(double)(xSize*ySize))+0.5);
+        (avgCandala = (sum/(double)(xSize*ySize))+0.5);
     }
 }

@@ -81,94 +81,6 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QSlider" name="redVerticalSlider">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>513</number>
-        </property>
-        <property name="sliderPosition">
-         <number>513</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksAbove</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSlider" name="GreenVerticalSlider_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>500</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksAbove</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSlider" name="BlueVerticalSlider_3">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>500</number>
-        </property>
-        <property name="tracking">
-         <bool>true</bool>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksAbove</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Referenzpunkt:</string>
@@ -227,7 +139,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -243,8 +155,15 @@
     </property>
     <addaction name="actionClear"/>
    </widget>
+   <widget class="QMenu" name="menuExtras">
+    <property name="title">
+     <string>Extras</string>
+    </property>
+    <addaction name="actionRandlichabfall_Kallibrierung"/>
+   </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuBearbeiten"/>
+   <addaction name="menuExtras"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSpeichern_unter">
@@ -260,6 +179,11 @@
   <action name="actionClear">
    <property name="text">
     <string>Clear</string>
+   </property>
+  </action>
+  <action name="actionRandlichabfall_Kallibrierung">
+   <property name="text">
+    <string>Randlichabfall Kallibrierung</string>
    </property>
   </action>
  </widget>
@@ -410,46 +334,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>BlueVerticalSlider_3</sender>
-   <signal>sliderReleased()</signal>
+   <sender>actionRandlichabfall_Kallibrierung</sender>
+   <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>sliderEvent()</slot>
+   <slot>randlichabfallCorrection()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>280</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>GreenVerticalSlider_2</sender>
-   <signal>sliderReleased()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>sliderEvent()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>249</x>
-     <y>280</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>redVerticalSlider</sender>
-   <signal>sliderReleased()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>sliderEvent()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>122</x>
-     <y>280</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
@@ -466,5 +358,6 @@
   <slot>selectReference()</slot>
   <slot>saveData()</slot>
   <slot>delDrawabels()</slot>
+  <slot>randlichabfallCorrection()</slot>
  </slots>
 </ui>

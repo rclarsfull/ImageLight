@@ -5,6 +5,7 @@
 #include "converter.h"
 #include <QMainWindow>
 //#include <QThread>
+
 enum programmModes{withoutReference, withReference, referenceSelection};
 
 QT_BEGIN_NAMESPACE
@@ -24,11 +25,13 @@ private:
     programmModes mode;
     Ui::MainWindow *ui;
     QImage* image;
-    QImage* flaschfarbenBild;
+    QImage* greyImage;
+    QImage* falschfarbenBild;
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
     Converter converter;
     bool isShowingOriginal;
+
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
@@ -42,5 +45,6 @@ private slots:
     void selectReference();
     void saveData();
     void delDrawabels(){orginalCanvas->delDrawabels(); update();};
+    void randlichabfallCorrection();
 };
 #endif // MAINWINDOW_H

@@ -13,6 +13,8 @@ class Canvas : public QFrame
     Converter* converter;
     QImage* image;
     QImage* resizedImage;
+    QImage* greyImage;
+    QImage* resizedGreyImage;
     QPoint* pressedLocation;
     Canvas* otherCanvas;
     QLabel* debugLabel;
@@ -42,6 +44,10 @@ public:
     void saveDataAsCSV(QString fileName);
 
     void delDrawabels();
+
+    QImage *getResizedImage() const;
+
+    void setGreyImage(QImage *newGreyImage);
 
 public slots:
 

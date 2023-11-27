@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     , mode(withoutReference)
     , ui(new Ui::MainWindow)
     , image(NULL)
-    , flaschfarbenBild(NULL)
+    , greyImage(NULL)
+    , falschfarbenBild(NULL)
     , orginalCanvas(new Canvas(true, &converter, this))
     , resultCanvas(new Canvas(false, &converter, this))
     , converter(this)
@@ -32,20 +33,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->referenceLineEdit->setDisabled(true);
     ui->berreichSetzenButton->setDisabled(true);
-
 }
 
 MainWindow::~MainWindow()
 {
-    if(flaschfarbenBild != NULL){
-        delete flaschfarbenBild;
-        flaschfarbenBild = NULL;
+    if(falschfarbenBild != NULL){
+        delete falschfarbenBild;
+        falschfarbenBild = NULL;
+    }
+    if(greyImage != NULL){
+        delete greyImage;
+        greyImage = NULL;
     }
     if(image != NULL){
         delete image;
         image = NULL;
     }
-
     delete ui;
 }
 
@@ -67,25 +70,37 @@ int MainWindow::getReferenceValue()
 
 void MainWindow::converte()
 {
-    PerfomanceTimer timer("Converte Time");
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    //PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
-
+    if(image != NULL){
+        delete image;
+        delete greyImage;
+        delete falschfarbenBild;
+        image = NULL;
+        greyImage = NULL;
+        falschfarbenBild = NULL;
+    }
     image = new QImage(fileName);
-    flaschfarbenBild = new QImage(fileName);
+    greyImage = new QImage(fileName);
+    falschfarbenBild = new QImage(fileName);
     int minGrey = 0, maxGrey = 255;
-    minGrey = converter.getMinGrey(flaschfarbenBild);
-    maxGrey = converter.getMaxGrey(flaschfarbenBild);
+    minGrey = converter.getMinGrey(greyImage);
+    maxGrey = converter.getMaxGrey(greyImage);
     ui->minSlider->setSliderPosition(minGrey);
     ui->maxSlider->setSliderPosition(maxGrey);
     orginalCanvas->setMaxGrey(maxGrey);
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    converter.recolorImage(flaschfarbenBild, minGrey, maxGrey);
+    converter.recolorImage(greyImage,falschfarbenBild, minGrey, maxGrey);
     orginalCanvas->setImage(image);
-    resultCanvas->setImage(flaschfarbenBild);
+    orginalCanvas->setGreyImage(greyImage);
+    resultCanvas->setImage(falschfarbenBild);
+    resultCanvas->setGreyImage(greyImage);
     update();
-    flaschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
+    //falschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
+    QGuiApplication::restoreOverrideCursor();
 }
 
 void MainWindow::sliderEvent()
@@ -93,21 +108,20 @@ void MainWindow::sliderEvent()
     qDebug() << "sliderEvent";
     int minGrey = ui->minSlider->value();
     int maxGrey = ui->maxSlider->value();
-    delete resultCanvas->getImage();
-    flaschfarbenBild = new QImage(*orginalCanvas->getImage());
-    resultCanvas->setImage(flaschfarbenBild);
+    if(falschfarbenBild != NULL)
+        delete falschfarbenBild;
+    falschfarbenBild = new QImage(*image);
+    resultCanvas->setImage(falschfarbenBild);
     orginalCanvas->setMaxGrey(maxGrey);
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    converter.recolorImage(resultCanvas->getImage(),minGrey,maxGrey);
-
-    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
-    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
-    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
+    converter.recolorImage(greyImage,falschfarbenBild,minGrey,maxGrey);
+//    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
+//    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
+//    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
     // R:  0.68 G:  0.88 B:  1.6
     //R:  1.014 G:  0.988 B:  1.014
-
     qDebug() << "R: " << Converter::redModifer << "G: " << Converter::greenModifer << "B: " << Converter::blueModifer;
     update();
     resultCanvas->update();
@@ -115,14 +129,13 @@ void MainWindow::sliderEvent()
 
 void MainWindow::speichernUnter()
 {
-    if(flaschfarbenBild != NULL){
+    if(falschfarbenBild != NULL){
         resultCanvas->update();
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                     "/home/jana/untitled.png",
                                                     tr("Images (*.png *.jpg)"));
         qDebug() << resultCanvas->getCanvas()->save(fileName);
     }
-
 }
 
 void MainWindow::changeMode()
@@ -131,7 +144,6 @@ void MainWindow::changeMode()
         mode = withReference;
     else
         mode = withoutReference;
-
     ui->referenceLineEdit->setDisabled(mode == withoutReference);
     ui->berreichSetzenButton->setDisabled(mode == withoutReference);
     qDebug() << "mode changed: " << mode;
@@ -145,12 +157,18 @@ void MainWindow::selectReference()
 
 void MainWindow::saveData()
 {
-    if(flaschfarbenBild != NULL){
+    if(falschfarbenBild != NULL){
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                         "untitled.csv",
                                                         tr("Images (*.csv)"));
         orginalCanvas->saveDataAsCSV(fileName);
     }
+}
+
+void MainWindow::randlichabfallCorrection()
+{
+    converter.calibrateLightCorrectionMatrix(image);
+    converte();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -172,8 +190,6 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-//    orginalCanvas->resize();
-//    resultCanvas->resize();
     update();
 }
 

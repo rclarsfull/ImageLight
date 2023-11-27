@@ -18,7 +18,7 @@ void ReferenceBox::draw(QPainter *painter)
         long double sum = 0;
         for(int i = 0; i<xSize; i++){
             for(int y = 0; y < ySize; y++){
-                sum += converter->greyToCandela(converter->colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y)));
+                sum += converter->greyToCandela(converter->colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y),origen.x()+i,origen.y()+y));
             }
         }
         avgGrey = sum/(xSize*ySize);
