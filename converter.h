@@ -31,6 +31,7 @@ public:
     unsigned int getMinGrey(QImage* greyImage);
     unsigned int getMaxGrey(QImage* greyImage);
     void calibrateLightCorrectionMatrix(QImage* image);
+    void updateFalschfarbenBild(QImage *greyImage, QImage *falschfarbenBild, int minGrey, int maxGrey);
 };
 
 

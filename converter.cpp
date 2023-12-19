@@ -40,6 +40,14 @@ void Converter::recolorImage(QImage* greyImage,QImage* falschfarbenBild, int min
     }
 }
 
+void Converter::updateFalschfarbenBild(QImage* greyImage,QImage* falschfarbenBild,int minGrey, int maxGrey)
+{
+    for(int y = 0; y < greyImage->height(); y++){
+        for(int x = 0; x < greyImage->width(); x++){
+            falschfarbenBild->setPixelColor(x,y,Converter::greyToColor(greyImage->pixelColor(x,y).red(),minGrey,maxGrey));
+        }
+    }
+}
 
 unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y){
     float red = (pow(color.red(),2.2));
@@ -91,11 +99,18 @@ void Converter::calibrateLightCorrectionMatrix(QImage *image){
             }
         }
         double avg = sum / (yReselution*xReselution);
+        double max = 0;
         for(int y = 0; y < yReselution; y++){
             for(int x = 0; x < xReselution; x++){
-                lightCorrectionMatrix[x][y] = avg / colorToGrey(image->pixelColor(QPoint(x,y)), x, y); 
+                lightCorrectionMatrix[x][y] = avg / colorToGrey(image->pixelColor(QPoint(x,y)), x, y);
+                if(max < lightCorrectionMatrix[x][y])
+                    max = lightCorrectionMatrix[x][y];
             }
-
+        }
+        for(int y = 0; y < yReselution; y++){
+            for(int x = 0; x < xReselution; x++){
+                lightCorrectionMatrix[x][y] = lightCorrectionMatrix[x][y] /max;
+            }
         }
         out.write((char*)lightCorrectionMatrix,sizeof(float)*xReselution*yReselution);
         out.close();
