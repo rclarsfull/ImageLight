@@ -53,7 +53,7 @@ unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y
     float red = (pow(color.red(),2.2));
     float green = (pow(color.green(),2.2));
     float blue = (pow(color.blue(),2.2));
-    float luminance =  pow((red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722) ,1/2.2);
+    float luminance =  (red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722)/ pow(255,2.2) * 255;
     if(luminance<0)
         luminance=0;
     return qRound(luminance * lightCorrectionMatrix[x][y]);
