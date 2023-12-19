@@ -116,7 +116,7 @@ void MainWindow::sliderEvent()
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    converter.recolorImage(greyImage,falschfarbenBild,minGrey,maxGrey);
+    converter.updateFalschfarbenBild(greyImage,falschfarbenBild,minGrey,maxGrey);
 //    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
 //    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
 //    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
