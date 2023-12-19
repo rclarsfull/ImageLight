@@ -99,6 +99,7 @@ void MainWindow::converte()
     resultCanvas->setImage(falschfarbenBild);
     resultCanvas->setGreyImage(greyImage);
     update();
+    greyImage->save("greyTest.jpg");
     //falschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     QGuiApplication::restoreOverrideCursor();
 }
@@ -116,7 +117,13 @@ void MainWindow::sliderEvent()
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
+
+    if(greyImage != NULL)
+        delete greyImage;
+    greyImage = new QImage(*image);
     converter.recolorImage(greyImage,falschfarbenBild,minGrey,maxGrey);
+    orginalCanvas->setGreyImage(greyImage);
+    resultCanvas->setGreyImage(greyImage);
 //    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
 //    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
 //    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
