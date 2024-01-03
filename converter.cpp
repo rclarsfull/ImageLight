@@ -27,7 +27,7 @@ Converter::~Converter(){
     delete[] lightCorrectionMatrix;
 }
 
-void Converter::recolorImage(QImage* greyImage,QImage* falschfarbenBild, int minGrey, int maxGrey)
+void Converter::updateGreyImage(QImage* greyImage,QImage* falschfarbenBild)
 {
     for(int y = 0; y < greyImage->height(); y++){
         for(int x = 0; x < greyImage->width(); x++){
@@ -35,7 +35,6 @@ void Converter::recolorImage(QImage* greyImage,QImage* falschfarbenBild, int min
             QColor color(grey,grey,grey);
             //qDebug() << color.red() << color.green() << color.blue();
             greyImage->setPixelColor(x, y, color);
-            falschfarbenBild->setPixelColor(x,y,Converter::greyToColor(greyImage->pixelColor(x,y).red(),minGrey,maxGrey));
         }
     }
 }
@@ -49,15 +48,34 @@ void Converter::updateFalschfarbenBild(QImage* greyImage,QImage* falschfarbenBil
     }
 }
 
-unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y){
-    float red = (pow(color.red(),2.2));
-    float green = (pow(color.green(),2.2));
-    float blue = (pow(color.blue(),2.2));
-    float luminance =  (red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722)/ pow(255,2.2) * 255;
-    if(luminance<0)
-        luminance=0;
-    return qRound(luminance * lightCorrectionMatrix[x][y]);
+double Converter::sRGBToLinear(double value) {
+    double linearValue;
+    if (value <= 0.04045) {
+        linearValue = value / 12.92;
+    } else {
+        linearValue = qPow((value + 0.055) / 1.055, 2.4);
+    }
+    return linearValue;
 }
+
+unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y) {
+    // Convert sRGB to linear RGB
+    double linearRed = sRGBToLinear(color.redF());
+    double linearGreen = sRGBToLinear(color.greenF());
+    double linearBlue = sRGBToLinear(color.blueF());
+    double luminance = 0.2126 * linearRed + 0.7152 * linearGreen + 0.0722 * linearBlue;
+    // Calculate luminance using linear RGB values
+    return qRound(luminance * lightCorrectionMatrix[x][y] * 255);
+}
+//unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y){
+//    float red = (pow(color.red(),2.2));
+//    float green = (pow(color.green(),2.2));
+//    float blue = (pow(color.blue(),2.2));
+//    float luminance =  (red * redModifer * 0.686*0.2126 + green * greenModifer *0.878* 0.7152 + blue * blueModifer *1.616* 0.0722)/ pow(255,2.2) * 255;
+//    if(luminance<0)
+//        luminance=0;
+//    return qRound(luminance * lightCorrectionMatrix[x][y]);
+//}
 
 unsigned int Converter::getMinGrey(QImage *greyImage){
     unsigned int min = 255;
@@ -155,6 +173,8 @@ inline QColor Converter::greyToColor(unsigned int grey, unsigned int minGrey, un
         return QColor(255,255,255);
     if(grey < minGrey)
         return QColor(0,0,0);
+    if(minGrey == maxGrey)
+        return QColor(0, 100, 0);
 
     double rot = 0, gruen = 0, blau = 0;
 

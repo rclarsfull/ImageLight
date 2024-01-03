@@ -72,8 +72,9 @@ void Canvas::paintEvent(QPaintEvent *event)
 
         painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
         painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
-        int scaleFactor = height() /(maxGrey-minGrey);
-        int space = (height()-(maxGrey-minGrey)*scaleFactor)/2;
+        int difference = (maxGrey-minGrey) ?  maxGrey-minGrey : 1;
+        int scaleFactor = height() /difference;
+        int space = (height()- difference * scaleFactor)/2;
         for (int i = minGrey; i < maxGrey; i++){
             painter.setPen(QPen(converter->greyToColor(i,minGrey,maxGrey),1));
             painter.setBrush(QBrush(converter->greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));

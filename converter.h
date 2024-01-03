@@ -25,13 +25,15 @@ public:
     ~Converter();
 
     unsigned int greyToCandela(unsigned int);
-    void recolorImage(QImage* greyImage, QImage *falschfarbenBild, int minGrey, int maxGrey);
+    void updateGreyImage(QImage* greyImage, QImage *falschfarbenBild);
     QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
     unsigned int colorToGrey(QColor color, unsigned x, unsigned y);
     unsigned int getMinGrey(QImage* greyImage);
     unsigned int getMaxGrey(QImage* greyImage);
     void calibrateLightCorrectionMatrix(QImage* image);
     void updateFalschfarbenBild(QImage *greyImage, QImage *falschfarbenBild, int minGrey, int maxGrey);
+private:
+    double sRGBToLinear(double value);
 };
 
 

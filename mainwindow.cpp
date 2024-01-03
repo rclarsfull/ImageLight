@@ -70,6 +70,7 @@ int MainWindow::getReferenceValue()
 
 void MainWindow::converte()
 {
+    //qDebug() << converter.colorToGrey(QColor(255,255,255),0,0);
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     //PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
@@ -84,6 +85,7 @@ void MainWindow::converte()
     image = new QImage(fileName);
     greyImage = new QImage(fileName);
     falschfarbenBild = new QImage(fileName);
+    converter.updateGreyImage(greyImage,falschfarbenBild);
     int minGrey = 0, maxGrey = 255;
     minGrey = converter.getMinGrey(greyImage);
     maxGrey = converter.getMaxGrey(greyImage);
@@ -93,7 +95,7 @@ void MainWindow::converte()
     orginalCanvas->setMinGrey(minGrey);
     resultCanvas->setMaxGrey(maxGrey);
     resultCanvas->setMinGrey(minGrey);
-    converter.recolorImage(greyImage,falschfarbenBild, minGrey, maxGrey);
+    converter.updateFalschfarbenBild(greyImage,falschfarbenBild, minGrey, maxGrey);
     orginalCanvas->setImage(image);
     orginalCanvas->setGreyImage(greyImage);
     resultCanvas->setImage(falschfarbenBild);
