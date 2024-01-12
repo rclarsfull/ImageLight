@@ -5,14 +5,14 @@
 class ReferenceBox: public Drawable
 {
     QPoint end;
-    QImage** image;
-    int avgGrey;
+    unsigned short *((*candela)[Global::Y_RESELUTION]);
+    unsigned short avgGrey;
 public:
     ReferenceBox():Drawable(){};
-    ReferenceBox(QPoint origen, QPoint end, QImage** image, Converter* converter):Drawable(origen, converter), end(end), image(image){};
+    ReferenceBox(QPoint origen, QPoint end, unsigned short *((*candela)[Global::Y_RESELUTION]), Converter* converter):Drawable(origen, converter), end(end), candela(candela){};
     ~ReferenceBox(){};
     void draw(QPainter* painter);
-    int getAvgGrey();
+    unsigned short getAvgGrey();
 };
 
 #endif // REFERENCEBOX_H

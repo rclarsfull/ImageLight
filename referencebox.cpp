@@ -1,5 +1,4 @@
 #include "referencebox.h"
-#include "converter.h"
 
 void ReferenceBox::draw(QPainter *painter)
 {
@@ -14,11 +13,11 @@ void ReferenceBox::draw(QPainter *painter)
     painter->setPen(QPen(Qt::white,2,Qt::SolidLine));
     painter->drawText(origen+QPoint(-4,4),"X");
 
-    if(image != NULL){
+    if(candela != NULL){
         long double sum = 0;
         for(int i = 0; i<xSize; i++){
             for(int y = 0; y < ySize; y++){
-                sum += converter->greyToCandela(converter->colorToGrey((*image)->pixelColor(origen.x()+i,origen.y()+y),origen.x()+i,origen.y()+y));
+                sum += (*candela)[origen.x()+i][origen.y()+y];
             }
         }
         avgGrey = sum/(xSize*ySize);
@@ -26,7 +25,7 @@ void ReferenceBox::draw(QPainter *painter)
     }
 }
 
-int ReferenceBox::getAvgGrey()
+unsigned short ReferenceBox::getAvgGrey()
 {
     return avgGrey;
 }

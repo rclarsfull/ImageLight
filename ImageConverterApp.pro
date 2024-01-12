@@ -1,4 +1,5 @@
-QT       += core gui
+QT  += core gui
+QT  += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,16 +17,17 @@ SOURCES += \
     mainwindow.cpp \
     messurebox.cpp \
     perfomancetimer.cpp \
-    referencebox.cpp
+    serverconnetor.cpp
     converter.cpp
 
 HEADERS += \
     canvas.h \
     converter.h \
+    global.h \
     mainwindow.h \
     messurebox.h \
     perfomancetimer.h \
-    referencebox.h \
+    serverconnetor.h \
     workerthread.h \
     converter.h \
     drawable.h

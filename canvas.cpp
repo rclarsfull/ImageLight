@@ -1,8 +1,8 @@
 #include "canvas.h"
 #include "QPainter"
 #include "converter.h"
-#include "messurebox.h"
 #include "mainwindow.h"
+#include "messurebox.h"
 #include <QMouseEvent>
 #include <QTextStream>
 #include <sstream>
@@ -13,13 +13,9 @@ QImage *Canvas::getResizedImage() const
     return resizedImage;
 }
 
-void Canvas::setGreyImage(QImage *newGreyImage)
-{
-    greyImage = newGreyImage;
-}
 
-Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minGrey(0), maxGrey(255), converter(converter), image(NULL), resizedImage(NULL),
-    greyImage(NULL), resizedGreyImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
+Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minCandela(0), maxCandela(255), converter(converter), image(NULL), resizedImage(NULL),
+    pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
 {
 }
 
@@ -55,36 +51,38 @@ Canvas::~Canvas()
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
-    QPainter finalPainter(this);
-    canvas = QPixmap(width(),height());
-    QPainter painter(&canvas);
-    resize();
-    if(image != NULL){
-        painter.drawImage(QPoint(0,0),*resizedImage);
-        if(pressedLocation){
-            painter.setPen(QPen(Qt::red,1));
-            painter.setBrush(QBrush(Qt::NoBrush));
-            painter.drawEllipse(*pressedLocation,5,5);
-        }
-        for (Drawable*& d:drawabels)
-            if(d!=NULL)
-                d->draw(&painter);
-
-        painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
-        painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
-        int difference = (maxGrey-minGrey) ?  maxGrey-minGrey : 1;
-        int scaleFactor = height() /difference;
-        int space = (height()- difference * scaleFactor)/2;
-        for (int i = minGrey; i < maxGrey; i++){
-            painter.setPen(QPen(converter->greyToColor(i,minGrey,maxGrey),1));
-            painter.setBrush(QBrush(converter->greyToColor(i,minGrey,maxGrey),Qt::SolidPattern));
-            painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
-            if(i%10 == 0){
-                painter.setPen(QPen(Qt::white,1));
-                painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(converter->greyToCandela(i)));
+    if(isOriginalImage || candela != NULL){
+        QPainter finalPainter(this);
+        canvas = QPixmap(width(),height());
+        QPainter painter(&canvas);
+        resize();
+        if(image != NULL){
+            painter.drawImage(QPoint(0,0),*resizedImage);
+            if(pressedLocation){
+                painter.setPen(QPen(Qt::red,1));
+                painter.setBrush(QBrush(Qt::NoBrush));
+                painter.drawEllipse(*pressedLocation,5,5);
             }
+            for (Drawable*& d:drawabels)
+                if(d!=NULL)
+                    d->draw(&painter);
+
+            painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
+            painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
+            int difference = (maxCandela-minCandela) ?  maxCandela-minCandela : 1;
+            int scaleFactor = height() /difference;
+            int space = (height()- difference * scaleFactor)/2;
+            for (int i = minCandela; i < maxCandela; i++){
+                painter.setPen(QPen(converter->candelaToColor(i,minCandela,maxCandela),1));
+                painter.setBrush(QBrush(converter->candelaToColor(i,minCandela,maxCandela),Qt::SolidPattern));
+                painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
+                if(i%10 == 0){
+                    painter.setPen(QPen(Qt::white,1));
+                    painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(-1)); //TODO: converter->greyToCandela(i) implement connection to ANN for singel value
+                }
+            }
+            finalPainter.drawPixmap(QPoint(0,0),canvas);
         }
-        finalPainter.drawPixmap(QPoint(0,0),canvas);
     }
 }
 
@@ -116,13 +114,11 @@ void Canvas::mousePressEvent(QMouseEvent *event)
                                                       debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
             debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
 
-            unsigned int grey;
+            unsigned int candelaValue;
             resize();
             otherCanvas->resize();
-            grey = resizedGreyImage->pixelColor(*pressedLocation).red();
-
-            debugText << "\tGrauwert Pixel:  " << grey;
-            debugText << "\tCandela: " << converter->greyToCandela(grey);
+            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,height() , image->height())];
+            debugText << "\tCandela: " << candelaValue;
             debugLabel->setText(QString::fromStdString(debugText.str()));
         }
     }
@@ -136,12 +132,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
             if(isOriginalImage){
                 resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &resizedGreyImage, converter);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, image);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }else{
                 otherCanvas->resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), &otherCanvas->resizedGreyImage, converter);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, otherCanvas->image);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }
@@ -155,16 +151,6 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
 void Canvas::resize()
 {
-    if(greyImage != NULL){
-        if(resizedGreyImage != NULL)
-            delete resizedGreyImage;
-        if(otherCanvas->resizedGreyImage != NULL)
-            delete otherCanvas->resizedGreyImage;
-        resizedGreyImage = new QImage(greyImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
-        otherCanvas->resizedGreyImage = new QImage(otherCanvas->greyImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
-    }else
-        qDebug() << "Fehler Grey Image Null resize ignored";
-
     if(image != NULL){
         if(resizedImage != NULL)
             delete resizedImage;
@@ -201,24 +187,24 @@ void Canvas::setImage(QImage *newImage)
     image = newImage;
 }
 
-int Canvas::getMinGrey() const
+int Canvas::getMinCandela() const
 {
-    return minGrey;
+    return minCandela;
 }
 
-void Canvas::setMinGrey(int newMinGrey)
+void Canvas::setMinCandela(int newMinCandela)
 {
-    minGrey = newMinGrey;
+    minCandela = newMinCandela;
 }
 
-int Canvas::getMaxGrey() const
+int Canvas::getMaxCandela() const
 {
-    return maxGrey;
+    return maxCandela;
 }
 
-void Canvas::setMaxGrey(int newMaxGrey)
+void Canvas::setMaxCandela(int newMaxCandela)
 {
-    maxGrey = newMaxGrey;
+    maxCandela = newMaxCandela;
 }
 
 QPixmap *Canvas::getCanvas()

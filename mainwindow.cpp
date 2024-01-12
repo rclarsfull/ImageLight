@@ -11,14 +11,15 @@ MainWindow::MainWindow(QWidget *parent)
     , mode(withoutReference)
     , ui(new Ui::MainWindow)
     , image(NULL)
-    , greyImage(NULL)
     , falschfarbenBild(NULL)
+    , candela(NULL)
     , orginalCanvas(new Canvas(true, &converter, this))
     , resultCanvas(new Canvas(false, &converter, this))
     , converter(this)
     , isShowingOriginal(false)
 {
     ui->setupUi(this);
+   // candela = new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION];
     orginalCanvas->setOtherCanvas(resultCanvas);
     resultCanvas->setOtherCanvas(orginalCanvas);
     ui->tabWidget->removeTab(1);
@@ -41,9 +42,9 @@ MainWindow::~MainWindow()
         delete falschfarbenBild;
         falschfarbenBild = NULL;
     }
-    if(greyImage != NULL){
-        delete greyImage;
-        greyImage = NULL;
+    if(candela != NULL){
+        delete[] candela;
+        candela = NULL;
     }
     if(image != NULL){
         delete image;
@@ -76,32 +77,33 @@ void MainWindow::converte()
     QString fileName = ui->lineEdit->text();
     if(image != NULL){
         delete image;
-        delete greyImage;
+        delete[] candela;
         delete falschfarbenBild;
         image = NULL;
-        greyImage = NULL;
+        candela = NULL;
         falschfarbenBild = NULL;
     }
     image = new QImage(fileName);
-    greyImage = new QImage(fileName);
     falschfarbenBild = new QImage(fileName);
-    converter.updateGreyImage(greyImage,falschfarbenBild);
+    converter.updateCandela(candela, image);
     int minGrey = 0, maxGrey = 255;
-    minGrey = converter.getMinGrey(greyImage);
-    maxGrey = converter.getMaxGrey(greyImage);
+    minGrey = converter.getMinCandela(candela);
+    maxGrey = converter.getMaxCandela(candela);
     ui->minSlider->setSliderPosition(minGrey);
     ui->maxSlider->setSliderPosition(maxGrey);
-    orginalCanvas->setMaxGrey(maxGrey);
-    orginalCanvas->setMinGrey(minGrey);
-    resultCanvas->setMaxGrey(maxGrey);
-    resultCanvas->setMinGrey(minGrey);
-    converter.updateFalschfarbenBild(greyImage,falschfarbenBild, minGrey, maxGrey);
+    orginalCanvas->setMaxCandela(maxGrey);
+    orginalCanvas->setMinCandela(minGrey);
+    resultCanvas->setMaxCandela(maxGrey);
+    resultCanvas->setMinCandela(minGrey);
+    if(candela != NULL)
+        converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
+    else
+        qDebug() << "candela is NULL";
     orginalCanvas->setImage(image);
-    orginalCanvas->setGreyImage(greyImage);
+    orginalCanvas->setCandela(candela);
     resultCanvas->setImage(falschfarbenBild);
-    resultCanvas->setGreyImage(greyImage);
+    resultCanvas->setCandela(candela);
     update();
-    greyImage->save("greyTest.jpg");
     //falschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     QGuiApplication::restoreOverrideCursor();
 }
@@ -109,24 +111,24 @@ void MainWindow::converte()
 void MainWindow::sliderEvent()
 {
     qDebug() << "sliderEvent";
-    int minGrey = ui->minSlider->value();
-    int maxGrey = ui->maxSlider->value();
+    int minCandela = ui->minSlider->value();
+    int maxCandela = ui->maxSlider->value();
     if(falschfarbenBild != NULL)
         delete falschfarbenBild;
     falschfarbenBild = new QImage(*image);
     resultCanvas->setImage(falschfarbenBild);
-    orginalCanvas->setMaxGrey(maxGrey);
-    orginalCanvas->setMinGrey(minGrey);
-    resultCanvas->setMaxGrey(maxGrey);
-    resultCanvas->setMinGrey(minGrey);
-    converter.updateFalschfarbenBild(greyImage,falschfarbenBild,minGrey,maxGrey);
+    orginalCanvas->setMaxCandela(maxCandela);
+    orginalCanvas->setMinCandela(minCandela);
+    resultCanvas->setMaxCandela(maxCandela);
+    resultCanvas->setMinCandela(minCandela);
+    converter.updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
 //    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
 //    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
 //    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
     // R:  0.68 G:  0.88 B:  1.6
     //R:  1.014 G:  0.988 B:  1.014
-    qDebug() << "R: " << Converter::redModifer << "G: " << Converter::greenModifer << "B: " << Converter::blueModifer;
-    update();
+    //qDebug() << "R: " << Converter::redModifer << "G: " << Converter::greenModifer << "B: " << Converter::blueModifer;
+    //update();
     resultCanvas->update();
 }
 
@@ -170,7 +172,7 @@ void MainWindow::saveData()
 
 void MainWindow::randlichabfallCorrection()
 {
-    converter.calibrateLightCorrectionMatrix(image);
+    converter.calibrateLightCorrectionMatrix(candela, image);
     converte();
 }
 

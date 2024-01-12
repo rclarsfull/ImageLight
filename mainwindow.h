@@ -25,8 +25,8 @@ private:
     programmModes mode;
     Ui::MainWindow *ui;
     QImage* image;
-    QImage* greyImage;
     QImage* falschfarbenBild;
+    unsigned short(*candela)[Global::Y_RESELUTION];
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
     Converter converter;

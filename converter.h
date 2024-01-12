@@ -1,12 +1,11 @@
 #ifndef CONVERTER_H
 #define CONVERTER_H
-
+#include "global.h"
+#include "serverconnetor.h"
 #include <QImage>
 #include <QColor>
 //#include <QThreadPool>
 //#include <QMutex>
-#define xReselution 2352
-#define yReselution 1568
 
 class MainWindow;
 class Converter
@@ -14,24 +13,23 @@ class Converter
     //static QThreadPool workerPool;
    // static QMutex imageMutex;
     MainWindow* mainWindow ;
-    //float* lightCorrectionMatrix[xReselution][yReselution];
-    float(*lightCorrectionMatrix)[yReselution];
+    //float* lightCorrectionMatrix[Global::X_RESELUTION][Global::Y_RESELUTION];
+    float(*lightCorrectionMatrix)[Global::Y_RESELUTION];
     void resetLightCorrectionMatrix();
+    ServerConnector pythonServer;
 public:
-    static double redModifer;
-    static double greenModifer;
-    static double blueModifer;
     Converter(MainWindow* mainWindow);;
     ~Converter();
+    float *colorToRGBArray(QColor color, unsigned int x, unsigned int y);
+    QColor candelaToColor(unsigned short candela, unsigned int minGrey, unsigned int maxGrey);
 
-    unsigned int greyToCandela(unsigned int);
-    void updateGreyImage(QImage* greyImage, QImage *falschfarbenBild);
-    QColor greyToColor(unsigned int grey, unsigned int minGrey, unsigned int maxGrey);
-    unsigned int colorToGrey(QColor color, unsigned x, unsigned y);
-    unsigned int getMinGrey(QImage* greyImage);
-    unsigned int getMaxGrey(QImage* greyImage);
-    void calibrateLightCorrectionMatrix(QImage* image);
-    void updateFalschfarbenBild(QImage *greyImage, QImage *falschfarbenBild, int minGrey, int maxGrey);
+    void updateCandela(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image);
+    unsigned int sRGBtoLinearRGB(QColor color, unsigned x, unsigned y);
+    unsigned int getMinCandela(unsigned short (*candela)[Global::Y_RESELUTION]);
+    unsigned int getMaxCandela(unsigned short (*candela)[Global::Y_RESELUTION]);
+    void calibrateLightCorrectionMatrix(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image);
+    void updateFalschfarbenBild(unsigned short (*candela)[Global::Y_RESELUTION], QImage *falschfarbenBild, int minGrey, int maxGrey);
+    static int scaleCordtoCanvas(int cord, int sizeCanvas, int sizeImage);
 private:
     double sRGBToLinear(double value);
 };

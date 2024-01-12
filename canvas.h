@@ -9,12 +9,11 @@ class MainWindow;
 class Canvas : public QFrame
 {
     bool isOriginalImage;
-    int minGrey, maxGrey;
+    int minCandela, maxCandela;
     Converter* converter;
     QImage* image;
     QImage* resizedImage;
-    QImage* greyImage;
-    QImage* resizedGreyImage;
+    unsigned short (**candela)[Global::Y_RESELUTION];
     QPoint* pressedLocation;
     Canvas* otherCanvas;
     QLabel* debugLabel;
@@ -27,7 +26,6 @@ public:
     Canvas(bool isOriginalImage, Converter* converter, MainWindow* mainWindow);
     ~Canvas();
     void resize();
-
     void setImage(QImage *newImage);
     void setOtherCanvas(Canvas* other);
     void setPressedLocation(QPoint* point);
@@ -36,18 +34,15 @@ public:
     QVector<Drawable *>& getDrawabels();
     bool getIsOriginalImage() const;
     QImage* getImage();
-    int getMinGrey() const;
-    void setMinGrey(int newMinGrey);
-    int getMaxGrey() const;
-    void setMaxGrey(int newMaxGrey);
+    int getMinCandela() const;
+    void setMinCandela(int newMinCandela);
+    int getMaxCandela() const;
+    void setMaxCandela(int newMaxCandela);
     QPixmap* getCanvas();
     void saveDataAsCSV(QString fileName);
-
     void delDrawabels();
-
     QImage *getResizedImage() const;
-
-    void setGreyImage(QImage *newGreyImage);
+    void setCandela(unsigned short (*newCandela)[Global::Y_RESELUTION]){candela = &newCandela;}
 
 public slots:
 
