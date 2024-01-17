@@ -10,24 +10,33 @@ import threading
 import time
 
 
-def handle_client(connection, client_address, model, x_scaler, X_RESELUTION, Y_RESELUTION):
+def handle_client(connection, client_address, model, x_scaler):
     try:
         print(f"Connection from {client_address}")
 
         start_time = time.time()  # Record the start time
 
+        dataSize = b""
+        while len(dataSize) < 4:
+            chunk = connection.recv(4 - len(dataSize))
+            if not chunk:
+                print(f"Error: No Size received from {client_address}")
+                return
+            dataSize += chunk
+        dataSize = struct.unpack('<I', dataSize)[0]
+        print(f"Expected size: {dataSize} bytes")
         # Receive the binary data from the socket
         data_bytes = b""
-        while len(data_bytes) < X_RESELUTION * Y_RESELUTION * 3 * 4:
-            chunk = connection.recv(X_RESELUTION * Y_RESELUTION * 3 * 4 - len(data_bytes))
+        while len(data_bytes) < dataSize:
+            chunk = connection.recv(dataSize - len(data_bytes))
             if not chunk:
-                print(f"Error: No Data received from {client_address}")
+                print(f"Error: No enothe Data received from {client_address}")
                 return
             data_bytes += chunk
         print(f"Received {len(data_bytes)} bytes of data from {client_address}")
-        print(f"Expected size: {X_RESELUTION * Y_RESELUTION * 3 * 4} bytes")
+        
         # Unpack the binary data into a float array using struct
-        float_array = struct.unpack(f'{X_RESELUTION * Y_RESELUTION * 3}f', data_bytes)
+        float_array = struct.unpack(f'{dataSize/4}f', data_bytes)
 
         # Convert the float array to a NumPy array if needed
         numpy_array = np.array(float_array, dtype=np.float32)
@@ -36,7 +45,7 @@ def handle_client(connection, client_address, model, x_scaler, X_RESELUTION, Y_R
         while counter < numpy_array.size:
             rgbValues.append((numpy_array[counter], numpy_array[counter + 1], numpy_array[counter + 2]))
             counter += 3
-        if len(rgbValues) != X_RESELUTION * Y_RESELUTION:
+        if len(rgbValues) != dataSize/(3*4):
             print(f"Error: Data amount doesn't match Resolution for {client_address}")
             return
 
@@ -57,7 +66,7 @@ def handle_client(connection, client_address, model, x_scaler, X_RESELUTION, Y_R
         print(scaled_predictions)
 
         # Convert scaled_predictions to bytes
-        scaled_bytes = struct.pack(f'{X_RESELUTION * Y_RESELUTION}H', *scaled_predictions)
+        scaled_bytes = struct.pack(f'{dataSize/(3*4)}H', *scaled_predictions)
 
         # Send the data over the connection
         connection.sendall(scaled_bytes)
@@ -77,10 +86,6 @@ def handle_client(connection, client_address, model, x_scaler, X_RESELUTION, Y_R
 def main():
     server_ip = "172.19.15.159"
     server_port = 12345
-    X_RESELUTION = 2352
-    Y_RESELUTION = 1568
-    print(f"Server expects an image size of {X_RESELUTION}x{Y_RESELUTION}")
-
     model = load_model('model.keras')
     x_scaler = joblib.load('scaler_model.joblib')
     print("Models loaded")
@@ -95,7 +100,7 @@ def main():
         connection, client_address = server_socket.accept()
 
         # Create a new thread to handle the connection
-        client_handler = threading.Thread(target=handle_client, args=(connection, client_address, model, x_scaler, X_RESELUTION, Y_RESELUTION))
+        client_handler = threading.Thread(target=handle_client, args=(connection, client_address, model, x_scaler))
         client_handler.start()
 
 if __name__ == "__main__":
