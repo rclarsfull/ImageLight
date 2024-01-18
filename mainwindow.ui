@@ -81,28 +81,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Referenzpunkt:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="referenceCheckBox">
+       <widget class="QCheckBox" name="calibrationCheckBox">
         <property name="text">
-         <string>Referenzpunkt nutzen</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="referenceLineEdit"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="berreichSetzenButton">
-        <property name="text">
-         <string>Berreich setzen</string>
+         <string>Calibration Mode</string>
         </property>
        </widget>
       </item>
@@ -139,7 +122,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -270,29 +253,13 @@
    </hints>
   </connection>
   <connection>
-   <sender>referenceCheckBox</sender>
+   <sender>calibrationCheckBox</sender>
    <signal>stateChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>changeMode()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>59</x>
-     <y>395</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>berreichSetzenButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectReference()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>452</x>
      <y>395</y>
     </hint>
     <hint type="destinationlabel">
@@ -355,7 +322,6 @@
   <slot>sliderEvent()</slot>
   <slot>speichernUnter()</slot>
   <slot>changeMode()</slot>
-  <slot>selectReference()</slot>
   <slot>saveData()</slot>
   <slot>delDrawabels()</slot>
   <slot>randlichabfallCorrection()</slot>

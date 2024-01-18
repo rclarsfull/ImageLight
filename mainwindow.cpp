@@ -8,7 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , mode(withoutReference)
+    , mode(normalMode)
     , ui(new Ui::MainWindow)
     , image(NULL)
     , falschfarbenBild(NULL)
@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     , isShowingOriginal(false)
 {
     ui->setupUi(this);
-   // candela = new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION];
+    candela = new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION];
     orginalCanvas->setOtherCanvas(resultCanvas);
     resultCanvas->setOtherCanvas(orginalCanvas);
     ui->tabWidget->removeTab(1);
@@ -31,9 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     orginalCanvas->setDebugLabel(ui->label);
     resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
-
-    ui->referenceLineEdit->setDisabled(true);
-    ui->berreichSetzenButton->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -52,22 +49,6 @@ MainWindow::~MainWindow()
     }
     delete ui;
 }
-
-int MainWindow::getReferenceValue()
-{
-    if(ui->referenceLineEdit->text() == "" )
-        return 0;
-
-    bool ok;
-    int reference = ui->referenceLineEdit->text().toInt(&ok);
-    if(ok)
-        return reference;
-    else{
-        qDebug() << "Error: Reference not an Integer! replaced with 0";
-        return 0;
-    }
-}
-
 
 void MainWindow::converte()
 {
@@ -122,13 +103,6 @@ void MainWindow::sliderEvent()
     resultCanvas->setMaxCandela(maxCandela);
     resultCanvas->setMinCandela(minCandela);
     converter.updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
-//    Converter::redModifer = (double)ui->redVerticalSlider->value()/500;
-//    Converter::greenModifer = (double)ui->GreenVerticalSlider_2->value()/500;
-//    Converter::blueModifer = (double)ui->BlueVerticalSlider_3->value()/500;
-    // R:  0.68 G:  0.88 B:  1.6
-    //R:  1.014 G:  0.988 B:  1.014
-    //qDebug() << "R: " << Converter::redModifer << "G: " << Converter::greenModifer << "B: " << Converter::blueModifer;
-    //update();
     resultCanvas->update();
 }
 
@@ -145,18 +119,10 @@ void MainWindow::speichernUnter()
 
 void MainWindow::changeMode()
 {
-    if(ui->referenceCheckBox->isChecked())
-        mode = withReference;
+    if(ui->calibrationCheckBox->isChecked())
+        mode = calibrationMode;
     else
-        mode = withoutReference;
-    ui->referenceLineEdit->setDisabled(mode == withoutReference);
-    ui->berreichSetzenButton->setDisabled(mode == withoutReference);
-    qDebug() << "mode changed: " << mode;
-}
-
-void MainWindow::selectReference()
-{
-    mode = referenceSelection;
+        mode = normalMode;
     qDebug() << "mode changed: " << mode;
 }
 
@@ -165,7 +131,7 @@ void MainWindow::saveData()
     if(falschfarbenBild != NULL){
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                         "untitled.csv",
-                                                        tr("Images (*.csv)"));
+                                                        tr("CSV (*.csv)"));
         orginalCanvas->saveDataAsCSV(fileName);
     }
 }

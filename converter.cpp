@@ -67,6 +67,7 @@ void Converter::resetLightCorrectionMatrix(){
 
 void Converter::updateCandela(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image)
 {
+
     PerfomanceTimer timer("UpdateCandela");
     float *data = new float[Global::X_RESELUTION*Global::Y_RESELUTION*3];
     for(int y = 0; y < Global::Y_RESELUTION; y++){

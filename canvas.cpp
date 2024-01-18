@@ -78,7 +78,7 @@ void Canvas::paintEvent(QPaintEvent *event)
                 painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
                 if(i%10 == 0){
                     painter.setPen(QPen(Qt::white,1));
-                    painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(-1)); //TODO: converter->greyToCandela(i) implement connection to ANN for singel value
+                    painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(i));
                 }
             }
             finalPainter.drawPixmap(QPoint(0,0),canvas);
@@ -88,40 +88,40 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    if(mainWindow->getMode() == referenceSelection){
-        // drawabels.push_front(new ReferenceBox())
-    }else{
-        isDelAction = false;
 
-        for (Drawable*& d:drawabels){
-            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-                d = NULL;
-                isDelAction = true;
-            }
-        }
-        for (Drawable*& d:otherCanvas->getDrawabels()){
-            if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
-                delete d;
-                d = NULL;
-                isDelAction = true;
-            }
-        }
-        if(!isDelAction){
-            setPressedLocation(new QPoint(event->pos()));
-            otherCanvas->setPressedLocation(new QPoint(event->pos()));
-            std::stringstream debugText;
-            debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
-                                                      debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
-            debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
+    isDelAction = false;
 
-            unsigned int candelaValue;
-            resize();
-            otherCanvas->resize();
-            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,height() , image->height())];
-            debugText << "\tCandela: " << candelaValue;
-            debugLabel->setText(QString::fromStdString(debugText.str()));
+    for (Drawable*& d:drawabels){
+        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+            d = NULL;
+            isDelAction = true;
         }
     }
+    for (Drawable*& d:otherCanvas->getDrawabels()){
+        if (d!= NULL && ((d->getOrigen().x()-event->pos().x())*(d->getOrigen().x()-event->pos().x()))+((d->getOrigen().y()-event->pos().y())*(d->getOrigen().y()-event->pos().y())) < 25){
+            delete d;
+            d = NULL;
+            isDelAction = true;
+        }
+    }
+    if(!isDelAction){
+        setPressedLocation(new QPoint(event->pos()));
+        otherCanvas->setPressedLocation(new QPoint(event->pos()));
+        std::stringstream debugText;
+        debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
+                                                  debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
+        debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
+
+        unsigned int candelaValue;
+        resize();
+        otherCanvas->resize();
+        if(mainWindow->getMode() == normalMode){
+            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,height() , image->height())];
+            debugText << "\tCandela: " << candelaValue;
+        }
+        debugLabel->setText(QString::fromStdString(debugText.str()));
+    }
+
     update();
     otherCanvas->update();
 }
@@ -132,12 +132,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
             if(isOriginalImage){
                 resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, image);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, image, converter, mainWindow);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }else{
                 otherCanvas->resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, otherCanvas->image);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, otherCanvas->image, converter, mainWindow);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }
@@ -217,14 +217,18 @@ void Canvas::saveDataAsCSV(QString fileName)
     QFile csvFile(fileName);
     csvFile.open(QFile::WriteOnly);
     QTextStream stream(&csvFile);
-    stream << ";" << "ID" << ";" << "Candela" << ";\n";
-    for(int i = 0; i < drawabels.size(); i++){
-        MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
-        if(messureBox == NULL)
-            continue;
-        stream << ";" << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
-        //qDebug() << ";" << messureBox->getAvgCandala() << ";\n";
+    if(mainWindow->getMode() == normalMode){
+        stream << "ID" << ";" << "Candela" << ";\n";
+        for(int i = 0; i < drawabels.size(); i++){
+            MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
+            if(messureBox == NULL)
+                continue;
+            stream << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
+        }
+    }else{
+
     }
+
 
     csvFile.close();
 }

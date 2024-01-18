@@ -39,7 +39,7 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
     }
 
     if (receivedData.size() == sizeof(unsigned short) * Global::Y_RESELUTION * Global::X_RESELUTION) {
-        std::memcpy(*responeData, receivedData.constData(), sizeof(*responeData));
+        std::memcpy(*responeData, receivedData.constData(), receivedData.size());
         // Process the received data as needed
     }
 
