@@ -4,24 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a58cf0b-2c6c-42cf-a28c-0ed69d988ef9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ArtificalNeuronalColorNetwork.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ArtificalNeuronalColorNetwork.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+    <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ANNTrainingRGB" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.keras" beforeDir="false" afterPath="$PROJECT_DIR$/model.keras" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scaler_model.joblib" beforeDir="false" afterPath="$PROJECT_DIR$/scaler_model.joblib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../canvas.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../canvas.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../converter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../mainwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mainwindow.h" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../messurebox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../messurebox.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../messurebox.h" beforeDir="false" afterPath="$PROJECT_DIR$/../messurebox.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../serverconnetor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../serverconnetor.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +22,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
   "associatedIndex": 0
 }]]></component>
-  <component name="ProjectId" id="2b7x3eaw6VsvnQYsZgp1cOdDylj" />
+  <component name="ProjectId" id="2bJ7zjRGX3C81pD6smf9mg8lszG" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -45,7 +36,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Lars/OneDrive/Dokumente/Arbeit/NewProjektFolder/Picture_Candela_Calculator/ArtificalNeuronalColorNetwork/main.py",
+    "last_opened_file_path": "C:/Users/Lars/Documents/Arbeit/NewProjektFolder/Picture_Candela_Calculator/ArtificalNeuronalColorNetwork/main.py",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,11 +44,6 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Lars\OneDrive\Dokumente\Arbeit\NewProjektFolder\Picture_Candela_Calculator\ArtificalNeuronalColorNetwork" />
-    </key>
-  </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ArtificalNeuronalColorNetwork" />
@@ -67,7 +53,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.9 (ArtificalNeuronalColorNetwork) (4)" />
+      <option name="SDK_NAME" value="Python 3.9 (ArtificalNeuronalColorNetwork) (5)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -90,7 +76,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.9 (ArtificalNeuronalColorNetwork) (4)" />
+      <option name="SDK_NAME" value="Python 3.9 (ArtificalNeuronalColorNetwork) (5)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -106,19 +92,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.main" />
       <item itemvalue="Python.train" />
+      <item itemvalue="Python.main" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4a58cf0b-2c6c-42cf-a28c-0ed69d988ef9" name="Changes" comment="" />
-      <created>1705579720583</created>
+      <changelist id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="" />
+      <created>1705921592954</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1705579720583</updated>
-      <workItem from="1705579723334" duration="4309000" />
+      <updated>1705921592954</updated>
+      <workItem from="1705921603937" duration="1084000" />
     </task>
     <servers />
   </component>
@@ -126,7 +112,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1705583197324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1705583446696" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$trein.coverage" NAME="train Coverage Results" MODIFIED="1705922033061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1705922086561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

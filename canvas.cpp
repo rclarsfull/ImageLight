@@ -116,12 +116,11 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         resize();
         otherCanvas->resize();
         if(mainWindow->getMode() == normalMode){
-            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,height() , image->height())];
+            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), resizedImage->width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,resizedImage->height() , image->height())];
             debugText << "\tCandela: " << candelaValue;
         }
         debugLabel->setText(QString::fromStdString(debugText.str()));
     }
-
     update();
     otherCanvas->update();
 }
@@ -132,12 +131,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
             if(isOriginalImage){
                 resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, image, converter, mainWindow);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, &resizedImage, &image, converter, mainWindow);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }else{
                 otherCanvas->resize();
-                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, this, otherCanvas->image, converter, mainWindow);
+                MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, &otherCanvas->resizedImage, &otherCanvas->image, converter, mainWindow);
                 drawabels.push_back(tmp);
                 otherCanvas->getDrawabels().push_back(tmp);
             }
@@ -226,7 +225,13 @@ void Canvas::saveDataAsCSV(QString fileName)
             stream << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
         }
     }else{
-
+        stream << "ID" << ";" << "Red" << ";" << "Green" << ";" << "Blue" << ";\n";
+        for(int i = 0; i < drawabels.size(); i++){
+            MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
+            if(messureBox == NULL)
+                continue;
+            stream << messureBox->getId() << ";" << messureBox->getAvgRed() << ";" << messureBox->getAvgGreen() << ";" << messureBox->getAvgBlue() << ";\n";
+        }
     }
 
 

@@ -8,8 +8,8 @@ class MessureBox : public Drawable
 {
     QPoint end;
     unsigned short (**candela)[Global::Y_RESELUTION];
-    Canvas* canvas;
-    QImage* originalImage;
+    QImage** resizedImage;
+    QImage** originalImage;
     MainWindow *mainWindow;
     int avgCandala, avgRed, avgGreen, avgBlue;
     int id;
@@ -17,7 +17,7 @@ class MessureBox : public Drawable
     void calcAvgCanela();
 public:
     MessureBox():Drawable(){};
-    MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::Y_RESELUTION], Canvas* canvas, QImage *originalImage, Converter *converter, MainWindow * mainWindow);
+    MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::Y_RESELUTION], QImage **resizedImage, QImage **originalImage, Converter *converter, MainWindow * mainWindow);
     ~MessureBox(){};
     void draw(QPainter* painter);
     int getAvgCandala(){return avgCandala;};

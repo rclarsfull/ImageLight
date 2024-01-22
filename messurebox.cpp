@@ -1,14 +1,13 @@
 #include "messurebox.h"
-#include "canvas.h"
 #include "converter.h"
 #include "mainwindow.h"
 int MessureBox::counter = 1;
 
-MessureBox::MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::Y_RESELUTION], Canvas* canvas, QImage* originalImage, Converter *converter, MainWindow *mainWindow)
+MessureBox::MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::Y_RESELUTION], QImage **resizedImage, QImage **originalImage, Converter *converter, MainWindow *mainWindow)
     :Drawable(origen,converter)
     , end(end)
     , candela(candela)
-    , canvas(canvas)
+    , resizedImage(resizedImage)
     , originalImage(originalImage)
     , mainWindow(mainWindow)
     , avgCandala(-1)
@@ -33,6 +32,7 @@ void MessureBox::draw(QPainter *painter)
     painter->drawEllipse(origen,5,5);
     painter->setPen(QPen(Qt::white,2,Qt::SolidLine));
     painter->drawText(origen+QPoint(-4,4),"X");
+
     calcAvgCanela();
     painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),"ID: "+ QString::number(id));
     if(mainWindow->getMode() == normalMode)
@@ -65,9 +65,14 @@ void MessureBox::calcAvgCanela()
         long int sumBlue = 0;
         for(int i = 0; i<xSize; i++){
             for(int y = 0; y < ySize; y++){
+                int cavasWidth = (*resizedImage)->width();
+                int imageWidthe = (*originalImage)->width();
+                int cavasHig = (*resizedImage)->height();
+                int imageHig = (*originalImage)->height();
+                QPoint point(Converter::scaleCordtoCanvas(origen.x()+i, cavasWidth, imageWidthe), Converter::scaleCordtoCanvas(origen.y()+y, cavasHig, imageHig));
                 if(mainWindow->getMode() == normalMode)
-                    sumCandela += (*candela)[Converter::scaleCordtoCanvas(origen.x()+i, canvas->width(), originalImage->width())][Converter::scaleCordtoCanvas(origen.y()+y, canvas->height(), originalImage->height())];
-                QColor color = originalImage->pixelColor(Converter::scaleCordtoCanvas(origen.x()+i, canvas->width(), originalImage->width()), Converter::scaleCordtoCanvas(origen.y()+y, canvas->height(), originalImage->height()));
+                    sumCandela += (*candela)[point.x()][point.y()];
+                QColor color = (*originalImage)->pixelColor(point);
                 sumRed += color.red();
                 sumGreen += color.green();
                 sumBlue += color.blue();

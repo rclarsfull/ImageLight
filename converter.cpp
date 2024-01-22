@@ -11,7 +11,7 @@
 #include <fstream>
 
 
-Converter::Converter(MainWindow *mainWindow):mainWindow(mainWindow), pythonServer("127.0.0.1",6666){
+Converter::Converter(MainWindow *mainWindow):mainWindow(mainWindow), pythonServer("127.0.0.1",12345){
     lightCorrectionMatrix = new float[Global::X_RESELUTION][Global::Y_RESELUTION];
     std::ifstream in("correctionFile.dat", std::ios_base::binary);
     if(!in.read((char*)lightCorrectionMatrix,sizeof(float)*Global::X_RESELUTION*Global::Y_RESELUTION)){
@@ -204,8 +204,9 @@ unsigned int Converter::getMaxCandela(unsigned short (*candela)[Global::Y_RESELU
 
 int Converter::scaleCordtoCanvas(int cord, int sizeCanvas, int sizeImage)
 {
-    double tmp = cord/sizeCanvas;
-    return tmp * sizeImage + 0.5;
+    double tmp = double(cord)/double(sizeCanvas);
+    int value = tmp * sizeImage;
+    return value;
 }
 //unsigned int Converter::colorToGrey(QColor color, unsigned int x, unsigned int y){
 //    float red = (pow(color.red(),2.2));

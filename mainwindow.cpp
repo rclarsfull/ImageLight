@@ -12,14 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , image(NULL)
     , falschfarbenBild(NULL)
-    , candela(NULL)
+    , candela(new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION])
     , orginalCanvas(new Canvas(true, &converter, this))
     , resultCanvas(new Canvas(false, &converter, this))
     , converter(this)
     , isShowingOriginal(false)
 {
     ui->setupUi(this);
-    candela = new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION];
     orginalCanvas->setOtherCanvas(resultCanvas);
     resultCanvas->setOtherCanvas(orginalCanvas);
     ui->tabWidget->removeTab(1);
@@ -27,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->addTab(orginalCanvas," Original");
     ui->tabWidget->addTab(resultCanvas,"Falschfarben");
     ui->tabWidget->setTabPosition(QTabWidget::South);
-
     orginalCanvas->setDebugLabel(ui->label);
     resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
@@ -58,32 +56,29 @@ void MainWindow::converte()
     QString fileName = ui->lineEdit->text();
     if(image != NULL){
         delete image;
-        delete[] candela;
         delete falschfarbenBild;
         image = NULL;
-        candela = NULL;
         falschfarbenBild = NULL;
     }
     image = new QImage(fileName);
     falschfarbenBild = new QImage(fileName);
-    converter.updateCandela(candela, image);
     int minGrey = 0, maxGrey = 255;
-    minGrey = converter.getMinCandela(candela);
-    maxGrey = converter.getMaxCandela(candela);
-    ui->minSlider->setSliderPosition(minGrey);
-    ui->maxSlider->setSliderPosition(maxGrey);
-    orginalCanvas->setMaxCandela(maxGrey);
-    orginalCanvas->setMinCandela(minGrey);
-    resultCanvas->setMaxCandela(maxGrey);
-    resultCanvas->setMinCandela(minGrey);
-    if(candela != NULL)
+    if(getMode() == normalMode){
+        converter.updateCandela(candela, image);
+        minGrey = converter.getMinCandela(candela);
+        maxGrey = converter.getMaxCandela(candela);
+        ui->minSlider->setSliderPosition(minGrey);
+        ui->maxSlider->setSliderPosition(maxGrey);
+        orginalCanvas->setMaxCandela(maxGrey);
+        orginalCanvas->setMinCandela(minGrey);
+        resultCanvas->setMaxCandela(maxGrey);
+        resultCanvas->setMinCandela(minGrey);
         converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
-    else
-        qDebug() << "candela is NULL";
-    orginalCanvas->setImage(image);
+    }
     orginalCanvas->setCandela(candela);
-    resultCanvas->setImage(falschfarbenBild);
     resultCanvas->setCandela(candela);
+    orginalCanvas->setImage(image);
+    resultCanvas->setImage(falschfarbenBild);
     update();
     //falschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     QGuiApplication::restoreOverrideCursor();
