@@ -1,4 +1,5 @@
 #include "serverconnetor.h"
+#include "qthread.h"
 #include <iostream>
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -6,7 +7,7 @@
 ServerConnector::ServerConnector(const char* serverIP, int serverPort)
     : serverIP(serverIP), serverPort(serverPort) {}
 
-void ServerConnector::connectAndSendData(float *data, unsigned short (*responeData)[Global::Y_RESELUTION]) {
+void ServerConnector::connectAndSendData(float *data, unsigned short (*responeData)[Global::X_RESELUTION]) {
     QTcpSocket socket;
 
     // Convert IP address from string to QHostAddress
@@ -29,19 +30,24 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
     // Wait for the data to be sent
     socket.waitForBytesWritten();
 
-    socket.waitForReadyRead(280000);
+    socket.waitForReadyRead(680000);
     // Receive response data
-    QByteArray receivedData = socket.readAll();
-
-    if (receivedData.isEmpty()) {
-        qDebug() << "Error reading data from the server" ;
-        return;
+    QByteArray receivedData;
+    int expectedSize = sizeof(unsigned short) * Global::X_RESELUTION * Global::Y_RESELUTION;
+    //QThread::sleep(5);
+    while (receivedData.size() < expectedSize) {
+        // Receive response data in chunks
+        if (socket.waitForReadyRead(1000)) {
+            receivedData.append(socket.readAll());
+        } else {
+            qDebug() << "Error: Timeout waiting for additional data from the server";
+            return;
+        }
     }
-
-    if (receivedData.size() == sizeof(unsigned short) * Global::Y_RESELUTION * Global::X_RESELUTION) {
-        std::memcpy(*responeData, receivedData.constData(), sizeof(*responeData));
-        // Process the received data as needed
-    }
-
+    qDebug() << "Recived: " << receivedData.size() << "bytes";
+    if (receivedData.size() == expectedSize) {
+        std::memcpy(*responeData, receivedData.constData(), expectedSize);
+    }else
+        qDebug() << "Error: Expects " << expectedSize << " bytes";
     socket.disconnectFromHost();
 }

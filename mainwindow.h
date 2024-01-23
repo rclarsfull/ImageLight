@@ -6,7 +6,8 @@
 #include <QMainWindow>
 //#include <QThread>
 
-enum programmModes{withoutReference, withReference, referenceSelection};
+enum programmModes{normalMode, calibrationMode};
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,7 +27,7 @@ private:
     Ui::MainWindow *ui;
     QImage* image;
     QImage* falschfarbenBild;
-    unsigned short(*candela)[Global::Y_RESELUTION];
+    unsigned short(*candela)[Global::X_RESELUTION];
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
     Converter converter;
@@ -42,7 +43,6 @@ private slots:
     void sliderEvent();
     void speichernUnter();
     void changeMode();
-    void selectReference();
     void saveData();
     void delDrawabels(){orginalCanvas->delDrawabels(); update();};
     void randlichabfallCorrection();

@@ -13,7 +13,7 @@ class Canvas : public QFrame
     Converter* converter;
     QImage* image;
     QImage* resizedImage;
-    unsigned short (**candela)[Global::Y_RESELUTION];
+    unsigned short (**candela)[Global::X_RESELUTION];
     QPoint* pressedLocation;
     Canvas* otherCanvas;
     QLabel* debugLabel;
@@ -42,7 +42,7 @@ public:
     void saveDataAsCSV(QString fileName);
     void delDrawabels();
     QImage *getResizedImage() const;
-    void setCandela(unsigned short (*newCandela)[Global::Y_RESELUTION]){candela = &newCandela;}
+    void setCandela(unsigned short (**candelaPtr)[Global::X_RESELUTION]){candela = candelaPtr;}
 
 public slots:
 
