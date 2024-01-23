@@ -23,12 +23,12 @@ public:
     float *colorToRGBArray(QColor color, unsigned int x, unsigned int y);
     QColor candelaToColor(unsigned short candela, unsigned int minGrey, unsigned int maxGrey);
 
-    void updateCandela(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image);
+    void updateCandela(unsigned short (*candela)[Global::X_RESELUTION], QImage *image);
     unsigned int sRGBtoLinearRGB(QColor color, unsigned x, unsigned y);
-    unsigned int getMinCandela(unsigned short (*candela)[Global::Y_RESELUTION]);
-    unsigned int getMaxCandela(unsigned short (*candela)[Global::Y_RESELUTION]);
-    void calibrateLightCorrectionMatrix(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image);
-    void updateFalschfarbenBild(unsigned short (*candela)[Global::Y_RESELUTION], QImage *falschfarbenBild, int minGrey, int maxGrey);
+    unsigned int getMinCandela(unsigned short (*candela)[Global::X_RESELUTION]);
+    unsigned int getMaxCandela(unsigned short (*candela)[Global::X_RESELUTION]);
+    void calibrateLightCorrectionMatrix(unsigned short (*candela)[Global::X_RESELUTION], QImage *image);
+    void updateFalschfarbenBild(unsigned short (*candela)[Global::X_RESELUTION], QImage *falschfarbenBild, int minGrey, int maxGrey);
     static int scaleCordtoCanvas(int cord, int sizeCanvas, int sizeImage);
 private:
     double sRGBToLinear(double value);

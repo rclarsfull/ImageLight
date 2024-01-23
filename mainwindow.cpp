@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , image(NULL)
     , falschfarbenBild(NULL)
-    , candela(new unsigned short[Global::X_RESELUTION][Global::Y_RESELUTION])
+    , candela(new unsigned short[Global::Y_RESELUTION][Global::X_RESELUTION])
     , orginalCanvas(new Canvas(true, &converter, this))
     , resultCanvas(new Canvas(false, &converter, this))
     , converter(this)
@@ -75,8 +75,8 @@ void MainWindow::converte()
         resultCanvas->setMinCandela(minGrey);
         converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
     }
-    orginalCanvas->setCandela(candela);
-    resultCanvas->setCandela(candela);
+    orginalCanvas->setCandela(&candela);
+    resultCanvas->setCandela(&candela);
     orginalCanvas->setImage(image);
     resultCanvas->setImage(falschfarbenBild);
     update();

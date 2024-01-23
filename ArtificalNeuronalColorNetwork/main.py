@@ -30,7 +30,7 @@ def lr_schedule(epoch):
     return 0.001
     if epoch < 10:
         return initial_lr
-    elif epoch < 500:
+    elif epoch < 300:
         return initial_lr * 0.1
     else:
         return initial_lr * 0.01
@@ -51,7 +51,7 @@ def train():
     # Modell erstellen und trainieren
     model = Sequential()
     model.add(Dense(128, input_dim=3, activation='relu'))  # 3 Eingangsneuronen für RGB-Werte
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.2))
     model.add(Dense(32, activation='relu'))
     model.add(Dense(1, activation='relu'))  # 1 Ausgangsneuron für die Helligkeit
     model.compile(optimizer=Nadam(learning_rate=lr_schedule(0)), loss='mean_squared_error')
@@ -83,9 +83,7 @@ def train():
     plt.plot([0, max(y_test)], [0, max(y_test)], color='red', linestyle='--')
 
     colors = np.array(x_scaler.inverse_transform(X_test))
-    avg_rgb = np.mean(colors, axis=1)
-    sizes = avg_rgb * 5
-    plt.scatter(y_test, predictions, c=colors / 255.0, s=sizes)
+    plt.scatter(y_test, predictions, c=colors / 255.0)
     plt.xlabel('Wahre Werte')
     plt.ylabel('Vorhersagen')
     plt.title('Vergleich Wahre Werte und Vorhersagen')
@@ -152,21 +150,20 @@ def handle_client(connection, client_address, model, x_scaler, X_RESELUTION, Y_R
             print(f"Error: Data amount doesn't match Resolution for {client_address}")
             return
 
-        
-        batch_rgb_values = np.array(rgbValues)
         feature_names = ['rot', 'gruen', 'blau']
-        rgbValues = pd.DataFrame(batch_rgb_values, columns=feature_names)
-
-        predictions = model.predict(x_scaler.transform(batch_rgb_values))
+        featured_rgbValues = pd.DataFrame(rgbValues, columns=feature_names)
+        print(featured_rgbValues)
+        predictions = model.predict(x_scaler.transform(featured_rgbValues))
+        print(predictions)
 
         rounded_predictions = np.round(predictions)
+        print(rounded_predictions)
+
 
         # Convert the rounded predictions to unsigned short values
         scaled_predictions = rounded_predictions.astype(np.uint16).flatten()
-
-        for i in range(scaled_predictions.size):
-            scaled_predictions[i] = (i % 1500) 
         print(scaled_predictions)
+
 
         # Convert scaled_predictions to bytes
         scaled_bytes = struct.pack(f'{X_RESELUTION * Y_RESELUTION}H', *scaled_predictions)

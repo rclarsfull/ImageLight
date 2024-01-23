@@ -116,7 +116,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         resize();
         otherCanvas->resize();
         if(mainWindow->getMode() == normalMode){
-            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->x(), resizedImage->width(),image->width())][Converter::scaleCordtoCanvas(pressedLocation->y() ,resizedImage->height() , image->height())];
+            candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->y(), resizedImage->height(),image->height())][Converter::scaleCordtoCanvas(pressedLocation->x() ,resizedImage->width() , image->width())];
             debugText << "\tCandela: " << candelaValue;
         }
         debugLabel->setText(QString::fromStdString(debugText.str()));
@@ -211,32 +211,39 @@ QPixmap *Canvas::getCanvas()
     return &canvas;
 }
 
+#include <QLocale>
+
 void Canvas::saveDataAsCSV(QString fileName)
 {
     QFile csvFile(fileName);
     csvFile.open(QFile::WriteOnly);
     QTextStream stream(&csvFile);
+
+    // Set the locale to German
+    QLocale german(QLocale::German);
+    stream.setLocale(german);
+
     if(mainWindow->getMode() == normalMode){
         stream << "ID" << ";" << "Candela" << ";\n";
         for(int i = 0; i < drawabels.size(); i++){
             MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
             if(messureBox == NULL)
                 continue;
-            stream << messureBox->getId() << ";" << messureBox->getAvgCandala() << ";\n";
+            stream << messureBox->getId() << ";" << german.toString(messureBox->getAvgCandala()) << ";\n";
         }
-    }else{
+    } else {
         stream << "ID" << ";" << "Red" << ";" << "Green" << ";" << "Blue" << ";\n";
         for(int i = 0; i < drawabels.size(); i++){
             MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
             if(messureBox == NULL)
                 continue;
-            stream << messureBox->getId() << ";" << messureBox->getAvgRed() << ";" << messureBox->getAvgGreen() << ";" << messureBox->getAvgBlue() << ";\n";
+            stream << messureBox->getId() << ";" << german.toString(messureBox->getAvgRed()) << ";"
+                   << german.toString(messureBox->getAvgGreen()) << ";" << german.toString(messureBox->getAvgBlue()) << ";\n";
         }
     }
-
-
     csvFile.close();
 }
+
 
 void Canvas::setOtherCanvas(Canvas *other)
 {

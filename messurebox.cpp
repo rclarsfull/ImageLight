@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 int MessureBox::counter = 1;
 
-MessureBox::MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::Y_RESELUTION], QImage **resizedImage, QImage **originalImage, Converter *converter, MainWindow *mainWindow)
+MessureBox::MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Global::X_RESELUTION], QImage **resizedImage, QImage **originalImage, Converter *converter, MainWindow *mainWindow)
     :Drawable(origen,converter)
     , end(end)
     , candela(candela)
@@ -39,17 +39,17 @@ void MessureBox::draw(QPainter *painter)
         painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+15),"Candela: "+ QString::number(avgCandala));
 }
 
-int MessureBox::getAvgRed() const
+float MessureBox::getAvgRed() const
 {
     return avgRed;
 }
 
-int MessureBox::getAvgGreen() const
+float MessureBox::getAvgGreen() const
 {
     return avgGreen;
 }
 
-int MessureBox::getAvgBlue() const
+float MessureBox::getAvgBlue() const
 {
     return avgBlue;
 }
@@ -60,29 +60,27 @@ void MessureBox::calcAvgCanela()
     int ySize = end.y() - origen.y();
     if(candela != NULL){
         long int sumCandela = 0;
-        long int sumRed = 0;
-        long int sumGreen = 0;
-        long int sumBlue = 0;
+        double sumRed = 0;
+        double sumGreen = 0;
+        double sumBlue = 0;
         for(int i = 0; i<xSize; i++){
             for(int y = 0; y < ySize; y++){
-                int cavasWidth = (*resizedImage)->width();
-                int imageWidthe = (*originalImage)->width();
-                int cavasHig = (*resizedImage)->height();
-                int imageHig = (*originalImage)->height();
-                QPoint point(Converter::scaleCordtoCanvas(origen.x()+i, cavasWidth, imageWidthe), Converter::scaleCordtoCanvas(origen.y()+y, cavasHig, imageHig));
+                QPoint point(Converter::scaleCordtoCanvas(origen.x()+i, (*resizedImage)->width(), (*originalImage)->width()), Converter::scaleCordtoCanvas(origen.y()+y, (*resizedImage)->height(), (*originalImage)->height()));
                 if(mainWindow->getMode() == normalMode)
-                    sumCandela += (*candela)[point.x()][point.y()];
+                    sumCandela += (*candela)[point.y()][point.x()];
                 QColor color = (*originalImage)->pixelColor(point);
-                sumRed += color.red();
-                sumGreen += color.green();
-                sumBlue += color.blue();
+                float *rgb = converter->colorToRGBArray(color,point.x(),point.y());
+                sumRed += rgb[0];
+                sumGreen += rgb[1];
+                sumBlue += rgb[2];
+                delete[] rgb;
             }
         }
         if(mainWindow->getMode() == normalMode)
             avgCandala = (sumCandela/(float)(xSize*ySize))+0.5;
-        avgRed = (sumRed/(float)(xSize*ySize))+0.5;
-        avgGreen = (sumGreen/(float)(xSize*ySize))+0.5;
-        avgBlue = (sumBlue/(float)(xSize*ySize))+0.5;
+        avgRed = (sumRed/(float)(xSize*ySize));
+        avgGreen = (sumGreen/(float)(xSize*ySize));
+        avgBlue = (sumBlue/(float)(xSize*ySize));
     }
 }
 

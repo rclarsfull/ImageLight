@@ -24,7 +24,7 @@ Converter::~Converter(){
     delete[] lightCorrectionMatrix;
 }
 
-void Converter::calibrateLightCorrectionMatrix(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image){
+void Converter::calibrateLightCorrectionMatrix(unsigned short (*candela)[Global::X_RESELUTION], QImage *image){
     if(candela != NULL){
         std::ofstream out("correctionFile.dat",std::ios_base::binary);
         unsigned long sum = 0;
@@ -32,14 +32,14 @@ void Converter::calibrateLightCorrectionMatrix(unsigned short (*candela)[Global:
         updateCandela(candela, image);
         for(int y = 0; y < Global::Y_RESELUTION; y++){
             for(int x = 0; x < Global::X_RESELUTION; x++){
-                sum += candela[x][y];
+                sum += candela[y][x];
             }
         }
         double avg = sum / (Global::Y_RESELUTION*Global::X_RESELUTION);
         double max = 0;
         for(int y = 0; y < Global::Y_RESELUTION; y++){
             for(int x = 0; x < Global::X_RESELUTION; x++){
-                lightCorrectionMatrix[x][y] = avg / candela[x][y];
+                lightCorrectionMatrix[x][y] = avg / candela[y][x];
                 if(max < lightCorrectionMatrix[x][y])
                     max = lightCorrectionMatrix[x][y];
             }
@@ -65,7 +65,7 @@ void Converter::resetLightCorrectionMatrix(){
     }
 }
 
-void Converter::updateCandela(unsigned short (*candela)[Global::Y_RESELUTION], QImage *image)
+void Converter::updateCandela(unsigned short (*candela)[Global::X_RESELUTION], QImage *image)
 {
 
     PerfomanceTimer timer("UpdateCandela");
@@ -118,11 +118,11 @@ inline float* Converter::colorToRGBArray(QColor color, unsigned int x, unsigned 
     return rgbData;
 }
 
-void Converter::updateFalschfarbenBild(unsigned short (*candela)[Global::Y_RESELUTION],QImage* falschfarbenBild,int minGrey, int maxGrey)
+void Converter::updateFalschfarbenBild(unsigned short (*candela)[Global::X_RESELUTION],QImage* falschfarbenBild,int minGrey, int maxGrey)
 {
     for(int y = 0; y < Global::Y_RESELUTION; y++){
         for(int x = 0; x < Global::X_RESELUTION; x++){
-            falschfarbenBild->setPixelColor(x,y,Converter::candelaToColor(candela[x][y],minGrey,maxGrey));
+            falschfarbenBild->setPixelColor(x,y,Converter::candelaToColor(candela[y][x],minGrey,maxGrey));
         }
     }
 }
@@ -140,7 +140,7 @@ inline QColor Converter::candelaToColor(unsigned short candela, unsigned int min
     double rot = 0, gruen = 0, blau = 0;
 
     double a = (maxCandela-minCandela)/4;
-    double b = Global::MAX_CANDELA/(a*a);
+    double b = 255/(a*a);
 
     if(candela < (minCandela + 3*a)){
         rot = -(b*(candela-3*a-minCandela)*(candela-3*a-minCandela))+255;
@@ -155,8 +155,7 @@ inline QColor Converter::candelaToColor(unsigned short candela, unsigned int min
         blau = -(b*(candela-4*a-minCandela)*(candela-4*a-minCandela))+255;
         gruen = -(b*(candela-4.5*a-minCandela)*(candela-4*a-minCandela))+255;
     }
-
-
+    //rot = gruen = blau = candela;
     if(rot > 255)
         rot = 255;
     if(gruen > 255)
@@ -174,28 +173,28 @@ inline QColor Converter::candelaToColor(unsigned short candela, unsigned int min
     return QColor(rot , gruen, blau);
 }
 
-unsigned int Converter::getMinCandela(unsigned short (*candela)[Global::Y_RESELUTION]){
+unsigned int Converter::getMinCandela(unsigned short (*candela)[Global::X_RESELUTION]){
     unsigned int min = Global::MAX_CANDELA;
     for(int y = 0; y < Global::Y_RESELUTION; y++){
         for(int x = 0; x < Global::X_RESELUTION; x++){
-            if(candela[x][y] == 0)
+            if(candela[y][x] == 0)
                 return 0;
-            if(candela[x][y] < min)
-                min = candela[x][y];
+            if(candela[y][x] < min)
+                min = candela[y][x];
         }
     }
     return min;
 }
 
-unsigned int Converter::getMaxCandela(unsigned short (*candela)[Global::Y_RESELUTION])
+unsigned int Converter::getMaxCandela(unsigned short (*candela)[Global::X_RESELUTION])
 {
     unsigned int max = 0;
     for(int y = 0; y < Global::Y_RESELUTION; y++){
         for(int x = 0; x < Global::X_RESELUTION; x++){
-            if(candela[x][y] == Global::MAX_CANDELA)
+            if(candela[y][x] == Global::MAX_CANDELA)
                 return Global::MAX_CANDELA;
-            if(candela[x][y] > max)
-                max = candela[x][y];
+            if(candela[y][x] > max)
+                max = candela[y][x];
         }
     }
     return max;

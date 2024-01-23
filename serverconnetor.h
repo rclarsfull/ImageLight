@@ -6,7 +6,7 @@
 class ServerConnector {
 public:
     ServerConnector(const char* serverIP, int serverPort);
-    void connectAndSendData(float *data, unsigned short (*responeData)[Global::Y_RESELUTION]);
+    void connectAndSendData(float *data, unsigned short (*responeData)[Global::X_RESELUTION]);
 
 private:
     const char* serverIP;

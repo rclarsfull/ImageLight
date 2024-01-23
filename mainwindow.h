@@ -27,7 +27,7 @@ private:
     Ui::MainWindow *ui;
     QImage* image;
     QImage* falschfarbenBild;
-    unsigned short(*candela)[Global::Y_RESELUTION];
+    unsigned short(*candela)[Global::X_RESELUTION];
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
     Converter converter;
