@@ -62,6 +62,15 @@ void MainWindow::converte()
     }
     image = new QImage(fileName);
     falschfarbenBild = new QImage(fileName);
+    if (image->width() != Global::X_RESELUTION || image->height() != Global::Y_RESELUTION){
+        qDebug() << "ERROR: Wrong image size!!\nExpected:\t" << Global::X_RESELUTION << "x" << Global::Y_RESELUTION
+                 << "\nRecived:\t" << image->width() << "x" << image->height();
+        delete image;
+        delete falschfarbenBild;
+        image = NULL;
+        falschfarbenBild = NULL;
+        return;
+    }
     int minGrey = 0, maxGrey = 255;
     if(getMode() == normalMode){
         converter.updateCandela(candela, image);
