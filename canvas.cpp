@@ -55,6 +55,9 @@ void Canvas::paintEvent(QPaintEvent *event)
         QPainter finalPainter(this);
         canvas = QPixmap(width(),height());
         QPainter painter(&canvas);
+        painter.setPen(QPen(Qt::black,1));
+        painter.setBrush(QBrush(Qt::black,Qt::SolidPattern));
+        painter.drawRect(QRect(QPoint(0,0),QPoint(width(),height())));
         resize();
         if(image != NULL){
             painter.drawImage(QPoint(0,0),*resizedImage);
@@ -71,17 +74,20 @@ void Canvas::paintEvent(QPaintEvent *event)
             painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
             int difference = (maxCandela-minCandela) ?  maxCandela-minCandela : 1;
             int skipSize = 1;
-            while(difference/skipSize > height())
+            int minSpace = 10;
+            int height = this->height();
+            while((difference+2*minSpace)/skipSize > height)
                 skipSize++;
-            int scaleFactor = height() /difference;
-            int space = (height()- difference/skipSize * scaleFactor)/2;
-            for (int i = minCandela; i < maxCandela; i++){
+            int scaleFactor = (height /(difference+2*minSpace)) ? height /(difference+2*minSpace) : 1;
+
+            int space = ((height- (((difference+2*minSpace)/skipSize) * scaleFactor))+minSpace)/2;
+            for (int i = minCandela; i < maxCandela; i+= skipSize){
                 painter.setPen(QPen(converter->candelaToColor(i,minCandela,maxCandela),1));
                 painter.setBrush(QBrush(converter->candelaToColor(i,minCandela,maxCandela),Qt::SolidPattern));
-                painter.drawRect(QRect(QPoint(resizedImage->width()+5,i * scaleFactor +space ),QPoint(width()-30,(i+scaleFactor)*scaleFactor+space)));
-                if(i%10 == 0){
+                painter.drawRect(QRect(QPoint(resizedImage->width()+5,(i * scaleFactor)/skipSize +space ),QPoint(width()-30,((i*scaleFactor)/skipSize)+scaleFactor+space)));
+                if(i%50 == 0){
                     painter.setPen(QPen(Qt::white,1));
-                    painter.drawText(QPoint(width()-20,i * scaleFactor+space)+QPoint(-4,4),QString::number(i));
+                    painter.drawText(QPoint(width()-20,(i * scaleFactor)/skipSize+space)+QPoint(-4,4),QString::number(i));
                 }
             }
             finalPainter.drawPixmap(QPoint(0,0),canvas);

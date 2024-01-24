@@ -1,7 +1,5 @@
 #include "converter.h"
-#include "perfomancetimer.h"
 #include "workerthread.h"
-//#include "perfomancetimer.h"
 #include "mainwindow.h"
 #include <QDebug>
 #include <QColor>
@@ -68,7 +66,7 @@ void Converter::resetLightCorrectionMatrix(){
 void Converter::updateCandela(unsigned short (*candela)[Global::X_RESELUTION], QImage *image)
 {
 
-    PerfomanceTimer timer("UpdateCandela");
+    //PerfomanceTimer timer("UpdateCandela");
     float *data = new float[Global::X_RESELUTION*Global::Y_RESELUTION*3];
     for(int y = 0; y < Global::Y_RESELUTION; y++){
         for(int x = 0; x < Global::X_RESELUTION; x++){
