@@ -125,17 +125,7 @@ def handle_client(connection, client_address, model, x_scaler):
         print(f"Connection from {client_address}")
 
         start_time = time.time()  # Record the start time
-
-        dataSize = b""
-        while len(dataSize) < 4:
-            chunk = connection.recv(4 - len(dataSize))
-            if not chunk:
-                print(f"Error: No Size received from {client_address}")
-                return
-            dataSize += chunk
-        dataSize = struct.unpack('<I', dataSize)[0]
-        print(f"Expected size: {dataSize} bytes")
-        # Receive the binary data from the socket
+        dataSize = 2352 * 1568 * 3 * 4# float size = 4
         data_bytes = b""
         while len(data_bytes) < dataSize:
             chunk = connection.recv(dataSize - len(data_bytes))
@@ -144,42 +134,17 @@ def handle_client(connection, client_address, model, x_scaler):
                 return
             data_bytes += chunk
         print(f"Received {len(data_bytes)} bytes of data from {client_address}")
-        
-        # Unpack the binary data into a float array using struct
-        float_array = struct.unpack(f'{dataSize/4}f', data_bytes)
 
-        # Convert the float array to a NumPy array if needed
-        numpy_array = np.array(float_array, dtype=np.float32)
-        rgbValues = []
-        counter = 0
-        while counter < numpy_array.size:
-            rgbValues.append((numpy_array[counter], numpy_array[counter + 1], numpy_array[counter + 2]))
-            counter += 3
+        numpy_array = np.frombuffer(data_bytes, dtype=np.float32)
+        feature_names = ['rot', 'gruen', 'blau']
+        rgbValues = pd.DataFrame(numpy_array.reshape(-1, 3), columns=feature_names)
         if len(rgbValues) != dataSize/(3*4):
             print(f"Error: Data amount doesn't match Resolution for {client_address}")
             return
-
-        feature_names = ['rot', 'gruen', 'blau']
         featured_rgbValues = pd.DataFrame(rgbValues, columns=feature_names)
-        print(featured_rgbValues)
-        predictions = model.predict(x_scaler.transform(featured_rgbValues))
-        print(predictions)
-
-        rounded_predictions = np.round(predictions)
-        print(rounded_predictions)
-
-
-        # Convert the rounded predictions to unsigned short values
-        scaled_predictions = rounded_predictions.astype(np.uint16).flatten()
-        print(scaled_predictions)
-
-
-        # Convert scaled_predictions to bytes
-        scaled_bytes = struct.pack(f'{dataSize/(3*4)}H', *scaled_predictions)
-
-        # Send the data over the connection
-        connection.sendall(scaled_bytes)
-        print(f"Send {len(scaled_bytes)} bytes to {client_address}")
+        prediction = np.round(model.predict(x_scaler.transform(featured_rgbValues), batch_size=int(3687936/5))).astype('uint16').flatten().tobytes()
+        connection.sendall(prediction)
+        print(f"Send {len(prediction)} bytes to {client_address}")
 
     except Exception as e:
         print(f"Error handling connection from {client_address}: {str(e)}")

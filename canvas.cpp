@@ -70,8 +70,11 @@ void Canvas::paintEvent(QPaintEvent *event)
             painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
             painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
             int difference = (maxCandela-minCandela) ?  maxCandela-minCandela : 1;
+            int skipSize = 1;
+            while(difference/skipSize > height())
+                skipSize++;
             int scaleFactor = height() /difference;
-            int space = (height()- difference * scaleFactor)/2;
+            int space = (height()- difference/skipSize * scaleFactor)/2;
             for (int i = minCandela; i < maxCandela; i++){
                 painter.setPen(QPen(converter->candelaToColor(i,minCandela,maxCandela),1));
                 painter.setBrush(QBrush(converter->candelaToColor(i,minCandela,maxCandela),Qt::SolidPattern));

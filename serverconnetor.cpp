@@ -1,5 +1,4 @@
 #include "serverconnetor.h"
-#include "qthread.h"
 #include <iostream>
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -26,25 +25,22 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
     // Convert and send data
     QByteArray dataArray(reinterpret_cast<const char*>(data), sizeof(float) * Global::X_RESELUTION * Global::Y_RESELUTION * 3);
     socket.write(dataArray);
-
-    // Wait for the data to be sent
     socket.waitForBytesWritten();
 
-    socket.waitForReadyRead(680000);
-    // Receive response data
     QByteArray receivedData;
     int expectedSize = sizeof(unsigned short) * Global::X_RESELUTION * Global::Y_RESELUTION;
-    //QThread::sleep(5);
+    socket.waitForReadyRead(380000);
     while (receivedData.size() < expectedSize) {
         // Receive response data in chunks
-        if (socket.waitForReadyRead(1000)) {
+        if (socket.waitForReadyRead(5000)) {
             receivedData.append(socket.readAll());
         } else {
-            qDebug() << "Error: Timeout waiting for additional data from the server";
+            qDebug() << "Error: Timeout waiting for additional data from the server\nRecived: " <<receivedData.size() << " / " << expectedSize << " bytes\nMissing "
+                     << expectedSize-receivedData.size() << "bytes";
             return;
         }
     }
-    qDebug() << "Recived: " << receivedData.size() << "bytes";
+    //qDebug() << "Recived: " << receivedData.size() << "bytes";
     if (receivedData.size() == expectedSize) {
         std::memcpy(*responeData, receivedData.constData(), expectedSize);
     }else
