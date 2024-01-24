@@ -8,6 +8,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , settings("Deutsche Flugsicherung","ImageLight")
+    , settingsWindow(this, &settings)
     , mode(normalMode)
     , ui(new Ui::MainWindow)
     , image(NULL)
@@ -50,9 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::converte()
 {
-    //qDebug() << converter.colorToGrey(QColor(255,255,255),0,0);
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    //PerfomanceTimer timer("Converte Time");
     QString fileName = ui->lineEdit->text();
     if(image != NULL){
         delete image;
@@ -89,7 +89,6 @@ void MainWindow::converte()
     orginalCanvas->setImage(image);
     resultCanvas->setImage(falschfarbenBild);
     update();
-    //falschfarbenBild->save(fileName.split(".")[0] + "[ReColored]." + fileName.split(".")[1]);
     QGuiApplication::restoreOverrideCursor();
 }
 
@@ -138,6 +137,11 @@ void MainWindow::saveData()
                                                         tr("CSV (*.csv)"));
         orginalCanvas->saveDataAsCSV(fileName);
     }
+}
+
+void MainWindow::openSettings()
+{
+    settingsWindow.exec();
 }
 
 void MainWindow::randlichabfallCorrection()

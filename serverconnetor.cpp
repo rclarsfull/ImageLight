@@ -1,22 +1,21 @@
 #include "serverconnetor.h"
+#include "mainwindow.h"
 #include <iostream>
 #include <QTcpSocket>
 #include <QHostAddress>
 
-ServerConnector::ServerConnector(const char* serverIP, int serverPort)
-    : serverIP(serverIP), serverPort(serverPort) {}
+ServerConnector::ServerConnector(MainWindow *mainWindow)
+    : mainWindow(mainWindow) {}
 
 void ServerConnector::connectAndSendData(float *data, unsigned short (*responeData)[Global::X_RESELUTION]) {
     QTcpSocket socket;
+    QHostAddress hostAddress(mainWindow->getSettingsWindow()->getIpPythonServer());
 
-    // Convert IP address from string to QHostAddress
-    QHostAddress hostAddress(serverIP);
     if (hostAddress.isNull()) {
         qDebug() << "Invalid server address" ;
         return;
     }
-
-    socket.connectToHost(hostAddress, serverPort);
+    socket.connectToHost(hostAddress, mainWindow->getSettingsWindow()->getPortPythonServer());
     if (!socket.waitForConnected()) {
         qDebug() << "Error connecting to server" ;
         return;
@@ -29,10 +28,10 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
 
     QByteArray receivedData;
     int expectedSize = sizeof(unsigned short) * Global::X_RESELUTION * Global::Y_RESELUTION;
-    socket.waitForReadyRead(380000);
+    socket.waitForReadyRead(mainWindow->getSettingsWindow()->getTimeoutPythonServer());
     while (receivedData.size() < expectedSize) {
         // Receive response data in chunks
-        if (socket.waitForReadyRead(5000)) {
+        if (socket.waitForReadyRead(1000)) {
             receivedData.append(socket.readAll());
         } else {
             qDebug() << "Error: Timeout waiting for additional data from the server\nRecived: " <<receivedData.size() << " / " << expectedSize << " bytes\nMissing "
@@ -40,7 +39,6 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
             return;
         }
     }
-    //qDebug() << "Recived: " << receivedData.size() << "bytes";
     if (receivedData.size() == expectedSize) {
         std::memcpy(*responeData, receivedData.constData(), expectedSize);
     }else

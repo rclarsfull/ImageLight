@@ -143,6 +143,7 @@
      <string>Extras</string>
     </property>
     <addaction name="actionRandlichabfall_Kallibrierung"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuBearbeiten"/>
@@ -167,6 +168,11 @@
   <action name="actionRandlichabfall_Kallibrierung">
    <property name="text">
     <string>Randlichabfall Kallibrierung</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>
@@ -316,6 +322,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>converte()</slot>
@@ -325,5 +347,6 @@
   <slot>saveData()</slot>
   <slot>delDrawabels()</slot>
   <slot>randlichabfallCorrection()</slot>
+  <slot>openSettings()</slot>
  </slots>
 </ui>

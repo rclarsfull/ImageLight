@@ -23,10 +23,9 @@ public:
     void draw(QPainter* painter);
     int getAvgCandala(){return avgCandala;};
     int getId(){return id;};
-
-    float getAvgRed() const;
-    float getAvgGreen() const;
-    float getAvgBlue() const;
+    float getAvgRed() const{return avgRed;}
+    float getAvgGreen() const{return avgGreen;}
+    float getAvgBlue() const{return avgBlue;}
 };
 
 #endif // MESSUREBOX_H

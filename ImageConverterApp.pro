@@ -17,7 +17,8 @@ SOURCES += \
     mainwindow.cpp \
     messurebox.cpp \
     perfomancetimer.cpp \
-    serverconnetor.cpp
+    serverconnetor.cpp \
+    settingswindow.cpp
     converter.cpp
 
 HEADERS += \
@@ -28,6 +29,7 @@ HEADERS += \
     messurebox.h \
     perfomancetimer.h \
     serverconnetor.h \
+    settingswindow.h \
     workerthread.h \
     converter.h \
     drawable.h

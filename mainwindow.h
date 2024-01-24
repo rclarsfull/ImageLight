@@ -3,7 +3,9 @@
 
 #include "canvas.h"
 #include "converter.h"
+#include "settingswindow.h"
 #include <QMainWindow>
+#include <QSettings>
 //#include <QThread>
 
 enum programmModes{normalMode, calibrationMode};
@@ -22,7 +24,10 @@ public:
     ~MainWindow();
     programmModes getMode();
     int getReferenceValue();
+    SettingsWindow* getSettingsWindow(){return &settingsWindow;};
 private:
+    QSettings settings;
+    SettingsWindow settingsWindow;
     programmModes mode;
     Ui::MainWindow *ui;
     QImage* image;
@@ -44,6 +49,7 @@ private slots:
     void speichernUnter();
     void changeMode();
     void saveData();
+    void openSettings();
     void delDrawabels(){orginalCanvas->delDrawabels(); update();};
     void randlichabfallCorrection();
 };

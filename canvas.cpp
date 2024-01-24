@@ -166,8 +166,7 @@ void Canvas::resize()
             delete otherCanvas->resizedImage;
         resizedImage = new QImage(image->scaledToWidth(width()-75,Qt::SmoothTransformation));
         otherCanvas->resizedImage = new QImage(otherCanvas->image->scaledToWidth(width()-75,Qt::SmoothTransformation));
-    }else
-        qDebug() << "Fehler Image Null resize ignored";
+    }
 }
 
 void Canvas::setDebugLabel(QLabel *newDebugLabel)
@@ -227,10 +226,8 @@ void Canvas::saveDataAsCSV(QString fileName)
     QFile csvFile(fileName);
     csvFile.open(QFile::WriteOnly);
     QTextStream stream(&csvFile);
-
-    // Set the locale to German
-    QLocale german(QLocale::German);
-    stream.setLocale(german);
+    QLocale location(mainWindow->getSettingsWindow()->getLocation());
+    stream.setLocale(location);
 
     if(mainWindow->getMode() == normalMode){
         stream << "ID" << ";" << "Candela" << ";\n";
@@ -238,7 +235,7 @@ void Canvas::saveDataAsCSV(QString fileName)
             MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
             if(messureBox == NULL)
                 continue;
-            stream << messureBox->getId() << ";" << german.toString(messureBox->getAvgCandala()) << ";\n";
+            stream << messureBox->getId() << ";" << location.toString(messureBox->getAvgCandala()) << ";\n";
         }
     } else {
         stream << "ID" << ";" << "Red" << ";" << "Green" << ";" << "Blue" << ";\n";
@@ -246,8 +243,8 @@ void Canvas::saveDataAsCSV(QString fileName)
             MessureBox* messureBox = dynamic_cast<MessureBox*>(drawabels.at(i));
             if(messureBox == NULL)
                 continue;
-            stream << messureBox->getId() << ";" << german.toString(messureBox->getAvgRed()) << ";"
-                   << german.toString(messureBox->getAvgGreen()) << ";" << german.toString(messureBox->getAvgBlue()) << ";\n";
+            stream << messureBox->getId() << ";" << location.toString(messureBox->getAvgRed()) << ";"
+                   << location.toString(messureBox->getAvgGreen()) << ";" << location.toString(messureBox->getAvgBlue()) << ";\n";
         }
     }
     csvFile.close();

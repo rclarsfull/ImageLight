@@ -39,20 +39,11 @@ void MessureBox::draw(QPainter *painter)
         painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+15),"Candela: "+ QString::number(avgCandala));
 }
 
-float MessureBox::getAvgRed() const
-{
-    return avgRed;
-}
 
-float MessureBox::getAvgGreen() const
-{
-    return avgGreen;
-}
 
-float MessureBox::getAvgBlue() const
-{
-    return avgBlue;
-}
+
+
+
 
 void MessureBox::calcAvgCanela()
 {

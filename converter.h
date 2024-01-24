@@ -4,16 +4,11 @@
 #include "serverconnetor.h"
 #include <QImage>
 #include <QColor>
-//#include <QThreadPool>
-//#include <QMutex>
 
 class MainWindow;
 class Converter
 {
-    //static QThreadPool workerPool;
-   // static QMutex imageMutex;
     MainWindow* mainWindow ;
-    //float* lightCorrectionMatrix[Global::X_RESELUTION][Global::Y_RESELUTION];
     float(*lightCorrectionMatrix)[Global::Y_RESELUTION];
     void resetLightCorrectionMatrix();
     ServerConnector pythonServer;

@@ -3,14 +3,14 @@
 #include "global.h"
 
 
+class MainWindow;
 class ServerConnector {
 public:
-    ServerConnector(const char* serverIP, int serverPort);
+    ServerConnector(MainWindow * mainWindow);
     void connectAndSendData(float *data, unsigned short (*responeData)[Global::X_RESELUTION]);
 
 private:
-    const char* serverIP;
-    int serverPort;
+    MainWindow *mainWindow;
 };
 
 #endif // SERVERCONNETOR_H
