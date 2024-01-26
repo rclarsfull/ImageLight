@@ -39,9 +39,16 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="minCandaleLabel">
+      <property name="text">
+       <string>min Candela:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QSlider" name="minSlider">
       <property name="maximum">
-       <number>255</number>
+       <number>1500</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -49,9 +56,16 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="maxCandelaLabel">
+      <property name="text">
+       <string>max Candela:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QSlider" name="maxSlider">
       <property name="maximum">
-       <number>255</number>
+       <number>1500</number>
       </property>
       <property name="value">
        <number>255</number>
@@ -66,30 +80,6 @@
        <bool>false</bool>
       </property>
      </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QCheckBox" name="calibrationCheckBox">
-        <property name="text">
-         <string>Calibration Mode</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
     <item>
      <widget class="QLabel" name="label_2">
@@ -122,7 +112,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -212,7 +202,7 @@
   </connection>
   <connection>
    <sender>maxSlider</sender>
-   <signal>sliderReleased()</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>sliderEvent()</slot>
    <hints>
@@ -228,7 +218,7 @@
   </connection>
   <connection>
    <sender>minSlider</sender>
-   <signal>sliderReleased()</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>sliderEvent()</slot>
    <hints>
@@ -255,22 +245,6 @@
     <hint type="destinationlabel">
      <x>273</x>
      <y>218</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>calibrationCheckBox</sender>
-   <signal>stateChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>changeMode()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>59</x>
-     <y>395</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>249</y>
     </hint>
    </hints>
   </connection>
@@ -329,8 +303,72 @@
    <slot>openSettings()</slot>
    <hints>
     <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
      <x>249</x>
-     <y>10</y>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minSlider</sender>
+   <signal>sliderPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeSliderTracking()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxSlider</sender>
+   <signal>sliderPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeSliderTracking()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>362</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minSlider</sender>
+   <signal>sliderReleased()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeSliderTracking()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>maxSlider</sender>
+   <signal>sliderReleased()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeSliderTracking()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
@@ -343,10 +381,10 @@
   <slot>converte()</slot>
   <slot>sliderEvent()</slot>
   <slot>speichernUnter()</slot>
-  <slot>changeMode()</slot>
   <slot>saveData()</slot>
   <slot>delDrawabels()</slot>
   <slot>randlichabfallCorrection()</slot>
   <slot>openSettings()</slot>
+  <slot>changeSliderTracking()</slot>
  </slots>
 </ui>

@@ -10,7 +10,6 @@ ServerConnector::ServerConnector(MainWindow *mainWindow)
 void ServerConnector::connectAndSendData(float *data, unsigned short (*responeData)[Global::X_RESELUTION]) {
     QTcpSocket socket;
     QHostAddress hostAddress(mainWindow->getSettingsWindow()->getIpPythonServer());
-
     if (hostAddress.isNull()) {
         qDebug() << "Invalid server address" ;
         return;
@@ -20,12 +19,9 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
         qDebug() << "Error connecting to server" ;
         return;
     }
-
-    // Convert and send data
     QByteArray dataArray(reinterpret_cast<const char*>(data), sizeof(float) * Global::X_RESELUTION * Global::Y_RESELUTION * 3);
     socket.write(dataArray);
     socket.waitForBytesWritten();
-
     QByteArray receivedData;
     int expectedSize = sizeof(unsigned short) * Global::X_RESELUTION * Global::Y_RESELUTION;
     socket.waitForReadyRead(mainWindow->getSettingsWindow()->getTimeoutPythonServer());

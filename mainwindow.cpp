@@ -28,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->addTab(orginalCanvas," Original");
     ui->tabWidget->addTab(resultCanvas,"Falschfarben");
     ui->tabWidget->setTabPosition(QTabWidget::South);
-    orginalCanvas->setDebugLabel(ui->label);
-    resultCanvas->setDebugLabel(ui->label);
     setAcceptDrops(true);
 }
 
@@ -54,88 +52,95 @@ void MainWindow::converte()
 {
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString fileName = ui->lineEdit->text();
-    if(image != NULL){
-        delete image;
-        delete falschfarbenBild;
-        image = NULL;
-        falschfarbenBild = NULL;
+    if(fileName!=""){
+        if(image != NULL){
+            delete image;
+            delete falschfarbenBild;
+            image = NULL;
+            falschfarbenBild = NULL;
+        }
+        image = new QImage(fileName);
+        falschfarbenBild = new QImage(fileName);
+        if (image->width() != Global::X_RESELUTION || image->height() != Global::Y_RESELUTION){
+            //qDebug() << "ERROR: Wrong image size!!\nExpected:\t" << Global::X_RESELUTION << "x" << Global::Y_RESELUTION
+            //         << "\nRecived:\t" << image->width() << "x" << image->height();
+            delete image;
+            delete falschfarbenBild;
+            image = NULL;
+            falschfarbenBild = NULL;
+            ui->lineEdit->setText("");
+            QGuiApplication::restoreOverrideCursor();
+            return;
+        }
+        int minGrey = 0, maxGrey = 255;
+        if(getMode() == normalMode){
+            converter.updateCandela(candela, image);
+            minGrey = converter.getMinCandela(candela);
+            maxGrey = converter.getMaxCandela(candela);
+            ui->minSlider->setSliderPosition(minGrey);
+            ui->maxSlider->setSliderPosition(maxGrey);
+            orginalCanvas->setMaxCandela(maxGrey);
+            orginalCanvas->setMinCandela(minGrey);
+            resultCanvas->setMaxCandela(maxGrey);
+            resultCanvas->setMinCandela(minGrey);
+            converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
+        }
+        orginalCanvas->setCandela(&candela);
+        resultCanvas->setCandela(&candela);
+        orginalCanvas->setImage(image);
+        resultCanvas->setImage(falschfarbenBild);
+        update();
     }
-    image = new QImage(fileName);
-    falschfarbenBild = new QImage(fileName);
-    if (image->width() != Global::X_RESELUTION || image->height() != Global::Y_RESELUTION){
-        qDebug() << "ERROR: Wrong image size!!\nExpected:\t" << Global::X_RESELUTION << "x" << Global::Y_RESELUTION
-                 << "\nRecived:\t" << image->width() << "x" << image->height();
-        delete image;
-        delete falschfarbenBild;
-        image = NULL;
-        falschfarbenBild = NULL;
-        return;
-    }
-    int minGrey = 0, maxGrey = 255;
-    if(getMode() == normalMode){
-        converter.updateCandela(candela, image);
-        minGrey = converter.getMinCandela(candela);
-        maxGrey = converter.getMaxCandela(candela);
-        ui->minSlider->setSliderPosition(minGrey);
-        ui->maxSlider->setSliderPosition(maxGrey);
-        orginalCanvas->setMaxCandela(maxGrey);
-        orginalCanvas->setMinCandela(minGrey);
-        resultCanvas->setMaxCandela(maxGrey);
-        resultCanvas->setMinCandela(minGrey);
-        converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
-    }
-    orginalCanvas->setCandela(&candela);
-    resultCanvas->setCandela(&candela);
-    orginalCanvas->setImage(image);
-    resultCanvas->setImage(falschfarbenBild);
-    update();
     QGuiApplication::restoreOverrideCursor();
 }
 
+
 void MainWindow::sliderEvent()
 {
-    qDebug() << "sliderEvent";
-    int minCandela = ui->minSlider->value();
-    int maxCandela = ui->maxSlider->value();
-    if(falschfarbenBild != NULL)
-        delete falschfarbenBild;
-    falschfarbenBild = new QImage(*image);
-    resultCanvas->setImage(falschfarbenBild);
-    orginalCanvas->setMaxCandela(maxCandela);
-    orginalCanvas->setMinCandela(minCandela);
-    resultCanvas->setMaxCandela(maxCandela);
-    resultCanvas->setMinCandela(minCandela);
-    converter.updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
-    resultCanvas->update();
+    if(ui->minSlider->value() < ui->maxSlider->value()){
+        int minCandela = ui->minSlider->value();
+        int maxCandela = ui->maxSlider->value();
+        resultCanvas->setImage(falschfarbenBild);
+        orginalCanvas->setMaxCandela(maxCandela);
+        orginalCanvas->setMinCandela(minCandela);
+        resultCanvas->setMaxCandela(maxCandela);
+        resultCanvas->setMinCandela(minCandela);
+        converter.updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
+        resultCanvas->update();
+    }
+}
+void MainWindow::changeSliderTracking()
+{
+    bool tracking = !ui->maxSlider->hasTracking();
+    ui->maxSlider->setTracking(tracking);
+    ui->minSlider->setTracking(tracking);
 }
 
 void MainWindow::speichernUnter()
 {
     if(falschfarbenBild != NULL){
-        resultCanvas->update();
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                    "/home/jana/untitled.png",
-                                                    tr("Images (*.png *.jpg)"));
-        qDebug() << resultCanvas->getCanvas()->save(fileName);
+                                                        "untitled.png",
+                                                        tr("Images (*.png *.jpg)"));
+        qDebug() << "Saved in:" << fileName;
     }
 }
 
 void MainWindow::changeMode()
 {
-    if(ui->calibrationCheckBox->isChecked())
+    if(settingsWindow.isClaibrationMode())
         mode = calibrationMode;
     else
         mode = normalMode;
-    qDebug() << "mode changed: " << mode;
+    //qDebug() << "mode changed: " << mode;
 }
 
 void MainWindow::saveData()
 {
     if(falschfarbenBild != NULL){
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                        "untitled.csv",
-                                                        tr("CSV (*.csv)"));
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "untitled.csv", "CSV (*.csv)");
         orginalCanvas->saveDataAsCSV(fileName);
+        qDebug() << "Saved in:" << fileName;
     }
 }
 
@@ -159,10 +164,6 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-//    foreach (const QUrl &url, event->mimeData()->urls()) {
-//        QString fileName = url.toLocalFile();
-//        qDebug() << "Dropped file:" << fileName;
-//    }
     ui->lineEdit->setText(event->mimeData()->urls()[0].toLocalFile());
     converte();
 }

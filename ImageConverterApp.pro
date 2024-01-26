@@ -27,10 +27,8 @@ HEADERS += \
     global.h \
     mainwindow.h \
     messurebox.h \
-    perfomancetimer.h \
     serverconnetor.h \
     settingswindow.h \
-    workerthread.h \
     converter.h \
     drawable.h
 

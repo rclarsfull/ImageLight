@@ -49,9 +49,9 @@ void Converter::calibrateLightCorrectionMatrix(unsigned short (*candela)[Global:
         }
         out.write((char*)lightCorrectionMatrix,sizeof(float)*Global::X_RESELUTION*Global::Y_RESELUTION);
         out.close();
-        qDebug() << "calibrated";
+        qDebug() << "Calibrated";
     }else
-        qDebug() << "Error: no Image loaded";
+        qDebug() << "Error: No Image loaded";
 }
 
 
@@ -92,6 +92,7 @@ inline double Converter::sRGBToLinear(double value) {
 }
 
 inline float* Converter::colorToRGBArray(QColor color, unsigned int x, unsigned int y) {
+
     float red = sRGBToLinear(color.redF()) * lightCorrectionMatrix[x][y];
     float green = sRGBToLinear(color.greenF()) * lightCorrectionMatrix[x][y];
     float blue = sRGBToLinear(color.blueF()) * lightCorrectionMatrix[x][y];

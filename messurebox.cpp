@@ -19,7 +19,6 @@ MessureBox::MessureBox(QPoint origen, QPoint end, unsigned short (**candela)[Glo
     calcAvgCanela();
     counter++;
 }
-
 void MessureBox::draw(QPainter *painter)
 {
     int xSize = end.x() - origen.x();
@@ -32,7 +31,6 @@ void MessureBox::draw(QPainter *painter)
     painter->drawEllipse(origen,5,5);
     painter->setPen(QPen(Qt::white,2,Qt::SolidLine));
     painter->drawText(origen+QPoint(-4,4),"X");
-
     calcAvgCanela();
     painter->drawText(QPoint(origen.x() + xSize + 5, origen.y()+5),"ID: "+ QString::number(id));
     if(mainWindow->getMode() == normalMode)

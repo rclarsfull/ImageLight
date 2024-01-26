@@ -130,7 +130,7 @@ def handle_client(connection, client_address, model, x_scaler):
         while len(data_bytes) < dataSize:
             chunk = connection.recv(dataSize - len(data_bytes))
             if not chunk:
-                print(f"Error: No enothe Data received from {client_address}")
+                print(f"Error: No enough Data received from {client_address}")
                 return
             data_bytes += chunk
         print(f"Received {len(data_bytes)} bytes of data from {client_address}")
@@ -158,8 +158,11 @@ def handle_client(connection, client_address, model, x_scaler):
         connection.close()
 
 def main():
-    server_ip = "127.0.0.1"
-    server_port = 12345
+    if(input("Do you want to run the server local? [y/n] ") == "y"):
+        server_ip = "127.0.0.1"
+    else:
+        server_ip = input("What ist your ip address? ");
+    server_port = int(input("On what port should the server run? "))
     model = load_model('model.keras')
     x_scaler = joblib.load('scaler_model.joblib')
     print("Models loaded")
@@ -181,4 +184,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--train":
         train()
     else:
-        main()
+        if len(sys.argv) > 1 and sys.argv[1] == "--help":
+            print("Use for starting the server: python3.exe server.py")
+            print("Use for training the ANN: python3.exe server.py --train")
+            print("Use for open this help: python3.exe server.py --help")
+        else:
+            main()

@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../settingswindow.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../settingswindow.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ImageConverterApp.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageConverterApp.pro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../canvas.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../canvas.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../converter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../converter.h" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../global.h" beforeDir="false" afterPath="$PROJECT_DIR$/../global.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mainwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mainwindow.h" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../messurebox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../messurebox.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../messurebox.h" beforeDir="false" afterPath="$PROJECT_DIR$/../messurebox.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../serverconnetor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../serverconnetor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../serverconnetor.h" beforeDir="false" afterPath="$PROJECT_DIR$/../serverconnetor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +102,7 @@
       <workItem from="1705921603937" duration="1084000" />
       <workItem from="1705932602962" duration="14937000" />
       <workItem from="1706090497504" duration="7858000" />
+      <workItem from="1706177497753" duration="1892000" />
     </task>
     <servers />
   </component>
@@ -124,6 +112,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1706005930433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$trein.coverage" NAME="train Coverage Results" MODIFIED="1705922033061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1706101570404" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1706178780112" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

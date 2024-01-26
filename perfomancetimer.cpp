@@ -15,7 +15,6 @@ PerfomanceTimer::~PerfomanceTimer()
     double time=getTimeNS();
     qDebug() << "\n\n" << name << " abgelaufen: " << time/1000000 << " s[" << time << " ns]\n\n";
 }
-
 double PerfomanceTimer::getTimeNS()
 {
     end=std::chrono::high_resolution_clock::now();

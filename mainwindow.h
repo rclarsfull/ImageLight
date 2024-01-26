@@ -25,6 +25,7 @@ public:
     programmModes getMode();
     int getReferenceValue();
     SettingsWindow* getSettingsWindow(){return &settingsWindow;};
+    void changeMode();
 private:
     QSettings settings;
     SettingsWindow settingsWindow;
@@ -43,14 +44,17 @@ private:
     void dropEvent(QDropEvent *event);
     void resizeEvent(QResizeEvent *event);
 
+
 private slots:
     void converte();
     void sliderEvent();
     void speichernUnter();
-    void changeMode();
     void saveData();
     void openSettings();
+    void changeSliderTracking();
     void delDrawabels(){orginalCanvas->delDrawabels(); update();};
+public slots:
     void randlichabfallCorrection();
+
 };
 #endif // MAINWINDOW_H
