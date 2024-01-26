@@ -34,9 +34,9 @@ private:
     QImage* image;
     QImage* falschfarbenBild;
     unsigned short(*candela)[Global::X_RESELUTION];
+    Converter *converter;
     Canvas* orginalCanvas;
     Canvas* resultCanvas;
-    Converter converter;
     bool isShowingOriginal;
 
 

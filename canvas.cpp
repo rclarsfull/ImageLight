@@ -3,6 +3,7 @@
 #include "converter.h"
 #include "mainwindow.h"
 #include "messurebox.h"
+#include "converter.h"
 #include <QMouseEvent>
 #include <QTextStream>
 #include <sstream>

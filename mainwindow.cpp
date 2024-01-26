@@ -1,4 +1,3 @@
-#include "perfomancetimer.h"
 #include <QMimeData>
 #include <ui_mainwindow.h>
 #include <converter.h>
@@ -15,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     , image(NULL)
     , falschfarbenBild(NULL)
     , candela(new unsigned short[Global::Y_RESELUTION][Global::X_RESELUTION])
-    , orginalCanvas(new Canvas(true, &converter, this))
-    , resultCanvas(new Canvas(false, &converter, this))
-    , converter(this)
+    , converter(new Converter(this))
+    , orginalCanvas(new Canvas(true, converter, this))
+    , resultCanvas(new Canvas(false, converter, this))
     , isShowingOriginal(false)
 {
     ui->setupUi(this);
@@ -45,6 +44,7 @@ MainWindow::~MainWindow()
         delete image;
         image = NULL;
     }
+    delete converter;
     delete ui;
 }
 
@@ -74,16 +74,16 @@ void MainWindow::converte()
         }
         int minGrey = 0, maxGrey = 255;
         if(getMode() == normalMode){
-            converter.updateCandela(candela, image);
-            minGrey = converter.getMinCandela(candela);
-            maxGrey = converter.getMaxCandela(candela);
+            converter->updateCandela(candela, image);
+            minGrey = converter->getMinCandela(candela);
+            maxGrey = converter->getMaxCandela(candela);
             ui->minSlider->setSliderPosition(minGrey);
             ui->maxSlider->setSliderPosition(maxGrey);
             orginalCanvas->setMaxCandela(maxGrey);
             orginalCanvas->setMinCandela(minGrey);
             resultCanvas->setMaxCandela(maxGrey);
             resultCanvas->setMinCandela(minGrey);
-            converter.updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
+            converter->updateFalschfarbenBild(candela, falschfarbenBild, minGrey, maxGrey);
         }
         orginalCanvas->setCandela(&candela);
         resultCanvas->setCandela(&candela);
@@ -105,7 +105,7 @@ void MainWindow::sliderEvent()
         orginalCanvas->setMinCandela(minCandela);
         resultCanvas->setMaxCandela(maxCandela);
         resultCanvas->setMinCandela(minCandela);
-        converter.updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
+        converter->updateFalschfarbenBild(candela, falschfarbenBild, minCandela, maxCandela);
         resultCanvas->update();
     }
 }
@@ -151,7 +151,7 @@ void MainWindow::openSettings()
 
 void MainWindow::randlichabfallCorrection()
 {
-    converter.calibrateLightCorrectionMatrix(candela, image);
+    converter->calibrateLightCorrectionMatrix(candela, image);
     converte();
 }
 

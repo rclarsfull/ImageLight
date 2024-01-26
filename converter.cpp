@@ -91,7 +91,7 @@ inline double Converter::sRGBToLinear(double value) {
     return linearValue;
 }
 
-inline float* Converter::colorToRGBArray(QColor color, unsigned int x, unsigned int y) {
+float* Converter::colorToRGBArray(QColor color, unsigned int x, unsigned int y) {
 
     float red = sRGBToLinear(color.redF()) * lightCorrectionMatrix[x][y];
     float green = sRGBToLinear(color.greenF()) * lightCorrectionMatrix[x][y];
@@ -124,7 +124,7 @@ void Converter::updateFalschfarbenBild(unsigned short (*candela)[Global::X_RESEL
     }
 }
 
-inline QColor Converter::candelaToColor(unsigned short candela, unsigned int minCandela, unsigned int maxCandela)
+QColor Converter::candelaToColor(unsigned short candela, unsigned int minCandela, unsigned int maxCandela)
 {
     if(candela > maxCandela)
         return QColor(255,255,255);

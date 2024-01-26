@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../canvas.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../canvas.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../converter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mainwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mainwindow.h" beforeDir="false" afterPath="$PROJECT_DIR$/../mainwindow.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../settingswindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../settingswindow.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +105,7 @@
       <workItem from="1705921603937" duration="1084000" />
       <workItem from="1705932602962" duration="14937000" />
       <workItem from="1706090497504" duration="7858000" />
-      <workItem from="1706177497753" duration="1892000" />
+      <workItem from="1706177497753" duration="1896000" />
     </task>
     <servers />
   </component>

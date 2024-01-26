@@ -33,7 +33,6 @@ SettingsWindow::SettingsWindow(MainWindow *parent, QSettings* settings)
     QPushButton *saveButton = new QPushButton("Save", this);
     connect(saveButton, &QPushButton::clicked, this, &SettingsWindow::saveSettings);
     connect(calibrateButton, &QPushButton::clicked, this, [](){ &MainWindow::randlichabfallCorrection;});
-    connect(calibrationModeCheckbox, &QCheckBox::stateChanged, this, [](){ &MainWindow::changeMode;});
     layout->addWidget(saveButton);
     skalaLabelCount->setText(settings->value("LABEL_COUNT",50).toString());
     maxCandelaLineEdit->setText(settings->value("MAX_CANDELA", 1500).toString());
