@@ -119,21 +119,9 @@ void Canvas::mousePressEvent(QMouseEvent *event)
                 }
             }
             if(!isDelAction){
+                //TODO Handel delete
                 setPressedLocation(new QPoint(event->pos()));
                 otherCanvas->setPressedLocation(new QPoint(event->pos()));
-                std::stringstream debugText;
-                debugText << "Ausgewähltes Pixel: R: " << resizedImage->pixelColor(*pressedLocation).red();
-                                                          debugText << " G: " << resizedImage->pixelColor(*pressedLocation).green();
-                debugText << " B: " << resizedImage->pixelColor(*pressedLocation).blue();
-
-                unsigned int candelaValue;
-                resize();
-                otherCanvas->resize();
-                if(mainWindow->getMode() == normalMode){
-                    candelaValue = (*candela)[Converter::scaleCordtoCanvas(pressedLocation->y(), resizedImage->height(),image->height())][Converter::scaleCordtoCanvas(pressedLocation->x() ,resizedImage->width() , image->width())];
-                    debugText << "\tCandela: " << candelaValue;
-                }
-                debugLabel->setText(QString::fromStdString(debugText.str()));
             }
             update();
             otherCanvas->update();
