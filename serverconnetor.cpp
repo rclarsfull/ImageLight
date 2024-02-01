@@ -31,7 +31,7 @@ void ServerConnector::connectAndSendData(float *data, unsigned short (*responeDa
             receivedData.append(socket.readAll());
         } else {
             qDebug() << "Error: Timeout waiting for additional data from the server\nRecived: " <<receivedData.size() << " / " << expectedSize << " bytes\nMissing "
-                     << expectedSize-receivedData.size() << "bytes";
+                     << expectedSize-receivedData.size() << " bytes";
             return;
         }
     }

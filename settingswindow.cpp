@@ -17,7 +17,8 @@ SettingsWindow::SettingsWindow(MainWindow *parent, QSettings* settings)
     , languageComboBox(new QComboBox(this))
     , calibrationModeCheckbox(new QCheckBox(this))
     , mainWindow(parent)
-{    
+{
+    calibrateButton->setText("Calibrate Lense Correction");
     languageComboBox->addItems(LANGUAGE_OPTIONS);
     QVBoxLayout *layout = new QVBoxLayout(this);
     QFormLayout *formLayout = new QFormLayout;
@@ -27,7 +28,7 @@ SettingsWindow::SettingsWindow(MainWindow *parent, QSettings* settings)
     formLayout->addRow("Port:", portLineEdit);
     formLayout->addRow("Timeout:", timeoutLineEdit);
     formLayout->addRow("Language for '.csv' filesave", languageComboBox);
-    formLayout->addRow("Calibrate Lense Correction", calibrateButton);
+    formLayout->addRow(calibrateButton);
     formLayout->addRow("Calibration mode", calibrationModeCheckbox);
     layout->addLayout(formLayout);
     QPushButton *saveButton = new QPushButton("Save", this);

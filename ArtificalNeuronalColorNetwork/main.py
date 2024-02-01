@@ -82,8 +82,8 @@ def train():
     print(f'R2_Score: {r2}')
     plt.plot([0, max(y_test)], [0, max(y_test)], color='red', linestyle='--')
 
-    colors = np.array(x_scaler.inverse_transform(X_test))
-    plt.scatter(y_test, predictions, c=colors / 255.0)
+    colors = pow(np.array(x_scaler.inverse_transform(X_test)),1/2.2)
+    plt.scatter(y_test, predictions, c=colors)
     plt.xlabel('Wahre Werte')
     plt.ylabel('Vorhersagen')
     plt.title('Vergleich Wahre Werte und Vorhersagen')

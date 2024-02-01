@@ -72,6 +72,9 @@ void MainWindow::converte()
             QGuiApplication::restoreOverrideCursor();
             return;
         }
+        orginalCanvas->setImage(image);
+        resultCanvas->setImage(falschfarbenBild);
+        orginalCanvas->update();
         int minGrey = 0, maxGrey = 255;
         if(getMode() == normalMode){
             converter->updateCandela(candela, image);
@@ -87,8 +90,6 @@ void MainWindow::converte()
         }
         orginalCanvas->setCandela(&candela);
         resultCanvas->setCandela(&candela);
-        orginalCanvas->setImage(image);
-        resultCanvas->setImage(falschfarbenBild);
         update();
     }
     QGuiApplication::restoreOverrideCursor();
@@ -132,7 +133,6 @@ void MainWindow::changeMode()
         mode = calibrationMode;
     else
         mode = normalMode;
-    //qDebug() << "mode changed: " << mode;
 }
 
 void MainWindow::saveData()

@@ -16,7 +16,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     messurebox.cpp \
-    perfomancetimer.cpp \
     serverconnetor.cpp \
     settingswindow.cpp
     converter.cpp
