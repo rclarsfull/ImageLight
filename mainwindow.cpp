@@ -123,7 +123,8 @@ void MainWindow::speichernUnter()
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                         "untitled.png",
                                                         tr("Images (*.png *.jpg)"));
-        qDebug() << "Saved in:" << fileName;
+        if(resultCanvas->saveCanvas(fileName))
+            qDebug() << "Saved in:" << fileName;
     }
 }
 

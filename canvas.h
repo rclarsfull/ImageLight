@@ -43,6 +43,7 @@ public:
     void delDrawabels();
     QImage *getResizedImage() const;
     void setCandela(unsigned short (**candelaPtr)[Global::X_RESELUTION]){candela = candelaPtr;}
+    bool saveCanvas(QString filename);
 
 public slots:
 

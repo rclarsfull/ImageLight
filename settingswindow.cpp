@@ -33,7 +33,7 @@ SettingsWindow::SettingsWindow(MainWindow *parent, QSettings* settings)
     layout->addLayout(formLayout);
     QPushButton *saveButton = new QPushButton("Save", this);
     connect(saveButton, &QPushButton::clicked, this, &SettingsWindow::saveSettings);
-    connect(calibrateButton, &QPushButton::clicked, this, [](){ &MainWindow::randlichabfallCorrection;});
+    connect(calibrateButton, &QPushButton::clicked, this, [this](){ mainWindow->randlichabfallCorrection();});
     layout->addWidget(saveButton);
     skalaLabelCount->setText(settings->value("LABEL_COUNT",50).toString());
     maxCandelaLineEdit->setText(settings->value("MAX_CANDELA", 1500).toString());

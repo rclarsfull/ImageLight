@@ -8,10 +8,16 @@
 #include <QTextStream>
 #include <sstream>
 #include <QFile>
+#include <QLocale>
 
 QImage *Canvas::getResizedImage() const
 {
     return resizedImage;
+}
+
+bool Canvas::saveCanvas(QString filename)
+{
+    return canvas.save(filename);
 }
 
 
@@ -217,8 +223,6 @@ QPixmap *Canvas::getCanvas()
 {
     return &canvas;
 }
-
-#include <QLocale>
 
 void Canvas::saveDataAsCSV(QString fileName)
 {
