@@ -76,7 +76,7 @@ void Canvas::paintEvent(QPaintEvent *event)
             for (Drawable*& d:drawabels)
                 if(d!=NULL)
                     d->draw(&painter);
-
+            painter.setPen(QPen(Qt::black,1));
             painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
             painter.drawRect(QRect(QPoint(resizedImage->width(),0),QPoint(width(),height())));
             int difference = (maxCandela-minCandela) ?  maxCandela-minCandela : 1;
@@ -88,19 +88,25 @@ void Canvas::paintEvent(QPaintEvent *event)
                 skipSize++;
             int scaleFactor = (height /(difference+2*minSpace)) ? height /(difference+2*minSpace) : 1;
 
-            int space = ((height- (((difference+2*minSpace)/skipSize) * scaleFactor))+minSpace)/2;
+            int space = (height - ((difference/skipSize) * scaleFactor)+2*minSpace)/2;
             painter.setPen(QPen(Qt::white,1));
-            painter.drawText(QPoint(width()-20,(minCandela * scaleFactor)/skipSize+space)+QPoint(-4,4),QString::number(minCandela));
-            painter.drawText(QPoint(width()-20,(maxCandela * scaleFactor)/skipSize+space)+QPoint(-4,4),QString::number(maxCandela));
+            painter.drawText(QPoint(width()-20,space)+QPoint(-4,4),QString::number(minCandela));
+            painter.drawLine(QPoint(width()-25,space),QPoint(width()-30,space));
+            painter.drawText(QPoint(width()-20,((maxCandela-minCandela) * scaleFactor)/skipSize+space)+QPoint(-4,4),QString::number(maxCandela));
+            painter.drawLine(QPoint(width()-25,((maxCandela-minCandela) * scaleFactor)/skipSize+space),QPoint(width()-30,((maxCandela-minCandela) * scaleFactor)/skipSize+space));
             for (int i = minCandela; i < maxCandela; i+= skipSize){
-                painter.setPen(QPen(converter->candelaToColor(i,minCandela,maxCandela),1));
-                painter.setBrush(QBrush(converter->candelaToColor(i,minCandela,maxCandela),Qt::SolidPattern));
-                painter.drawRect(QRect(QPoint(resizedImage->width()+5,(i * scaleFactor)/skipSize +space ),QPoint(width()-30,((i*scaleFactor)/skipSize)+scaleFactor+space)));
                 if(i%labelCount == 0){
                     painter.setPen(QPen(Qt::white,1));
-                    painter.drawText(QPoint(width()-20,(i * scaleFactor)/skipSize+space)+QPoint(-4,4),QString::number(i));
+                    painter.drawText(QPoint(width()-20,((i-minCandela) * scaleFactor)/skipSize+space+scaleFactor/2)+QPoint(-4,4),QString::number(i));
+                    painter.drawLine(QPoint(width()-25,((i-minCandela) * scaleFactor)/skipSize+space+scaleFactor/2),QPoint(width()-30,((i-minCandela) * scaleFactor)/skipSize+space+scaleFactor/2));
                 }
+                painter.setPen(QPen(converter->candelaToColor(i,minCandela,maxCandela),1));
+                painter.setBrush(QBrush(converter->candelaToColor(i,minCandela,maxCandela),Qt::SolidPattern));
+                painter.drawRect(QRect(QPoint(resizedImage->width()+5,((i-minCandela) * scaleFactor)/skipSize +space ),QPoint(width()-30,(((i-minCandela)*scaleFactor)/skipSize)+scaleFactor+space)));
             }
+            painter.setPen(QPen(Qt::white,1));
+            painter.setBrush(Qt::NoBrush);
+            painter.drawRect(QRect(QPoint(resizedImage->width()+5,space),QPoint(width()-30,((maxCandela-minCandela) * scaleFactor)/skipSize+space)));
             finalPainter.drawPixmap(QPoint(0,0),canvas);
         }
     }
