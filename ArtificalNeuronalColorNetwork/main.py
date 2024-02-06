@@ -17,23 +17,25 @@ import pandas as pd
 import math
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, BatchNormalization
+from keras.layers import Dense, Dropout, BatchNormalization, LeakyReLU
 from sklearn.model_selection import train_test_split
 from keras.models import save_model, load_model
 from keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 
 
 def lr_schedule(epoch):
     initial_lr = 0.01
-    return 0.001
-    if epoch < 10:
+    #return 0.001
+    if epoch < 100:
         return initial_lr
-    elif epoch < 300:
+    elif epoch < 200:
         return initial_lr * 0.1
-    else:
+    elif epoch < 800:
         return initial_lr * 0.01
+    else:
+        return initial_lr * 0.005
 
 def train():
     # Daten laden
@@ -45,18 +47,20 @@ def train():
     x_scaler = MinMaxScaler()
     x_scaler.feature_names_in_ = ['rot', 'gruen', 'blau']
     X_normalized = x_scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.28, random_state=42)
     joblib.dump(x_scaler, 'scaler_model.joblib')
 
     # Modell erstellen und trainieren
     model = Sequential()
     model.add(Dense(128, input_dim=3, activation='relu'))  # 3 Eingangsneuronen für RGB-Werte
-    model.add(Dropout(0.2))
-    model.add(Dense(32, activation='relu'))
+    model.add(Dense(16, activation='tanh'))
+    model.add(Dropout(0.05))
+    model.add(Dense(16, activation=LeakyReLU(alpha=0.02)))
+    model.add(Dropout(0.05))
     model.add(Dense(1, activation='relu'))  # 1 Ausgangsneuron für die Helligkeit
-    model.compile(optimizer=Nadam(learning_rate=lr_schedule(0)), loss='mean_squared_error')
-    early_stopping = EarlyStopping(monitor='val_loss', patience=25, restore_best_weights=True)
-    history = model.fit(X_train, y_train, epochs=10000, batch_size=32, validation_split=0.2, callbacks=[early_stopping, LearningRateScheduler(lr_schedule)])
+    model.compile(optimizer=Adam(learning_rate=lr_schedule(0)), loss='mean_squared_error')
+    early_stopping = EarlyStopping(monitor='val_loss', patience=200 , restore_best_weights=True)
+    history = model.fit(X_train, y_train, epochs=70000, batch_size=64, validation_split=0.2, callbacks=[early_stopping, LearningRateScheduler(lr_schedule)])
     model.save('model.keras')
 
     # Plotten der Lernkurven
@@ -71,15 +75,24 @@ def train():
 
 
     # Evaluierung des Modells
-    loss = model.evaluate(X_test, y_test)
+    #loss = model.evaluate(X_test, y_test)
     predictions = model.predict(X_test)
     mae = mean_absolute_error(y_test, predictions)
+    mse = mean_squared_error(y_test, predictions)
     r2 = r2_score(y_test, predictions)
 
+    percentage_errors = np.abs((y_test - predictions.flatten()) / y_test) * 100
+    for x in range(len(y_test)):
+        if x in y_test.index:
+            print(f'Value: {y_test[x]} Error: {percentage_errors[x]} Color: {pow(np.array(x_scaler.inverse_transform(X_test)[x]), 1 / 2.2)}')
+    print(percentage_errors)
+    average_percentage_error = np.mean(percentage_errors)
+
     print(f'Mean Absolute Error auf Testdaten: {mae}')
-    print(f'Loss on test data: {loss}')
-    print(f'Standardabweichung: {math.sqrt(loss)}')
+    print(f'Loss on test data: {mse}')
+    print(f'Standardabweichung: {math.sqrt(mse)}')
     print(f'R2_Score: {r2}')
+    print(f'Average Percentage Error: {average_percentage_error}%')
     plt.plot([0, max(y_test)], [0, max(y_test)], color='red', linestyle='--')
 
     colors = pow(np.array(x_scaler.inverse_transform(X_test)),1/2.2)
@@ -93,27 +106,42 @@ def train():
     rottoene = []
     gruentoene = []
     blautoene = []
-    for x in range(255):
-        grautoene.append((x, x, x))
-        rottoene.append((x, 0, 0))
-        gruentoene.append((0, x, 0))
-        blautoene.append((0, 0, x))
+    gelbtoene = []
+    lilatoene = []
+    tuerkiestoene = []
+    for x in range(1000):
+        grautoene.append((x/1000, x/1000, x/1000))
+        rottoene.append((x/1000, 0, 0))
+        gruentoene.append((0, x/1000, 0))
+        blautoene.append((0, 0, x/1000))
+        gelbtoene.append((x/1000, x/1000, 0))
+        lilatoene.append((x/1000, 0, x/1000))
+        tuerkiestoene.append((0, x/1000, x/1000))
 
     feature_names = ['rot', 'gruen', 'blau']
     grautoene = pd.DataFrame(grautoene, columns=feature_names)
     rottoene = pd.DataFrame(rottoene, columns=feature_names)
     gruentoene = pd.DataFrame(gruentoene, columns=feature_names)
     blautoene = pd.DataFrame(blautoene, columns=feature_names)
+    gelbtoene = pd.DataFrame(gelbtoene, columns=feature_names)
+    lilatoene = pd.DataFrame(lilatoene, columns=feature_names)
+    tuerkiestoene = pd.DataFrame(tuerkiestoene, columns=feature_names)
 
     greyPredictions = model.predict(x_scaler.transform(grautoene))
     rotPredictions = model.predict(x_scaler.transform(rottoene))
     gruenPredictions = model.predict(x_scaler.transform(gruentoene))
     blauPredictions = model.predict(x_scaler.transform(blautoene))
+    gelbPredictions = model.predict(x_scaler.transform(gelbtoene))
+    lilaPredictions = model.predict(x_scaler.transform(lilatoene))
+    tuerkiesPredictions = model.predict(x_scaler.transform(tuerkiestoene))
 
     plt.plot(greyPredictions, color="grey", label='grey')
     plt.plot(rotPredictions, color="red", label='red')
     plt.plot(gruenPredictions, color="green", label='green')
     plt.plot(blauPredictions, color="blue", label='blue')
+    plt.plot(gelbPredictions, color="yellow", label='yellow')
+    plt.plot(lilaPredictions, color="purple", label='purple')
+    plt.plot(tuerkiesPredictions, color="turquoise", label='turquoise')
     plt.xlabel('Shades')
     plt.ylabel('Candela')
     plt.legend()
