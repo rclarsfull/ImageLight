@@ -1,4 +1,3 @@
-// settingswindow.cpp
 #include "settingswindow.h"
 #include "mainwindow.h"
 #include <QSettings>
@@ -32,6 +31,7 @@ SettingsWindow::SettingsWindow(MainWindow *parent, QSettings* settings)
     formLayout->addRow("Calibration mode", calibrationModeCheckbox);
     layout->addLayout(formLayout);
     QPushButton *saveButton = new QPushButton("Save", this);
+    saveButton->setDefault(true);
     connect(saveButton, &QPushButton::clicked, this, &SettingsWindow::saveSettings);
     connect(calibrateButton, &QPushButton::clicked, this, [this](){ mainWindow->randlichabfallCorrection();});
     layout->addWidget(saveButton);
