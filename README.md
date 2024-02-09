@@ -11,7 +11,7 @@
 The tool can be launched through a batch script, initiating a server for the neural network that approximates images. Users need to enter the server address and a port (Standard setting: IP: 127.0.0.1, port: 12345). The script also launches a client where users can drag and drop the image for conversion (Images must have a resolution of 2352 x 1568 pixels).
 
 ### Client Interface
-The Client Window has a Frame with two tabs, one for the original image and one for the generated false-color image. Users can draw windows, each showing an ID and average luminance. The accuracy of this approximation is dependent on the quantity, quality, and diversity of calibration data. Under The Frame are two sliders; with them, you can change the color spectrum for the false-color image to your liking. By default, they use the highest and lowest values of your image.
+The Client Window has a Frame with two tabs, one for the original image and one for the generated false-color image. Users can draw windows, each showing an ID and average luminance. The accuracy of this approximation is dependent on the quantity, quality, and diversity of calibration data. Under The Frame are two sliders, with them, you can change the color spectrum for the false-color image to your liking. By default, they use the highest and lowest values of your image.
 
 ## Calibration
 
