@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>ImageLight</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../Desktop/icon.png</normaloff>../../../../Desktop/icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
