@@ -11,7 +11,9 @@ class Canvas : public QFrame
     bool isOriginalImage;
     int minCandela, maxCandela;
     Converter* converter;
+    QImage* originalImage;
     QImage* image;
+    QImage* originalResizedImage;
     QImage* resizedImage;
     unsigned short (**candela)[Global::X_RESELUTION];
     QPoint* pressedLocation;
@@ -27,6 +29,7 @@ public:
     ~Canvas();
     void resize();
     void setImage(QImage *newImage);
+    void setOriginalImage(QImage *newImage);
     void setOtherCanvas(Canvas* other);
     void setPressedLocation(QPoint* point);
     QPoint* getPressedLocation();

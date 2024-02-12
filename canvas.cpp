@@ -21,8 +21,8 @@ bool Canvas::saveCanvas(QString filename)
 }
 
 
-Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minCandela(0), maxCandela(255), converter(converter), image(NULL), resizedImage(NULL),
-    pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
+Canvas::Canvas(bool isOriginalImage, Converter *converter, MainWindow* mainWindow):isOriginalImage(isOriginalImage), minCandela(0), maxCandela(255), converter(converter), image(NULL), originalResizedImage(NULL),
+    resizedImage(NULL), pressedLocation(NULL), otherCanvas(NULL), canvas(), mainWindow(mainWindow)
 {
 }
 
@@ -52,6 +52,14 @@ Canvas::~Canvas()
         delete pressedLocation;
         pressedLocation = NULL;
     }
+    if(resizedImage != NULL)
+        delete resizedImage;
+    if(otherCanvas->resizedImage != NULL)
+        delete otherCanvas->resizedImage;
+    if(originalResizedImage != NULL)
+        delete originalResizedImage;
+    if(otherCanvas->originalResizedImage != NULL)
+        delete otherCanvas->originalResizedImage;
     delDrawabels();
 
 }
@@ -147,18 +155,10 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         if(!isDelAction){
             if(event->pos().x() <= resizedImage->width() && event->pos().y() <= resizedImage->height()){
                 if(pressedLocation != NULL && 100 < (pressedLocation->x() - event->pos().x())*(pressedLocation->x() - event->pos().x())+(pressedLocation->y() - event->pos().y())*(pressedLocation->y() - event->pos().y())){
-                    if(isOriginalImage){
-                        resize();
-                        MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, &resizedImage, &image, converter, mainWindow);
-                        drawabels.push_back(tmp);
-                        otherCanvas->getDrawabels().push_back(tmp);
-                    }else{
-                        otherCanvas->resize();
-                        MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, &otherCanvas->resizedImage, &otherCanvas->image, converter, mainWindow);
-                        drawabels.push_back(tmp);
-                        otherCanvas->getDrawabels().push_back(tmp);
-                    }
-
+                    resize();
+                    MessureBox* tmp = new MessureBox(*pressedLocation, event->pos(), candela, &originalResizedImage, &originalImage, converter, mainWindow);
+                    drawabels.push_back(tmp);
+                    otherCanvas->getDrawabels().push_back(tmp);
                     pressedLocation = NULL;
                     update();
                     otherCanvas->update();
@@ -175,8 +175,27 @@ void Canvas::resize()
             delete resizedImage;
         if(otherCanvas->resizedImage != NULL)
             delete otherCanvas->resizedImage;
+        if(originalResizedImage != NULL)
+            delete originalResizedImage;
+        if(otherCanvas->originalResizedImage != NULL)
+            delete otherCanvas->originalResizedImage;
         resizedImage = new QImage(image->scaledToWidth(width()-75,Qt::SmoothTransformation));
         otherCanvas->resizedImage = new QImage(otherCanvas->image->scaledToWidth(width()-75,Qt::SmoothTransformation));
+        originalResizedImage = new QImage(originalImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
+        otherCanvas->originalResizedImage = new QImage(originalImage->scaledToWidth(width()-75,Qt::SmoothTransformation));
+        for (Drawable*& d:otherCanvas->getDrawabels()){
+            MessureBox* tmp = dynamic_cast<MessureBox*>(d);
+            if (tmp != nullptr && (tmp->getOrigen().x() >= resizedImage->width() || tmp->getOrigen().y() >= resizedImage->height() || tmp->getEnd().x() >= resizedImage->width() || tmp->getEnd().y() >= resizedImage->height())){
+                d = NULL;
+            }
+        }
+        for (Drawable*& d:getDrawabels()){
+            MessureBox* tmp = dynamic_cast<MessureBox*>(d);
+            if (tmp != nullptr && (tmp->getOrigen().x() >= resizedImage->width() || tmp->getOrigen().y() >= resizedImage->height() || tmp->getEnd().x() >= resizedImage->width() || tmp->getEnd().y() >= resizedImage->height())){
+                delete d;
+                d = NULL;
+            }
+        }
     }
 }
 
@@ -203,6 +222,11 @@ QImage* Canvas::getImage()
 void Canvas::setImage(QImage *newImage)
 {
     image = newImage;
+}
+
+void Canvas::setOriginalImage(QImage *newImage)
+{
+    originalImage = newImage;
 }
 
 int Canvas::getMinCandela() const

@@ -73,7 +73,9 @@ void MainWindow::converte()
             return;
         }
         orginalCanvas->setImage(image);
+        orginalCanvas->setOriginalImage(image);
         resultCanvas->setImage(falschfarbenBild);
+        resultCanvas->setOriginalImage(image);
         orginalCanvas->update();
         int minGrey = 0, maxGrey = 255;
         if(getMode() == normalMode){

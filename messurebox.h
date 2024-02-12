@@ -26,6 +26,7 @@ public:
     float getAvgRed() const{return avgRed;}
     float getAvgGreen() const{return avgGreen;}
     float getAvgBlue() const{return avgBlue;}
+    QPoint getEnd() const{return end;}
 };
 
 #endif // MESSUREBOX_H
