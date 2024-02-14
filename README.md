@@ -5,6 +5,76 @@
 **ImageLight** is a specialized tool for extracting luminance from images captured by a calibrated camera, presenting the results in a false-color image. It leverages an artificial neural network to approximate luminance based on RGB values.
 <img width="400" alt="Screenshot App" src="https://github.com/rclarsfull/ImageLight/assets/19623214/a7656576-bb96-476f-b357-092ab680b947">
 
+## Installing Python 3.9 and ANNServer Application
+
+This README provides instructions for installing Python 3.9 with PATH enabled, extracting the ANNServer application, and then installing it using `pip install`.
+
+### Installing Python 3.9 with PATH enabled
+
+1. **Download Python 3.9:**
+   
+   Visit the [official Python website](https://www.python.org/downloads/) and download the installer for Python 3.9 suitable for your operating system (Windows, macOS, or Linux).
+
+2. **Run the Installer:**
+
+   Double-click the downloaded installer to run it. Follow the on-screen instructions provided by the installer.
+
+3. **Enable PATH (for Windows only):**
+
+   During the installation process, make sure to check the box that says "Add Python 3.9 to PATH." This will allow you to run Python and pip commands from the command line without specifying the full path to the executable.
+
+4. **Verify Installation:**
+
+   Open a terminal or command prompt and type the following command to verify that Python 3.9 has been installed successfully:
+
+   ```
+   python --version
+   ```
+
+   You should see output similar to `Python 3.9.x`.
+
+### Extracting the ANNServer Application
+
+1. **Download and Extract the Application:**
+
+   Prior to installing ImageLight, download the application from the gihub releases. The downloaded folder should be extracted using WinRAR. Navigate to the folder containing the extracted files.
+
+## Installing ANNServer using pip
+
+1. **Navigate to the Application Directory:**
+
+   Open the extracted folder containing the ANNServer application. 
+
+2. **Open Command Prompt:**
+
+   Inside the "ImageLight vx.x.x" folder, go to the ArtificalNeuronalColorNetwork folder, locate an empty space (not on any file) and hold down the "Shift" key. Right-click and select "Open PowerShell window here" from the context menu.
+
+3. **Install the Application:**
+
+   In the PowerShell window, use the `pip install` command followed by a dot (`.`) to install the ANNServer application from the current directory. For example:
+
+   ```
+   pip install .
+   ```
+
+   This command will install the ANNServer application along with its dependencies.
+
+4. **Start the ANNServer:**
+
+   Once installed, you can start the ANNServer by typing `ANNServer` in the console and hitting Enter. This command will initiate the server.
+    ```
+   ANNServer
+   ```
+
+6. **Training the ANNServer:**
+
+   To train the ANNServer, type `TrainANNServer` in the console and hit Enter. This command will trigger the training process.
+    ```
+   TrainANNServer
+   ```
+
+Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. If you have any questions or need further assistance, feel free to reach out to the application's developer or community for support.
+
 ## Usage
 
 ### Program Initiation
