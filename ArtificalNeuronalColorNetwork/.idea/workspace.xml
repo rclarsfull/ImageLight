@@ -5,23 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/PKG-INFO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/SOURCES.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/dependency_links.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/entry_points.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/requires.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/ANNServer.egg-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/data.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/model.keras" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ANNServer/scaler_model.joblib" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.keras" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scaler_model.joblib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ANNServer/data.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/data.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ANNServer/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ANNServer/model.keras" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/model.keras" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ANNServer/scaler_model.joblib" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/scaler_model.joblib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../converter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +50,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.train">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ArtificalNeuronalColorNetwork" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -76,7 +65,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ANNServer/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -99,7 +88,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ANNServer/main.py" />
       <option name="PARAMETERS" value="--train" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -129,7 +118,9 @@
       <workItem from="1706794400800" duration="621000" />
       <workItem from="1707140341211" duration="20116000" />
       <workItem from="1707729562023" duration="843000" />
-      <workItem from="1707814993484" duration="9877000" />
+      <workItem from="1707814993484" duration="37358000" />
+      <workItem from="1708355444244" duration="1719000" />
+      <workItem from="1708430206839" duration="7648000" />
     </task>
     <servers />
   </component>
@@ -148,8 +139,8 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1707225978714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1708506315544" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$trein.coverage" NAME="train Coverage Results" MODIFIED="1705922033061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1707729599622" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1707901859643" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

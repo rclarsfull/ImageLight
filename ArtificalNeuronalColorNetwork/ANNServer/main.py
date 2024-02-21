@@ -25,8 +25,15 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 import pkg_resources
 import signal
+from sklearn.utils import shuffle
 
 client_handlers = []
+
+def add_noise(data, factor=0.02):
+    noise_level = factor * data
+    noise = np.random.uniform(-noise_level, noise_level)
+    noisy_data = data + noise
+    return noisy_data
 def signal_handler(sig, frame):
     print("Exiting...")
     # Wait for all active threads to finish
@@ -36,13 +43,13 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 def lr_schedule(epoch):
-    initial_lr = 0.01
+    initial_lr = 0.1
     #return 0.001
     if epoch < 100:
         return initial_lr
     elif epoch < 200:
         return initial_lr * 0.1
-    elif epoch < 800:
+    elif epoch < 300:
         return initial_lr * 0.01
     else:
         return initial_lr * 0.005
@@ -58,22 +65,40 @@ def train():
     x_scaler = MinMaxScaler()
     x_scaler.feature_names_in_ = ['rot', 'gruen', 'blau']
     X_normalized = x_scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.28, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.20, random_state=42)
     joblib.dump(x_scaler, pkg_resources.resource_filename('ANNServer', 'scaler_model.joblib'))
+    X_train_augmented = np.empty((0, X_train.shape[1]))  # Assuming X_train is a 2D array
+    y_train_augmented = np.empty(0)
+    for i in range(100):
+        X_train_augmented_new = X_train.copy()
+        y_train_augmented_new = add_noise(y_train)
 
+        # Shuffle the data
+        X_train_augmented_new, y_train_augmented_new = shuffle(X_train_augmented_new, y_train_augmented_new,
+                                                               random_state=i)
 
+        # Append the augmented data to the original dataset
+        X_train_augmented = np.vstack((X_train_augmented, X_train_augmented_new))
+        y_train_augmented = np.concatenate((y_train_augmented, y_train_augmented_new))
+
+    X_train_augmented = np.vstack((X_train, X_train_augmented))
+    y_train_augmented = np.concatenate((y_train, y_train_augmented))
+    # Möglicherweise musst du sicherstellen, dass die Anzahl der Beispiele im Trainingsdatensatz gleich bleibt, indem du entsprechendes Oversampling oder Undersampling durchführst.
+    X_train_augmented, y_train_augmented = shuffle(X_train_augmented, y_train_augmented,
+                                                           random_state=42)
     # Modell erstellen und trainieren
     model = Sequential()
     model.add(Dense(128, input_dim=3, activation='relu'))  # 3 Eingangsneuronen für RGB-Werte
-    model.add(Dense(16, activation='tanh'))
+    #model.add(Dense(16, activation='tanh'))
     model.add(Dropout(0.05))
-    model.add(Dense(16, activation=LeakyReLU(alpha=0.02)))
+    model.add(Dense(128, activation=LeakyReLU(alpha=0.04)))
     model.add(Dropout(0.05))
     model.add(Dense(1, activation='relu'))  # 1 Ausgangsneuron für die Helligkeit
     model.compile(optimizer=Adam(learning_rate=lr_schedule(0)), loss='mean_squared_error')
     early_stopping = EarlyStopping(monitor='val_loss', patience=200 , restore_best_weights=True)
-    history = model.fit(X_train, y_train, epochs=70000, batch_size=64, validation_split=0.2, callbacks=[early_stopping, LearningRateScheduler(lr_schedule)])
+    history = model.fit(X_train_augmented, y_train_augmented, epochs=70000, batch_size=1500, validation_split=0.3, callbacks=[early_stopping, LearningRateScheduler(lr_schedule)])
     model.save(pkg_resources.resource_filename('ANNServer', 'model.keras'))
+    print(f'Saved under:{pkg_resources.resource_filename("ANNServer", "model.keras")}')
 
     # Plotten der Lernkurven
     plt.plot(history.history['loss'], label='Training Loss')
@@ -84,6 +109,13 @@ def train():
     plt.legend()
     plt.show()
 
+    plt.plot(history.history['loss'][50:], label='Training Loss')
+    plt.plot(history.history['val_loss'][50:], label='Validation Loss')
+    plt.title('Training and Validation Loss from Epoch 50 Onwards')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
 
 
     # Evaluierung des Modells
@@ -93,10 +125,11 @@ def train():
     r2 = r2_score(y_test, predictions)
 
     percentage_errors = np.abs((y_test - predictions.flatten()) / y_test) * 100
-    for x in range(len(y_test)):
-        if x in y_test.index:
-            print(f'actual: {y_test[x]} target: {predictions.flatten()[x]} Error in %: {percentage_errors[x]} Color: {pow(np.array(x_scaler.inverse_transform(X_test)[x]), 1 / 2.2)}')
-    print(percentage_errors)
+    print("Length of y_test:", len(y_test))
+    print("Length of predictions:", len(predictions))
+    for target, prediction, error, color in sorted(zip(y_test.values, predictions, percentage_errors,
+                                                       pow(np.array(x_scaler.inverse_transform(X_test)), 1 / 2.2)), key=lambda x: x[2]):
+        print(f'prediction: {prediction} target: {target} Error in %: {error} Color: {color}')
     average_percentage_error = np.mean(percentage_errors)
 
     print(f'Mean Absolute Error auf Testdaten: {mae}')

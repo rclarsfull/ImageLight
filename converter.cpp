@@ -1,5 +1,4 @@
 #include "converter.h"
-#include "workerthread.h"
 #include "mainwindow.h"
 #include <QDebug>
 #include <QColor>
