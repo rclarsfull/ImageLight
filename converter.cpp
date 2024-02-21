@@ -77,6 +77,15 @@ void Converter::updateCandela(unsigned short (*candela)[Global::X_RESELUTION], Q
         }
     }
     pythonServer.connectAndSendData(data, candela);
+    if(mainWindow->getSettingsWindow()->getexposureTime() != 1){
+        float factor = 1/mainWindow->getSettingsWindow()->getexposureTime();
+        qDebug() << factor;
+        for(int y = 0; y < Global::Y_RESELUTION; y++){
+            for(int x = 0; x < Global::X_RESELUTION; x++){
+                candela[y][x] = candela[y][x] * factor;
+            }
+        }
+    }
     delete[] data;
 }
 

@@ -4,6 +4,8 @@
 #include <mainwindow.h>
 #include <qevent.h>
 #include <QFileDialog>
+#include <QCoreApplication>
+#include <QImageReader>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

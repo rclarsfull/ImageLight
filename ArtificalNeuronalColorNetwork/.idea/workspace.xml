@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="">
+    <list default="true" id="105da64b-2f90-48cd-ba52-d42ec87d7a24" name="Changes" comment="Updated Parameters and Dataset 7% Average Percent Error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ANNServer/data.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/data.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ANNServer/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ANNServer/model.keras" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/model.keras" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ANNServer/scaler_model.joblib" beforeDir="false" afterPath="$PROJECT_DIR$/ANNServer/scaler_model.joblib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../converter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../converter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,12 +118,34 @@
       <workItem from="1707729562023" duration="843000" />
       <workItem from="1707814993484" duration="37358000" />
       <workItem from="1708355444244" duration="1719000" />
-      <workItem from="1708430206839" duration="7648000" />
+      <workItem from="1708430206839" duration="10404000" />
     </task>
+    <task id="LOCAL-00001" summary="Updated Parameters and Dataset">
+      <option name="closed" value="true" />
+      <created>1708506695756</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1708506695756</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Updated Parameters and Dataset 7% Average Percent Error">
+      <option name="closed" value="true" />
+      <created>1708507052159</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1708507052159</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Updated Parameters and Dataset" />
+    <MESSAGE value="Updated Parameters and Dataset 7% Average Percent Error" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Parameters and Dataset 7% Average Percent Error" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -139,8 +159,8 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1708506315544" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$train.coverage" NAME="train Coverage Results" MODIFIED="1708508636328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$trein.coverage" NAME="train Coverage Results" MODIFIED="1705922033061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1707901859643" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ArtificalNeuronalColorNetwork$main.coverage" NAME="main Coverage Results" MODIFIED="1708509246044" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

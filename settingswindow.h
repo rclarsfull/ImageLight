@@ -23,6 +23,7 @@ public:
     int getLabelCount();
     QString getIpPythonServer();
     bool isClaibrationMode();
+    double getexposureTime();
 private slots:
     void saveSettings();
 
@@ -35,6 +36,8 @@ private:
     QLineEdit *portLineEdit;
     QLineEdit *timeoutLineEdit;
     QLineEdit *skalaLabelCount;
+    QLineEdit *exposureTimeTrainedLineEdit;
+    QLineEdit *exposureTimeImageLineEdit;
     QPushButton *calibrateButton;
     QComboBox* languageComboBox;
     QCheckBox* calibrationModeCheckbox;
