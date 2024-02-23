@@ -110,8 +110,9 @@ The client window has a frame with two tabs, one for the original image and one 
 - **Calibrate Lens Correction** attempts to correct the Vignette of your lens. It's not perfect, but it reduces the Vignette effect of your lens. This requires an extra calibration step.
 - **Calibration Mode** disables the connection to the server. In this mode, you can collect Linear RGB data from your image for the calibration process.
 
+<img width="400" alt="Screenshot 2024-02-23 164221" src="https://github.com/rclarsfull/ImageLight/assets/19623214/93cbef21-921f-4c1d-b3e7-b26bbbf7f6b2">
 
-<img width="400" alt="Screenshot Settings" src="https://github.com/rclarsfull/ImageLight/assets/19623214/707bbc23-0c53-4fc0-ac8e-43b1b23fe941">
+
 
 ## Calibration
 
