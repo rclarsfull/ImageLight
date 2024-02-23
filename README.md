@@ -70,7 +70,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    ```
    Alternativly you can use the `run.bat` to start the server and the Interface.
 
-### Training the ANNServer:
+## Training the ANNServer:
 
    To train the ANNServer, type `TrainANNServer` in the console and hit Enter. This command will trigger the training process.
    ```
@@ -78,7 +78,6 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    ```
    Alternativly you can use the `Train ANN.bat` to start training.
 
-Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. If you have any questions or need further assistance, feel free to reach out to the application's developer or community for support.
 
 ## Usage
 
