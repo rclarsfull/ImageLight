@@ -3,6 +3,7 @@
 ## Overview
 
 **ImageLight** is a specialized tool for extracting luminance from images captured by a calibrated camera, presenting the results in a false-color image. It leverages an artificial neural network to approximate luminance based on RGB values.
+
 <img width="400" alt="Screenshot App" src="https://github.com/rclarsfull/ImageLight/assets/19623214/a7656576-bb96-476f-b357-092ab680b947">
 
 ## Installing Python 3.9 and ANNServer Application
@@ -34,7 +35,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
 
    You should see output similar to `Python 3.9.x`.
 
-### Extracting the ANNServer Application
+## Extracting the ANNServer Application
 
 1. **Download and Extract the Application:**
 
@@ -61,24 +62,30 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    This command will install the ANNServer application along with its dependencies.
    For Windows you can alternatively use the install `installANNServer.bat` Script.
 
-4. **Start the ANNServer:**
+   Alternativly you can use the `#installANNServer.bat` to initiate the installation.
+
+## Start the ANNServer:
 
    Once installed, you can start the ANNServer by typing `ANNServer` in the console and hitting Enter. This command will initiate the server.
-    ```
+   ```
    ANNServer
    ```
+
    For Windows you can alternatively use the install `run.bat` Script.
 
-6. **Training the ANNServer:**
+
+## Training the ANNServer:
 
    To train the ANNServer, type `TrainANNServer` in the console and hit Enter. This command will trigger the training process.
-    ```
+   ```
    TrainANNServer
    ```
+
    For Windows you can alternatively use the install `Train ANN.bat` Script.
 
 Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. 
 If you have any questions or need further assistance, feel free to reach out to the application's developer for support.
+
 
 ## Usage
 
@@ -102,6 +109,8 @@ The client window has a frame with two tabs, one for the original image and one 
 
 - **Label on every x Value in Scale** defines which numbers will be shown in the Legend on the right. It shows every value that is divided by x and has no remaining number.
 - **Max Candela** defines the highest value for which your ANN (Artificial Neural Network) was trained.
+- **Exposure Time Trained** defines the exposure time you used in you training Images as you trained the artififcal network.
+- **Exposure Time Image** defines the exposure time used in the Images you want to take Messurments from. (Use with caution!! Make sure that your network ist trained for the modified luminance. The app calculates modifieres for candala  based on the relation betwean the exposuretimes. `(EXPOSURE_TIME_TRAINED/EXPOSURE_TIME_IMAGE) * candela`)
 - **IP Address** defines the address where your server runs. When it runs locally, enter "127.0.0.1".
 - **Port** defines the port on which the server runs.
 - **Timeout** specifies how many milliseconds the client waits for a response from the server. (Increase this if you get a completely green false-color image)
@@ -109,8 +118,9 @@ The client window has a frame with two tabs, one for the original image and one 
 - **Calibrate Lens Correction** attempts to correct the Vignette of your lens. It's not perfect, but it reduces the Vignette effect of your lens. This requires an extra calibration step.
 - **Calibration Mode** disables the connection to the server. In this mode, you can collect Linear RGB data from your image for the calibration process.
 
+<img width="400" alt="Screenshot 2024-02-23 164221" src="https://github.com/rclarsfull/ImageLight/assets/19623214/93cbef21-921f-4c1d-b3e7-b26bbbf7f6b2">
 
-<img width="400" alt="Screenshot Settings" src="https://github.com/rclarsfull/ImageLight/assets/19623214/707bbc23-0c53-4fc0-ac8e-43b1b23fe941">
+
 
 ## Calibration
 
@@ -171,7 +181,7 @@ The client window has a frame with two tabs, one for the original image and one 
 The Lens Correction tries to mitigate the Vignette of the Lens.
 You need an already calibrated Camera to Correct the Vignette of the Lens.
 
-1. Calibrate Camera as described above for a Candela Range between 50 and 200.
+1. Calibrate Camera as described above for a Candela Range between 50 and 200(typical brightness for an normal monitor).
 2. Open a blank white image on a good TFT monitor that features an even brightness.
 3. Take a photo with your camera from the center of the Monitor (In my case, the camera lens touches the monitor).
 4. Drag&Drop the image into ImageLight. Now you should see the error caused by the Lens in the false color image.
