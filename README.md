@@ -60,9 +60,8 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    ```
 
    This command will install the ANNServer application along with its dependencies.
-   For Windows you can alternatively use the install `installANNServer.bat` Script.
+   For Windows you can alternatively use the `installANNServer.bat` Script.
 
-   Alternativly you can use the `#installANNServer.bat` to initiate the installation.
 
 ## Start the ANNServer:
 
@@ -71,7 +70,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    ANNServer
    ```
 
-   For Windows you can alternatively use the install `run.bat` Script.
+   For Windows you can alternatively use the `run.bat` Script.
 
 
 ## Training the ANNServer:
@@ -81,7 +80,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    TrainANNServer
    ```
 
-   For Windows you can alternatively use the install `Train ANN.bat` Script.
+   For Windows you can alternatively use the `Train ANN.bat` Script.
 
 Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. 
 If you have any questions or need further assistance, feel free to reach out to the application's developer for support.
