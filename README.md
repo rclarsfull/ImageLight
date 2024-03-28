@@ -14,6 +14,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
 1. **Download Python 3.9:**
    
    Visit the [official Python website](https://www.python.org/downloads/) and download the installer for Python 3.9 suitable for your operating system (Windows, macOS, or Linux).
+   Watch out [3.9.13](https://www.python.org/downloads/release/python-3913/) is th last version released with an installer.
 
 2. **Run the Installer:**
 
@@ -58,6 +59,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
    ```
 
    This command will install the ANNServer application along with its dependencies.
+   For Windows you can alternatively use the install `installANNServer.bat` Script.
 
 4. **Start the ANNServer:**
 
@@ -65,6 +67,7 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
     ```
    ANNServer
    ```
+   For Windows you can alternatively use the install `run.bat` Script.
 
 6. **Training the ANNServer:**
 
@@ -72,8 +75,10 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
     ```
    TrainANNServer
    ```
+   For Windows you can alternatively use the install `Train ANN.bat` Script.
 
-Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. If you have any questions or need further assistance, feel free to reach out to the application's developer or community for support.
+Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. 
+If you have any questions or need further assistance, feel free to reach out to the application's developer for support.
 
 ## Usage
 
@@ -99,7 +104,7 @@ The client window has a frame with two tabs, one for the original image and one 
 - **Max Candela** defines the highest value for which your ANN (Artificial Neural Network) was trained.
 - **IP Address** defines the address where your server runs. When it runs locally, enter "127.0.0.1".
 - **Port** defines the port on which the server runs.
-- **Timeout** specifies how many milliseconds the client waits for a response from the server.
+- **Timeout** specifies how many milliseconds the client waits for a response from the server. (Increase this if you get a completely green false-color image)
 - **Language for '.csv' File Save** This option lets you decide the formatting for "." and "," that your country uses. For example, "1/2" in Germany would be "0,5", while in England it would be "0.5".
 - **Calibrate Lens Correction** attempts to correct the Vignette of your lens. It's not perfect, but it reduces the Vignette effect of your lens. This requires an extra calibration step.
 - **Calibration Mode** disables the connection to the server. In this mode, you can collect Linear RGB data from your image for the calibration process.
