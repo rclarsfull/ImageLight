@@ -82,10 +82,6 @@ This README provides instructions for installing Python 3.9 with PATH enabled, e
 
    For Windows you can alternatively use the `Train ANN.bat` Script.
 
-Following these steps should enable you to install Python 3.9 with PATH enabled, extract the ImageLight application, and then install it using `pip install`. 
-If you have any questions or need further assistance, feel free to reach out to the application's developer for support.
-
-
 ## Usage
 
 ### Program Initiation
