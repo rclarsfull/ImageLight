@@ -184,5 +184,11 @@ You need an already calibrated Camera to Correct the Vignette of the Lens.
 6. Now you need to do a full calibration. Don't reuse the RGB Values from the first calibration. You need to redo Step 4 in calibration for the data from the first calibration.
 7. Expand you Dataset
 
-  
+## The exampel model ist trained for:
+- Kamera used: Cannon EOS 500D
+- Reselution: 2352 x 1568
+- Aperture: F/8
+- Shutter speed: 1/400 sec
+- ISO: 800
+- Lense :  Canon EF 50 mm
 
